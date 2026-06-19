@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mastery OS &middot; Project Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#080F1E; --navy-deep:#04070F; --rust:#8B3A2E; --rust-hover:#A0452F;
+    --gold:#C9A14A; --gold-light:#D9B065; --cream:#F5F1E8; --white:#FFFFFF; --offwhite:#FAFAF9;
+    --ink:#080F1E; --ink-soft:rgba(8,15,30,0.74); --line:rgba(8,15,30,0.10);
+    --shadow:0 1px 3px rgba(8,15,30,0.08); --lift:0 10px 26px -12px rgba(8,15,30,0.26);
+    --disp:'Plus Jakarta Sans',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box} html,body{margin:0}
+  body{background:var(--offwhite);color:var(--ink);font-family:var(--disp);-webkit-font-smoothing:antialiased;line-height:1.6}
+  h1,h2,h3{letter-spacing:-0.02em;color:var(--navy);line-height:1.12}
+  a{color:var(--rust)}
+  .wrap{max-width:860px;margin:0 auto;padding:0 max(20px,5vw)}
+
+  header{background:var(--navy);color:var(--cream);padding:46px 0 40px}
+  .logo{display:inline-flex;align-items:center;gap:14px}
+  .logo svg{height:50px}
+  .logo .lt{font-size:23px;font-weight:800;color:#fff;letter-spacing:-0.02em} .logo .lt .ac{color:var(--gold)}
+  .logo .ls{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cream);opacity:.72;display:block;margin-top:4px}
+  header h1{color:#fff;font-size:clamp(28px,5vw,42px);font-weight:800;margin:26px 0 12px}
+  header p{color:var(--cream);opacity:.92;font-size:17px;max-width:60ch;margin:0}
+  .tag{margin-top:18px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+
+  section{padding:40px 0;border-bottom:1px solid var(--line)}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--rust);margin:0 0 10px}
+  h2{font-size:clamp(21px,3.4vw,28px);font-weight:800;margin:0 0 14px}
+  h3{font-size:15px;font-weight:800;margin:22px 0 8px;color:var(--navy)}
+  p{margin:0 0 14px;max-width:68ch}
+  .lead{font-size:16.5px}
+
+  ul{margin:0 0 14px;padding-left:0;list-style:none}
+  li{position:relative;padding-left:24px;margin-bottom:9px;max-width:70ch;font-size:15px}
+  li::before{content:"";position:absolute;left:4px;top:9px;width:7px;height:7px;border-radius:2px;background:var(--gold)}
+  li b{color:var(--navy)}
+  .against li::before{background:var(--rust);border-radius:50%}
+
+  .card{background:var(--white);border-left:4px solid var(--gold);border-radius:8px;padding:18px 20px;box-shadow:var(--shadow);margin:0 0 14px}
+  .card.rust{border-left-color:var(--rust)}
+  .card p{margin:0}
+
+  .built{background:var(--white);border-radius:8px;box-shadow:var(--shadow);padding:6px 20px}
+  .built .row{display:flex;gap:14px;padding:11px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  .built .row:last-child{border:0}
+  .built .fn{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--rust);font-weight:600;flex:none;width:150px}
+  .built .ds{font-size:14px;color:var(--ink-soft)}
+
+  .swatches{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 16px}
+  .sw{border-radius:8px;overflow:hidden;box-shadow:var(--shadow);width:120px}
+  .sw .chip{height:54px} .sw .meta{padding:7px 9px;background:var(--white);font-size:10.5px}
+  .sw .nm{font-weight:700;color:var(--navy);display:block} .sw .hx{font-family:ui-monospace,monospace;color:var(--ink-soft)}
+  .kv{font-size:14.5px;margin:0 0 8px}.kv b{color:var(--navy)}
+
+  footer{background:var(--navy-deep);color:var(--cream);padding:30px 0;border:0}
+  footer .logo .lt{font-size:18px} footer .logo svg{height:40px}
+  footer p{font-size:12px;opacity:.7;margin-top:12px}
+  @media(max-width:600px){.built .fn{width:auto}.built .row{flex-direction:column;gap:2px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="logo">
+      <svg viewBox="40 10 125 148" role="img" aria-label="Mastery OS"><g transform="translate(0,18)">
+        <g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g>
+        <g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g>
+        <g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#F5F1E8"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#F5F1E8"/></g>
+      </g></svg>
+      <span><span class="lt">Mastery <span class="ac">OS</span></span><span class="ls">Med Masters Collaborative</span></span>
+    </span>
+    <h1>Project Brief</h1>
+    <p>What we are building, every decision we made, and the decisions we made against. Built in the BIO 304 brand, ready to carry into a new project.</p>
+    <p class="tag">Students choose the destination. The platform chooses the route.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section>
+  <p class="eyebrow">What we are building</p>
+  <h2>A learning operating system for the health sciences.</h2>
+  <p class="lead">Mastery OS turns a course's existing materials into a guided, evidence-based system that tells each student exactly what to study, when, and how, and walks them from first exposure to clinical competence. It is not an anatomy app, a flashcard deck, or an AI tutor. Those are features. The product is the operating system underneath them.</p>
+  <p>Anatomy and physiology is simply the first subject. The same engines generalize to any course where competence is the point: physiology, pathophysiology, nursing, the broader health sciences. The subject changes; the operating system does not.</p>
+  <div class="card"><p><b>The core line.</b> Students personalize their goals (target grade, time available, exam dates). The platform decides the method (what to review, when, how hard, in what form). The decision students are bad at making is the one we take off their plate.</p></div>
+</section>
+
+<section>
+  <p class="eyebrow">Guiding principles</p>
+  <h2>The thinking everything is built on.</h2>
+  <ul>
+    <li><b>It is a category, not an app.</b> A "learning operating system," framed as new, so people remember what it is.</li>
+    <li><b>Success, not rescue.</b> Positioned as a mastery and excellence platform. The remediation capability is real but is never the headline, because students buy to succeed, not because they are failing.</li>
+    <li><b>Grounded in established learning science.</b> Retrieval practice, spacing, interleaving, elaboration, generation, productive struggle, feedback, metacognition, application, dual coding. The science is the product, not a feature you toggle on.</li>
+    <li><b>Adaptive mastery over personalization.</b> The system adapts to what a student needs (performance, accuracy, confidence, retention), not to what they like.</li>
+    <li><b>Mastery velocity.</b> Prove a level and you are promoted (recognition to recall to application to clinical reasoning). No piling on busywork. This is the explicit anti-Duolingo stance.</li>
+    <li><b>The material is the only cognitive load.</b> The platform adds none. One task at a time, no menus to navigate.</li>
+    <li><b>Accommodation, not modification.</b> Remove the artificial barriers (clock pressure, clutter, one giant task) and keep the rigor fully intact. Much of it is universal design that helps everyone.</li>
+    <li><b>The engines are the moat.</b> Anyone can find a diagram. The learning architecture, adaptive logic, and instructor radar are the defensible asset, not image ownership.</li>
+  </ul>
+</section>
+
+<section>
+  <p class="eyebrow">Decided &mdash; for</p>
+  <h2>What we agreed to do.</h2>
+
+  <h3>Positioning &amp; model</h3>
+  <ul>
+    <li>Build and market a <b>learning operating system</b>, with A&amp;P as the first implementation.</li>
+    <li>Lead with the <b>success</b> framing; keep remediation under the hood.</li>
+    <li>Operationalize <b>learning science by default</b> so students do the effective thing whether or not they meant to.</li>
+    <li>Let students set <b>goals</b>; the system sets the <b>route, schedule, difficulty, and practice type</b>.</li>
+    <li>Use <b>mastery velocity</b>: demonstrate competence and advance to higher-order work.</li>
+  </ul>
+
+  <h3>Student experience &amp; engines</h3>
+  <ul>
+    <li>A <b>"Right Now" front door</b>: one chosen task, big start, no setup or decisions.</li>
+    <li>An <b>activity picker</b> in a Pomodoro session: the student picks the <b>format</b> (recall, drawing, tutor, labeling, teach-back), the system picks the <b>content</b>. Format autonomy that cannot be used for avoidance.</li>
+    <li>A <b>visible session rhythm</b> with breaks, plus an "earned a hands-on one" nudge after consecutive heads-down blocks, so effortful work is tolerable because relief is in sight.</li>
+    <li><b>Adaptive scheduling</b> (real SM-2 style), exam-anchored, with a guaranteed final consolidation pass.</li>
+    <li><b>Calibration and self-explanation</b>: rate confidence, then check actual coverage; the gap drives what comes next.</li>
+    <li>A <b>score-driven mode</b> (Rebuild / Steady / Stretch) inferred from exam scores, with no self-labeling required.</li>
+  </ul>
+
+  <h3>Accessibility &amp; neurodivergence</h3>
+  <ul>
+    <li>A <b>learning-needs setup</b> with optional bundles (ADHD, slower processing, overwhelm, easier-to-read) that pre-select granular toggles the student can fine-tune.</li>
+    <li><b>Never force a diagnosis label.</b> Students pick needs, not conditions. Settings are private and on-device.</li>
+    <li>For <b>slower processing, remove the clock on recall</b> (a timer measures speed, not knowing) while keeping the recall itself.</li>
+    <li>Settings <b>flow into every engine</b> (for example, "shorter blocks" shortens the Pomodoro intervals automatically).</li>
+    <li>State plainly, in the product, that <b>the bar does not move</b>.</li>
+  </ul>
+
+  <h3>Instructor side</h3>
+  <ul>
+    <li>An <b>early-warning radar</b>, not averages. A "reach out first" queue ranked by urgency, with <b>going quiet</b> treated as the earliest signal of a student about to disappear.</li>
+    <li>A <b>class heat map</b> where a red row is a student to help and a red column is a concept to reteach.</li>
+    <li><b>TBL pre-work readiness</b> for the next class.</li>
+    <li><b>Templated outreach that is copy-to-send</b>, reviewed by the instructor, never auto-sent.</li>
+  </ul>
+
+  <h3>Business, build &amp; brand</h3>
+  <ul>
+    <li>Two markets: a <b>student</b> offer (roughly $49 to $99 per semester) and a higher-value <b>instructor</b> offer (build once, generate everything).</li>
+    <li><b>MVP = A&amp;P Practical Mastery</b>: upload the lab list, get labeling, practical stations, recall, a schedule, and a readiness view. It answers "Am I ready for my practical?"</li>
+    <li>AI tutor without API cost by default: the app <b>builds a tailored prompt the student pastes into their own free Claude</b>; bring-your-own-key optional.</li>
+    <li>All deliverables are <b>standalone, self-contained HTML</b>, vanilla JS, in the MCAS brand.</li>
+    <li>Marketing built so far: a general pitch page, an instructor adoption page, a 12-slide student deck, and three kinetic reels (student 9:16, faculty 9:16, social square 1:1).</li>
+    <li>Copy and design rules: <b>"lecture," not "video"</b> (some classes are in person); <b>no invented statistics</b>; <b>no em dashes</b>; <b>white, not cream, on light slides</b>; emphasis by <b>color, not size jumps</b>; <b>smooth fades only</b>; questions appear before answers with deliberate pauses; weighty lines land alone.</li>
+  </ul>
+</section>
+
+<section>
+  <p class="eyebrow">Decided &mdash; against</p>
+  <h2>What we ruled out (and why).</h2>
+  <ul class="against">
+    <li><b>A remediation / failing-student / academic-rescue headline.</b> Students buy to succeed, not to be rescued.</li>
+    <li><b>A Duolingo clone.</b> Slow advancement and repeating mastered material is exactly what we reject; mastery velocity replaces it.</li>
+    <li><b>Letting students personalize their study strategy.</b> Left to choose, they pick comfort and ineffective methods. They personalize goals only.</li>
+    <li><b>Invented efficacy statistics.</b> No fabricated numbers in any marketing; lean on the genuinely strong claim that retrieval and spacing are among the most replicated findings in learning science. Real pilot numbers go in later.</li>
+    <li><b>Making images or content the core value.</b> The engines are the moat; image licensing is not the business.</li>
+    <li><b>Paying for an AI API by default.</b> Chose prompt-export and bring-your-own-key instead.</li>
+    <li><b>Auto-sending instructor outreach.</b> Human-in-the-loop only, so students never feel surveilled.</li>
+    <li><b>Forcing a student to self-identify with a diagnosis</b> to get accommodations.</li>
+    <li><b>Timing retrieval for slower processors.</b> The clock comes off; the recall stays.</li>
+    <li><b>Cream on light slides, em dashes, and the word "video."</b> Replaced with white, removed, and "lecture."</li>
+    <li><b>Bookend borders</b> in the visual system, and any sense of a <b>separate app island</b>. It lives inside the course students already take.</li>
+    <li><b>Faculty content aimed at TikTok.</b> TikTok skews student; the faculty story belongs on LinkedIn and Facebook.</li>
+    <li><b>Building everything at once.</b> Start with the single painful problem (the practical exam) and expand.</li>
+  </ul>
+</section>
+
+<section>
+  <p class="eyebrow">Architecture</p>
+  <h2>How the system is layered.</h2>
+  <p><b>Inputs.</b> Student and instructor upload existing materials: slides, objectives, lab lists, study guides, notes, exam blueprints.</p>
+  <p><b>Content intelligence.</b> Those materials become a structured map of concepts, structures, relationships, vocabulary, processes, and clinical applications.</p>
+  <p><b>Learning-science engines.</b> Retrieval, spacing, interleaving, generation, elaboration, and metacognition engines decide what, when, and how hard.</p>
+  <p><b>Experience engines.</b> Labeling lab, practical exam simulator, AI tutor, sim-patient reasoning, team-based-learning engine, and an auto-built study planner.</p>
+  <p><b>The dashboard.</b> Today's tasks, weak areas, lecture and practical readiness, and the next challenge, for the student; the early-warning radar for the instructor.</p>
+</section>
+
+<section>
+  <p class="eyebrow">Phased roadmap</p>
+  <h2>The expansion path.</h2>
+  <ul>
+    <li><b>Phase 1.</b> A&amp;P Practical Mastery (the MVP).</li>
+    <li><b>Phase 2.</b> A&amp;P Lecture Mastery.</li>
+    <li><b>Phase 3.</b> Physiology Mastery.</li>
+    <li><b>Phase 4.</b> Pathophysiology Mastery.</li>
+    <li><b>Phase 5.</b> Sim-Patient Clinical Reasoning.</li>
+    <li><b>Phase 6.</b> Instructor Creator Platform: upload once, generate everything.</li>
+  </ul>
+</section>
+
+<section>
+  <p class="eyebrow">Built so far</p>
+  <h2>Working prototypes (all self-contained HTML).</h2>
+  <div class="built">
+    <div class="row"><span class="fn">mastery-os</span><span class="ds">First prototype: goal-setting, dashboard, interactive labeling lab.</span></div>
+    <div class="row"><span class="fn">...-plan</span><span class="ds">Forgetting-curve view, spaced-schedule generator, metacognition fade.</span></div>
+    <div class="row"><span class="fn">...-adaptive</span><span class="ds">SM-2 adaptive engine, exam-anchored, mastery-velocity promotion.</span></div>
+    <div class="row"><span class="fn">...-session</span><span class="ds">Pomodoro competency-session runner.</span></div>
+    <div class="row"><span class="fn">...-triage</span><span class="ds">Self-explanation plus calibration feeding a transparent triage scorer.</span></div>
+    <div class="row"><span class="fn">...-coverage</span><span class="ds">Coverage / no-gaps view with a course calendar.</span></div>
+    <div class="row"><span class="fn">...-mcas</span><span class="ds">Unified shell and the "Right Now" front door, with light/dark toggle.</span></div>
+    <div class="row"><span class="fn">...-mode</span><span class="ds">Score-driven Rebuild / Steady / Stretch (tips are placeholders).</span></div>
+    <div class="row"><span class="fn">...-needs</span><span class="ds">Neurodivergence and accessibility setup that live-reconfigures the page.</span></div>
+    <div class="row"><span class="fn">...-instructor</span><span class="ds">Instructor radar: reach-out queue, heat map, TBL readiness, outreach drawer.</span></div>
+    <div class="row"><span class="fn">...-picker</span><span class="ds">Pomodoro activity picker; real drawing canvas and recall card.</span></div>
+    <div class="row"><span class="fn">...-pitch</span><span class="ds">General marketing / decision-maker page.</span></div>
+    <div class="row"><span class="fn">...-adopt</span><span class="ds">Instructor-facing adoption page.</span></div>
+    <div class="row"><span class="fn">...-student-deck</span><span class="ds">12-slide student presentation.</span></div>
+    <div class="row"><span class="fn">...-tiktok</span><span class="ds">Student kinetic reel, 9:16.</span></div>
+    <div class="row"><span class="fn">...-faculty-reel</span><span class="ds">Faculty kinetic reel, 9:16.</span></div>
+    <div class="row"><span class="fn">...-social</span><span class="ds">LinkedIn / Facebook reel, square 1:1, white + navy + terracotta.</span></div>
+    <div class="row"><span class="fn">bio304-concept-player</span><span class="ds">Concept-chunked lecture player (built, parked).</span></div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">On the horizon</p>
+  <h2>Pending pieces and placeholders.</h2>
+  <div class="card rust"><p><b>To wire in once provided:</b> the real AI-tutor prompt-builder engine, the drawing canvases, the genuine success tips for struggling students (currently placeholders in the mode screen), and the real Med Masters Collaborative logo (to replace the placeholder figures in the reel end cards).</p></div>
+</section>
+
+<section>
+  <p class="eyebrow">Brand system</p>
+  <h2>MCAS / BIO 304 brand (from your course index).</h2>
+  <div class="swatches">
+    <div class="sw"><div class="chip" style="background:#080F1E"></div><div class="meta"><span class="nm">Navy</span><span class="hx">#080F1E</span></div></div>
+    <div class="sw"><div class="chip" style="background:#04070F"></div><div class="meta"><span class="nm">Navy deep</span><span class="hx">#04070F</span></div></div>
+    <div class="sw"><div class="chip" style="background:#8B3A2E"></div><div class="meta"><span class="nm">Terracotta</span><span class="hx">#8B3A2E</span></div></div>
+    <div class="sw"><div class="chip" style="background:#A0452F"></div><div class="meta"><span class="nm">Terracotta hover</span><span class="hx">#A0452F</span></div></div>
+    <div class="sw"><div class="chip" style="background:#C9A14A"></div><div class="meta"><span class="nm">Gold</span><span class="hx">#C9A14A</span></div></div>
+    <div class="sw"><div class="chip" style="background:#D9B065"></div><div class="meta"><span class="nm">Gold light</span><span class="hx">#D9B065</span></div></div>
+    <div class="sw"><div class="chip" style="background:#F5F1E8;border:1px solid #0001"></div><div class="meta"><span class="nm">Cream</span><span class="hx">#F5F1E8</span></div></div>
+    <div class="sw"><div class="chip" style="background:#FFFFFF;border:1px solid #0001"></div><div class="meta"><span class="nm">White</span><span class="hx">#FFFFFF</span></div></div>
+  </div>
+  <p class="kv"><b>Typeface.</b> Plus Jakarta Sans throughout. Headings weight 800 with tight letter-spacing (-0.02em). Eyebrows and labels are uppercase, weight 700, letter-spaced 0.18 to 0.28em, small.</p>
+  <p class="kv"><b>Logo.</b> Three standing figures (left gold, center terracotta, right cream on dark; recolorable). Wordmark with the accent word in terracotta on light, gold on dark.</p>
+  <p class="kv"><b>Design language.</b> Navy headings and primary actions. Terracotta eyebrows, links, and accents. Gold as a left-border accent on info cards and as the dark-background accent. Small radii (3 to 10px). Subtle rest shadows with hover-lift on interactive elements only. No bookend borders. Dark navy footer with cream text and a gold byline. Strong accessibility (skip link, visible focus, reduced-motion support).</p>
+  <p class="kv"><b>Reel palette decision.</b> The social and marketing reels use white, dark navy, and dark terracotta only. Cream is dropped from light slides. On dark navy, gold or a lighter terracotta carries emphasis for legibility; on white, deep terracotta carries it.</p>
+  <p class="kv"><b>Domain.</b> medmasterscollaborative.com, set two-tone with "masters" in terracotta.</p>
+  <p class="kv"><b>Navy update.</b> The house navy was deepened to a near-black #080F1E (deepest #04070F), replacing the earlier #0B1530. It carries the gold and terracotta accents harder and reads as more premium. All product surfaces, marketing pages, and reels follow the new value.</p>
+</section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span class="logo">
+      <svg viewBox="40 10 125 148" role="img" aria-hidden="true"><g transform="translate(0,18)">
+        <g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g>
+        <g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g>
+        <g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#F5F1E8"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#F5F1E8"/></g>
+      </g></svg>
+      <span><span class="lt">Mastery <span class="ac">OS</span></span></span>
+    </span>
+    <p>Med Masters Collaborative &middot; Dr. Sharilyn Rennie &middot; Project brief</p>
+  </div>
+</footer>
+
+</body>
+</html>
