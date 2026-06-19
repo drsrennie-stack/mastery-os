@@ -14,6 +14,8 @@
   --ink:#080F1E; --ink-soft:rgba(8,15,30,0.74); --ink-faint:rgba(8,15,30,0.50);
   --line:rgba(8,15,30,0.10); --line-soft:rgba(8,15,30,0.06);
   --shadow:0 1px 3px rgba(8,15,30,0.08); --lift:0 14px 34px -16px rgba(8,15,30,0.34);
+  --card-rest:0 6px 18px -10px rgba(8,15,30,0.22),0 2px 5px -2px rgba(8,15,30,0.07);
+  --card-hover:0 18px 40px -14px rgba(8,15,30,0.30),0 6px 14px -5px rgba(8,15,30,0.12);
   --disp:'Plus Jakarta Sans',system-ui,sans-serif;
   --r-sm:4px; --r:8px; --r-lg:14px;
   --ease:cubic-bezier(.22,.61,.36,1);
@@ -187,9 +189,11 @@ input.txt[type="date"]::-webkit-calendar-picker-indicator{opacity:0;width:30px;h
 
 /* grid of cards under front door */
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:24px}
-.panel-card{background:var(--white);border-radius:var(--r);border-left:4px solid var(--gold);box-shadow:var(--shadow);padding:20px 22px}
-.panel-card.rust{border-left-color:var(--rust)}
-.panel-card h3{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);margin:0 0 14px}
+.panel-card{background:var(--white);border-radius:10px;box-shadow:var(--card-rest);padding:22px 24px;transition:box-shadow .22s var(--ease),transform .22s var(--ease)}
+.panel-card:hover{transform:translateY(-3px);box-shadow:var(--card-hover),inset 0 2px 0 0 var(--gold)}
+.panel-card.rust:hover{box-shadow:var(--card-hover),inset 0 2px 0 0 var(--rust)}
+.panel-card h3{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);margin:0 0 14px;transition:color .2s}
+.panel-card:hover h3{color:var(--rust)}
 .ready-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .ready-row:last-child{margin-bottom:0}
 .ready-row .nm{font-size:14px;font-weight:600;color:var(--navy);flex:none;width:96px}
@@ -220,7 +224,7 @@ input.txt[type="date"]::-webkit-calendar-picker-indicator{opacity:0;width:30px;h
 .sadv{flex:none;background:var(--navy);color:#fff;border:0;border-radius:999px;font-family:inherit;font-size:11px;font-weight:700;padding:5px 11px}
 .sadv:hover{background:#13234d}
 .sdone{flex:none;font-size:10.5px;font-weight:700;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.08em}
-.checkin{background:var(--white);border-left:4px solid var(--rust);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 20px;margin:0 0 18px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.checkin{background:var(--white);border-radius:10px;box-shadow:var(--card-rest),inset 0 2px 0 0 var(--rust);padding:18px 20px;margin:0 0 18px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
 .checkin .ci-tx{flex:1;min-width:240px;font-size:14.5px;color:var(--ink-soft);line-height:1.5}
 .checkin .ci-tx b{color:var(--navy)}
 .ci-row{display:flex;gap:8px;flex-wrap:wrap}
@@ -247,6 +251,13 @@ input.txt[type="date"]::-webkit-calendar-picker-indicator{opacity:0;width:30px;h
 
 /* activity picker */
 .picker h2{font-size:24px;font-weight:800;margin:0 0 4px}
+.intro h2{font-size:26px;font-weight:800;margin:4px 0 14px}
+.introp{color:var(--ink-soft);font-size:15.5px;line-height:1.6;margin:0 0 18px;max-width:60ch}
+.introp.small{font-size:14px;color:var(--ink-faint)}
+.introrow{display:flex;gap:12px;margin:0 0 20px;flex-wrap:wrap}
+.introrow div{flex:1;min-width:130px;background:var(--white);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;text-align:center;border-top:3px solid var(--gold)}
+.introrow b{display:block;color:var(--navy);font-size:16px;font-weight:800;margin-bottom:2px}
+.introrow span{font-size:12px;color:var(--ink-faint)}
 .picker .lead{color:var(--ink-soft);font-size:15px;margin:0 0 4px}
 .picker .sysline{color:var(--rust);font-size:13px;font-weight:700;margin:0 0 24px}
 .acts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -280,6 +291,9 @@ input.txt[type="date"]::-webkit-calendar-picker-indicator{opacity:0;width:30px;h
 .label-lab .lead{color:var(--ink-soft);font-size:15px;margin:0 0 6px}
 .label-lab .prompt{font-size:21px;font-weight:800;color:var(--navy);margin:0 0 20px}
 .label-lab .prompt em{color:var(--rust);font-style:normal}
+.lab-speak{vertical-align:middle;margin-left:10px;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--line);background:var(--white);color:var(--rust);display:inline-grid;place-items:center;box-shadow:var(--card-rest);transition:.16s;cursor:pointer}
+.lab-speak:hover{transform:translateY(-1px);border-color:var(--gold);color:var(--navy)}
+.lab-speak svg{width:17px;height:17px}
 .diagram{position:relative;background:var(--white);border-radius:var(--r-lg);box-shadow:var(--lift);padding:18px;margin:0 auto;max-width:380px}
 .diagram svg{display:block;width:100%;height:auto}
 .hot{position:absolute;width:26px;height:26px;border-radius:50%;border:2.5px solid var(--rust);background:rgba(139,58,46,.12);transform:translate(-50%,-50%);transition:.16s;cursor:pointer}
@@ -291,9 +305,36 @@ input.txt[type="date"]::-webkit-calendar-picker-indicator{opacity:0;width:30px;h
 .lab-feedback.ok{color:#2f7d4f}
 .lab-feedback.no{color:var(--rust)}
 
-/* tutor (prompt export) */
+/* tutor */
 .tutor .promptbox{background:var(--navy);color:var(--cream);border-radius:var(--r);padding:20px;font-size:13.5px;line-height:1.6;white-space:pre-wrap;max-height:280px;overflow:auto;font-family:ui-monospace,Menlo,monospace}
 .tutor .row{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+.exam-cfg .lead{color:var(--ink-soft);font-size:15px;margin:0 0 6px}
+.exam-cfg .prompt{font-size:21px;font-weight:800;color:var(--navy);margin:0 0 12px}
+.exam-cfg .prompt em{color:var(--rust);font-style:normal}
+.exam-cfg .cfg-line{font-size:14px;color:var(--ink-soft);line-height:1.6;margin:0 0 18px;max-width:60ch}
+.exam-cfg .cfg-line b{color:var(--navy)}
+.adj{margin-top:12px}
+.adjlbl{display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--rust);margin:12px 0 6px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{border:1.5px solid var(--line);background:var(--white);border-radius:var(--r);font-family:inherit;font-weight:700;font-size:13px;padding:9px 14px;color:var(--ink-soft);transition:.15s}
+.seg button[aria-pressed="true"]{border-color:var(--gold);background:rgba(201,161,74,.14);color:var(--navy)}
+/* chat */
+.chat{display:flex;flex-direction:column;height:100%}
+.chat-log{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:4px 2px 14px;min-height:240px;max-height:52vh}
+.bub{max-width:84%;padding:13px 16px;border-radius:14px;font-size:15px;line-height:1.55}
+.bub.assistant{align-self:flex-start;background:var(--white);color:var(--navy);box-shadow:var(--card-rest);border-bottom-left-radius:4px}
+.bub.user{align-self:flex-end;background:var(--navy);color:#fff;border-bottom-right-radius:4px}
+.bub.typing{color:var(--ink-faint);font-style:italic}
+.bub.typing span{animation:blink 1.2s infinite}.bub.typing span:nth-child(2){animation-delay:.2s}.bub.typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}
+.chat-in{display:flex;gap:10px;align-items:flex-end}
+.chat-in textarea,.txtin{flex:1;font-family:inherit;font-size:15px;border:1.5px solid var(--line);border-radius:var(--r);padding:12px 14px;outline:none;resize:none;background:var(--white);color:var(--navy);transition:border-color .18s}
+.chat-in textarea:focus,.txtin:focus{border-color:var(--gold)}
+.chat-send{flex:none;background:var(--navy);color:#fff;border:0;border-radius:var(--r);font-family:inherit;font-weight:700;font-size:14px;padding:13px 20px;transition:.15s;align-self:stretch}
+.chat-send:hover{background:#13234d}
+.chat-send[disabled]{opacity:.5}
+.notconn .prompt{font-size:20px;font-weight:800;color:var(--navy)}
+.notconn .lead{color:var(--ink-soft);font-size:14.5px;line-height:1.6;margin:0 0 16px;max-width:60ch}
 
 /* break screen */
 .breakscreen{text-align:center;max-width:440px;margin:0 auto}
@@ -453,17 +494,18 @@ const HOTSPOTS = [
 /* ---------- state ---------- */
 const NEEDS = [
   {key:'shortBlocks', b:'Shorter focus blocks', s:'Work in 15-minute stretches instead of 25.'},
-  {key:'noClock', b:'No clock on recall', s:'A timer measures speed, not knowing. The recall stays.'},
+  {key:'noClock', b:'Turn off the countdown clock', s:'A clock can measure speed, not knowing. We hide it and keep the gentle break rhythm.'},
   {key:'clutterfree', b:'One thing at a time', s:'Hide everything except the task in front of you.'},
   {key:'larger', b:'Larger, easier-to-read text', s:'Bigger type and more breathing room.'},
   {key:'calm', b:'Calmer visuals', s:'Drop ambient glow and heavy shadows.'},
-  {key:'easierread', b:'Generous line spacing', s:'Looser lines for easier tracking.'}
+  {key:'easierread', b:'Generous line spacing', s:'Looser lines for easier tracking.'},
+  {key:'readAloud', b:'Read structures aloud', s:'A voice names each structure as it comes up.'}
 ];
 const BUNDLES = [
   {id:'adhd', ttl:'Hard to stay on one thing', dsc:'Short blocks, frequent breaks, one task on screen.', sets:['shortBlocks','clutterfree']},
-  {id:'slow', ttl:'I need more time, not less knowing', dsc:'Takes the clock off recall and shortens blocks.', sets:['noClock','shortBlocks']},
+  {id:'slow', ttl:'I need more time, not less knowing', dsc:'Turns the clock off and shortens blocks.', sets:['noClock','shortBlocks']},
   {id:'over', ttl:'Big tasks feel overwhelming', dsc:'One task at a time, calmer screen.', sets:['clutterfree','calm']},
-  {id:'read', ttl:'Reading on screen is tiring', dsc:'Larger text and generous spacing.', sets:['larger','easierread']}
+  {id:'read', ttl:'Reading on screen is tiring', dsc:'Larger text, generous spacing, structures read aloud.', sets:['larger','easierread','readAloud']}
 ];
 
 const CATALOG = [
@@ -490,7 +532,7 @@ function freshState(){
     setupDone:false, name:'', course:'Anatomy',
     goal:'B', credits:4, hours:10,
     nextPracticalDate:_iso, examDays:14, practicalCount:5, practicals:[],
-    mode:'Steady', checkInDue:false,
+    mode:'Steady', checkInDue:false, seenPomodoroIntro:false, apiKey:'', tutorEndpoint:'',
     needs:{}, bundles:[],
     mastery:{}, // topic -> {level:0..2, score:0..1}
     plan:[
@@ -854,11 +896,31 @@ function secondaryHTML(){
 let sess=null, timerInt=null;
 function openSession(nt){
   const focusMin = S.needs.shortBlocks?15:25;
-  sess={ task:nt, phase:'pick', focusSec:focusMin*60, left:focusMin*60, headsDown:0, results:{right:0,total:0} };
+  sess={ task:nt, phase:'intro', focusSec:focusMin*60, left:focusMin*60, headsDown:0, results:{right:0,total:0} };
   sessionEl.setAttribute('aria-hidden','false'); sessionEl.classList.add('live');
   renderSessionShell();
-  renderPicker();
+  if(S.seenPomodoroIntro) renderPicker(); else renderIntro();
   startTimer();
+}
+function renderIntro(){
+  sess.phase='intro'; updateTimer();
+  const mins = S.needs.shortBlocks?15:25;
+  const clockLine = S.needs.noClock
+    ? `You\u2019ve turned the clock off, so you\u2019ll see the gentle rhythm without a ticking countdown. The breaks still arrive on their own.`
+    : `If a ticking clock stresses you more than it helps, the no-clock option in settings hides it and keeps the rhythm.`;
+  $('#sInner').innerHTML=`<div class="intro fade-enter">
+    <p class="eyebrow" style="color:var(--rust)">How sessions work</p>
+    <h2>This runs on the Pomodoro rhythm.</h2>
+    <p class="introp">You work in one focused block, take a short break, then go again. The breaks aren\u2019t slacking off, they\u2019re what makes long, effortful study sustainable and help you get through dense material without burning out. It\u2019s one of the most recommended techniques for focus and momentum.</p>
+    <div class="introrow">
+      <div><b>${mins} min</b><span>focused block</span></div>
+      <div><b>Short break</b><span>then back in</span></div>
+      <div><b>Repeat</b><span>momentum builds</span></div>
+    </div>
+    <p class="introp small">${clockLine}</p>
+    <button class="btn primary block" id="introGo" style="background:var(--navy);color:#fff;max-width:320px;margin:6px auto 0">Start the first block</button>
+  </div>`;
+  $('#introGo').addEventListener('click',()=>{ S.seenPomodoroIntro=true; save(); renderPicker(); });
 }
 function closeSession(){
   clearInterval(timerInt); timerInt=null;
@@ -882,7 +944,7 @@ function renderSessionShell(){
 function startTimer(){
   clearInterval(timerInt);
   timerInt=setInterval(()=>{
-    if(sess.phase==='break'){ return; }
+    if(sess.phase==='break' || sess.phase==='intro'){ return; }
     sess.left--;
     if(sess.left<=0){ sess.left=0; updateTimer(); enterBreak(); return; }
     updateTimer();
@@ -890,9 +952,8 @@ function startTimer(){
 }
 function updateTimer(){
   const t=$('#timeval'); if(!t) return;
-  const noClock = S.needs.noClock && sess.phase==='recall';
-  if(noClock){ $('#timer').style.visibility='hidden'; }
-  else { $('#timer').style.visibility='visible'; }
+  const hide = S.needs.noClock || sess.phase==='intro';   // clock-off hides the countdown everywhere; rhythm bar stays
+  $('#timer').style.visibility = hide ? 'hidden' : 'visible';
   const m=Math.floor(sess.left/60), s=sess.left%60;
   t.textContent=`${m}:${String(s).padStart(2,'0')}`;
   const r=$('#rhythm'); if(r) r.style.width=(100*(1-sess.left/sess.focusSec))+'%';
@@ -904,7 +965,7 @@ function renderPicker(){
     {id:'recall',ic:I.recall,b:'Recall',s:'Produce answers from memory.'},
     {id:'label',ic:I.label,b:'Label the diagram',s:'Put structures back in place.'},
     {id:'draw',ic:I.draw,b:'Draw it',s:'Sketch the structure from scratch.'},
-    {id:'tutor',ic:I.tutor,b:'AI tutor',s:'Get a prompt for your own Claude.'},
+    {id:'tutor',ic:I.tutor,b:'Tutored exam',s:'Live questions, your reasoning, instant feedback.'},
     {id:'teach',ic:I.teach,b:'Teach it back',s:'Explain it out loud in your words.'}
   ];
   $('#sInner').innerHTML=`<div class="picker fade-enter">
@@ -920,7 +981,7 @@ function renderPicker(){
     if(a==='recall'||a==='teach') startRecall(a==='teach');
     else if(a==='label') startLabel();
     else if(a==='draw') startDraw();
-    else if(a==='tutor') startTutor();
+    else if(a==='tutor') startExamTutor();
   }));
 }
 
@@ -975,11 +1036,16 @@ function showLabel(fb,fbCls){
   const target=labelOrder[labelStep];
   $('#sInner').innerHTML=`<div class="label-lab fade-enter">
     <p class="lead">Click the structure. ${labelStep+1} of ${labelOrder.length}.</p>
-    <p class="prompt">Find the <em>${target.name}</em></p>
+    <p class="prompt">Find the <em>${target.name}</em>
+      <button class="lab-speak" id="labSpeak" aria-label="Hear ${esc(target.name)}" title="Hear it">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg>
+      </button></p>
     <div class="diagram" id="diagram">${heartSVG()}
       ${HOTSPOTS.map(h=>`<button class="hot" data-id="${h.id}" style="left:${h.x}%;top:${h.y}%" aria-label="structure"></button>`).join('')}
     </div>
     <p class="lab-feedback ${fbCls||''}">${fb||''}</p></div>`;
+  if(S.needs.readAloud) speak(target.name);
+  $('#labSpeak').addEventListener('click',()=>speak(target.name));
   $('#diagram').querySelectorAll('.hot').forEach(h=>h.addEventListener('click',()=>{
     if(h.dataset.id===target.id){
       h.classList.add('right'); sess.results.total++; sess.results.right++;
@@ -1029,37 +1095,171 @@ function startDraw(){
 }
 
 /* --- tutor (prompt export, no API cost) --- */
-function startTutor(){
-  sess.phase='tutor'; updateTimer();
-  const prompt=`You are my anatomy tutor. I am preparing for a lab practical on the heart.
-
-Topic I am working on: ${sess.task.topic}.
-My goal: ${goalLabel(S.goal)}.
-
-Please tutor me with the Socratic method:
-1. Ask me one question at a time about ${sess.task.topic}.
-2. Wait for my answer before telling me anything.
-3. If I am wrong, give me a hint, not the answer.
-4. Move from naming the structure, to its location and relationships, to a clinical "what if" once I am solid.
-Start now with your first question.`;
-  $('#sInner').innerHTML=`<div class="tutor fade-enter">
-    <p class="lead" style="color:var(--ink-soft);font-size:15px;margin:0 0 4px">Your tutor, no subscription needed.</p>
-    <p class="prompt" style="font-size:21px;font-weight:800;color:var(--navy);margin:0 0 18px">Copy this into your own free Claude</p>
-    <div class="promptbox" id="promptBox">${esc(prompt)}</div>
-    <div class="row">
-      <button class="btn primary" id="copyPrompt" style="background:var(--navy);color:#fff">Copy prompt</button>
-      <button class="linkbtn" id="tutorDone">I\u2019ve finished tutoring</button>
-    </div>
-    <p style="font-size:12.5px;color:var(--ink-faint);margin-top:16px">Bring-your-own-key is optional later. By default the work happens in your own free tutor, so there\u2019s no cost to run this.</p>
-  </div>`;
-  $('#copyPrompt').addEventListener('click',()=>{
-    const t=prompt;
-    if(navigator.clipboard){ navigator.clipboard.writeText(t).then(()=>toast('Prompt copied')).catch(()=>fallbackCopy(t)); }
-    else fallbackCopy(t);
-  });
-  $('#tutorDone').addEventListener('click',()=>{ bumpScore(0.04); completeActivity(); });
+/* ===== Exam engine (lifted from the MedMasters generator) ===== */
+function dokInstruction(val,n){
+  const rubric=`DOK LEVELS: DOK 1 recall (define, identify, name); DOK 2 application (explain why, apply to a scenario, compare, predict); DOK 3 analysis (clinical reasoning, evaluate mechanisms, justify); DOK 4 extended thinking (integrate multiple systems, weigh competing explanations).`;
+  const map={
+    dok1:`Write all ${n} questions at DOK 1 (recall).`,
+    dok2:`Write all ${n} questions at DOK 2 (application).`,
+    dok3:`Write all ${n} questions at DOK 3 (analysis and clinical reasoning).`,
+    dok4:`Write all ${n} questions at DOK 4 (extended, multi-system integration).`,
+    mixed:`Spread across all four DOK levels; label each [DOK n] in feedback.`
+  };
+  if(map[val]) return rubric+"\nDOK TARGET: "+map[val];
+  const half=Math.floor(n/2);
+  return rubric+`\nDOK TARGET (balanced): ${half} at DOK 2 and ${n-half} at DOK 3; label each [DOK 2] or [DOK 3].`;
 }
-function fallbackCopy(t){ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');toast('Prompt copied');}catch(e){toast('Select and copy the text');} ta.remove(); }
+function balancedKey(n){
+  const p=["A","B","C","D"], seq=[];
+  for(let i=0;i<n;i++) seq.push(p[i%4]);
+  for(let i=seq.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[seq[i],seq[j]]=[seq[j],seq[i]];}
+  return seq;
+}
+function disciplineText(v){
+  return ({both:'Anatomy and Physiology (50/50 across the session)',anatomy:'Anatomy only (structures, location, relationships, identification)',physiology:'Physiology only (mechanisms and function)',pharmacology:'Pharmacology only (mechanisms, indications, adverse effects, interactions)',pathophysiology:'Pathophysiology only (disease mechanisms, manifestations, complications)',nclex:'Nursing (NCLEX): NGN item types, clinical judgment, prioritization, safety, the nursing process'})[v]||'Medical science';
+}
+function buildExamPrompt(o){
+  const types = o.types.map(t=>({tf:'True/False',mc:'Multiple Choice',sa:'Short Answer',cl:'Clinical Application'})[t]);
+  const topicsBlock = o.topics.length ? `\nTOPICS TO COVER:\n${o.topics.map((t,i)=>`${i+1}. ${t}`).join("\n")}` : "";
+  let balance="";
+  if(o.types.includes('mc')){
+    balance=`\nANSWER POSITION BALANCE (mandatory): place the correct option for the Nth multiple-choice question at the matching position in this sequence: [${balancedKey(o.count).join(", ")}]. Non-MC questions do not advance the counter. This prevents defaulting to B or C. Keep all options the same length and plausibility; do not let wording signal the answer.`;
+  }
+  const strictTail = o.strictness==='coaching' ? 'Gentle guidance and hints before grading.' : o.strictness==='strict' ? 'Precise justification required, no hints before grading, exam-level rigor.' : 'Fair, concise feedback with a clear rationale.';
+  const justify = o.justify ? 'REQUIRED: ask the student to explain their reasoning before you grade each answer.' : 'Reasoning encouraged but optional.';
+  const retry = o.retry ? 'If incorrect: give a minimal one-sentence hint, allow ONE retry, grade it, then reveal the answer.' : 'If incorrect: reveal the correct answer directly.';
+  const bonus = o.bonus==='off' ? 'Grade correct/incorrect only.' : `After grading, rate the reasoning 0 to ${o.scale}. ${o.aboveBeyond?'Give explicit "Above & Beyond" recognition for exceptional insight. ':''}Do not penalize reasoning on wrong answers.`;
+  const report = o.report==='full' ? 'END REPORT: score and %, breakdown by type, top 3 weak topics with study actions, and one concrete next step.' : o.report==='none' ? 'END REPORT: score and % only.' : 'END REPORT: score, %, and weak topics.';
+  return `You are an expert medical-science educator running a live, interactive study exam inside a learning platform. Stay in this role; do not break character or mention prompts.
+DISCIPLINE: ${disciplineText(o.discipline)}
+${dokInstruction(o.dok,o.count)}
+QUESTION TYPES: ${types.join(", ")}
+TOTAL QUESTIONS: ${o.count}${topicsBlock}${balance}
+
+INTERACTION:
+- Strictness: ${o.strictness}. ${strictTail}
+- Justification: ${justify}
+- ${retry}
+- Score: ${o.score?'show the running score after each question (e.g. Score: 3/4)':'show the score only at the end'}.
+- The student may ask you questions at any time; answer them, then continue the loop.
+
+LOOP for every question: present ONE question (number it, never reveal the answer or upcoming items) -> wait for the student's answer and reasoning -> grade Correct/Incorrect/Partial with a brief rationale -> ${o.retry?'hint and one retry if wrong -> ':''}reveal the answer with a short explanation${o.bonus!=='off'?' -> rate the reasoning':''} -> next question.
+
+${bonus}
+${report}
+Base everything on current, authoritative sources; zero factual errors; no ambiguity. Begin immediately with Question 1, no preamble.`;
+}
+function deriveDiscipline(course){
+  return ({'Anatomy':'anatomy','Physiology':'physiology','Anatomy & Physiology I':'both','Anatomy & Physiology II':'both','Anatomy & Physiology (Non-Majors)':'both','Microbiology':'both','Pathophysiology':'pathophysiology','Pharmacology':'pharmacology','Nursing (NCLEX-RN)':'nclex'})[course]||'both';
+}
+function examOptsFor(topic){
+  const lvl = S.mastery[topic] ? S.mastery[topic].level : 1;        // depth from mastery (velocity)
+  const dok = ['dok1','dok2','dok3'][lvl] || 'balanced';
+  const strictness = S.mode==='Rebuild'?'coaching' : S.mode==='Stretch'?'strict' : 'standard';   // grading from mode
+  return { topics:[topic], types:['mc','sa','cl'], count:6, dok, strictness,
+    justify:true, retry:true, score:true, bonus:'light', scale:'5', aboveBeyond:true,
+    discipline:deriveDiscipline(S.course), report:'brief' };
+}
+
+/* ===== live in-system tutor ===== */
+let examOpts=null, tutorMsgs=[], tutorSystem='', tutorBusy=false;
+function startExamTutor(){
+  sess.phase='tutor'; updateTimer();
+  examOpts = examOptsFor(sess.task.topic);
+  const depthLabel = {dok1:'recognition',dok2:'recall',dok3:'application',balanced:'mixed depth'}[examOpts.dok];
+  $('#sInner').innerHTML=`<div class="exam-cfg fade-enter">
+    <p class="lead">A live tutor runs the exam with you, right here.</p>
+    <p class="prompt">Tutored exam: <em>${esc(sess.task.topic)}</em></p>
+    <p class="cfg-line">Depth set to <b>${depthLabel}</b> from your mastery, grading set to <b>${examOpts.strictness}</b> from your mode. You answer and explain your reasoning; it grades, hints, and you can ask it questions back.</p>
+    <button class="btn primary block" id="examBegin" style="background:var(--navy);color:#fff;max-width:300px;margin:6px auto 0">Begin the exam</button>
+    <details class="finetune" style="margin-top:16px"><summary>Adjust depth or grading</summary>
+      <div class="adj">
+        <label class="adjlbl">Depth</label>
+        <div class="seg" id="segDok">${[['dok1','Recall'],['dok2','Apply'],['dok3','Analyze'],['balanced','Mixed']].map(([v,l])=>`<button data-dok="${v}" aria-pressed="${examOpts.dok===v}">${l}</button>`).join('')}</div>
+        <label class="adjlbl">Grading</label>
+        <div class="seg" id="segStrict">${[['coaching','Coaching'],['standard','Standard'],['strict','Strict']].map(([v,l])=>`<button data-st="${v}" aria-pressed="${examOpts.strictness===v}">${l}</button>`).join('')}</div>
+        <label class="adjlbl">Questions</label>
+        <div class="seg" id="segCount">${[5,6,8,10].map(c=>`<button data-c="${c}" aria-pressed="${examOpts.count===c}">${c}</button>`).join('')}</div>
+      </div>
+    </details>`;
+  const wire=(sel,attr,key,cast)=>$('#sInner').querySelectorAll(sel).forEach(b=>b.addEventListener('click',()=>{
+    $('#sInner').querySelectorAll(sel).forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true'); examOpts[key]=cast?cast(b.dataset[attr]):b.dataset[attr];
+  }));
+  wire('[data-dok]','dok','dok'); wire('[data-st]','st','strictness'); wire('[data-c]','c','count',Number);
+  $('#examBegin').addEventListener('click',startExamChat);
+}
+function startExamChat(){
+  tutorSystem = buildExamPrompt(examOpts);
+  tutorMsgs = [{role:'user', content:'Begin the exam now with Question 1.'}];
+  renderChat();
+  callTutor();
+}
+function renderChat(){
+  const bubbles = tutorMsgs.filter(m=>m.content!=='Begin the exam now with Question 1.').map(m=>
+    `<div class="bub ${m.role}">${esc(m.content).replace(/\n/g,'<br>')}</div>`).join('');
+  $('#sInner').innerHTML=`<div class="chat fade-enter">
+    <div class="chat-log" id="chatLog">${bubbles}${tutorBusy?'<div class="bub tutor typing">tutoring<span>.</span><span>.</span><span>.</span></div>':''}</div>
+    <div class="chat-in">
+      <textarea id="chatBox" rows="2" placeholder="Type your answer and your reasoning, or ask a question" ${tutorBusy?'disabled':''}></textarea>
+      <button class="chat-send" id="chatSend" ${tutorBusy?'disabled':''} aria-label="Send">Send</button>
+    </div>
+    <button class="linkbtn" id="examEnd" style="margin-top:8px">End and score this block</button>`;
+  const log=$('#chatLog'); if(log) log.scrollTop=log.scrollHeight;
+  const box=$('#chatBox');
+  if(box && !tutorBusy){ box.focus(); box.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendTurn(); } }); }
+  $('#chatSend') && $('#chatSend').addEventListener('click',sendTurn);
+  $('#examEnd') && $('#examEnd').addEventListener('click',endExam);
+}
+function sendTurn(){
+  const box=$('#chatBox'); if(!box) return;
+  const text=box.value.trim(); if(!text||tutorBusy) return;
+  tutorMsgs.push({role:'user',content:text});
+  renderChat(); callTutor();
+}
+async function callTutor(){
+  tutorBusy=true; renderChat();
+  try{
+    const endpoint = S.tutorEndpoint || 'https://api.anthropic.com/v1/messages';
+    const headers = {'Content-Type':'application/json'};
+    if(S.apiKey){ headers['x-api-key']=S.apiKey; headers['anthropic-version']='2023-06-01'; headers['anthropic-dangerous-direct-browser-access']='true'; }
+    const res = await fetch(endpoint,{ method:'POST', headers, body:JSON.stringify({
+      model:'claude-sonnet-4-6', max_tokens:1024, system:tutorSystem, messages:tutorMsgs }) });
+    if(!res.ok) throw new Error('status '+res.status);
+    const data = await res.json();
+    const text = (data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n').trim() || '(no response)';
+    tutorMsgs.push({role:'assistant',content:text});
+    tutorBusy=false; renderChat();
+  }catch(e){
+    tutorBusy=false; renderNotConnected();
+  }
+}
+function renderNotConnected(){
+  $('#sInner').innerHTML=`<div class="notconn fade-enter">
+    <p class="prompt" style="margin-bottom:8px">The live tutor isn\u2019t connected here yet.</p>
+    <p class="lead">In Mastery OS this runs in-app with no setup. On an embedded site it needs to be connected once, either through your course\u2019s tutor endpoint or with a key below. Nothing leaves the system.</p>
+    <label class="adjlbl" for="keyIn">Anthropic API key (stored only on this device)</label>
+    <div class="chat-in">
+      <input class="txtin" id="keyIn" type="password" placeholder="sk-ant-..." value="${esc(S.apiKey||'')}">
+      <button class="chat-send" id="keySave">Connect</button>
+    </div>
+    <button class="linkbtn" id="ncBack" style="margin-top:12px">Back to activities</button>
+  </div>`;
+  $('#keySave').addEventListener('click',()=>{
+    const v=$('#keyIn').value.trim(); if(!v){ toast('Enter a key to connect'); return; }
+    S.apiKey=v; save(); toast('Connected. Starting the tutor.'); startExamChat();
+  });
+  $('#ncBack').addEventListener('click',renderPicker);
+}
+function endExam(){
+  const last=[...tutorMsgs].reverse().find(m=>m.role==='assistant');
+  const m=last && last.content.match(/Score:\s*(\d+)\s*\/\s*(\d+)/i);
+  const mt=S.mastery[sess.task.topic];
+  if(m){ const frac=Math.min(1, (+m[1])/Math.max(1,+m[2])); mt.score=clamp(mt.score*0.5 + frac*0.5); if(mt.score>0.8&&mt.level<2)mt.level++; }
+  else bumpScore(0.04);
+  completeActivity();
+}
+function fallbackCopy(t){ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');toast('Copied');}catch(e){toast('Select and copy the text');} ta.remove(); }
 
 /* --- after an activity: break or finish --- */
 function completeActivity(){
@@ -1167,6 +1367,14 @@ function clamp(n){ return Math.max(0,Math.min(1,n)); }
 function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
 function todayIso(){ return new Date().toISOString().slice(0,10); }
 function daysUntil(iso){ return Math.max(1, Math.round((new Date(iso)-new Date())/86400000)); }
+function speak(text){
+  try{
+    if(!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) return false;
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text); u.rate=0.92; u.pitch=1;
+    window.speechSynthesis.speak(u); return true;
+  }catch(e){ return false; }
+}
 function fmtLong(iso){ return new Date(iso).toLocaleDateString(undefined,{month:'long',day:'numeric'}); }
 function fmtShort(iso){ return new Date(iso).toLocaleDateString(undefined,{month:'short',day:'numeric'}); }
 
