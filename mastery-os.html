@@ -57,6 +57,13 @@ button{font-family:inherit;cursor:pointer}
 .txt{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);color:#fff;font-family:inherit;font-size:18px;padding:14px 16px;border-radius:var(--r);outline:none;transition:border-color .2s,background .2s}
 .txt:focus{border-color:var(--gold);background:rgba(255,255,255,.10)}
 .txt::placeholder{color:rgba(245,241,232,.4)}
+input.txt[type="date"]{
+  color-scheme:dark;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23C9A14A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;background-size:19px 19px;
+}
+input.txt[type="date"]::-webkit-calendar-picker-indicator{opacity:0;width:30px;height:30px;cursor:pointer}
+.prow-d{background-position:right 10px center;background-size:17px 17px}
 
 /* choice cards */
 .choices{display:grid;gap:12px;max-width:440px;margin:0 auto;text-align:left}
@@ -70,6 +77,11 @@ button{font-family:inherit;cursor:pointer}
 .choice[aria-pressed="true"] .ck svg{opacity:1}
 .choice .ttl{font-weight:700;color:#fff;font-size:15px;display:block;margin-bottom:3px}
 .choice .dsc{font-size:13px;opacity:.78;line-height:1.45}
+.choice .fx{display:block;margin-top:9px;font-size:12px;color:var(--gold);line-height:1.45;font-weight:600}
+#needOptions{margin-top:6px}
+.finetune{max-width:440px;margin:16px auto 0;text-align:left}
+.finetune>summary{cursor:pointer;color:var(--gold);font-size:13px;font-weight:700;list-style:none}
+.finetune>summary::-webkit-details-marker{display:none}
 
 /* course catalog */
 .catalog{max-width:460px;margin:0 auto;text-align:left;max-height:46vh;overflow:auto;padding:2px 8px 4px 2px}
@@ -87,6 +99,22 @@ button{font-family:inherit;cursor:pointer}
 .chip{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.18);color:var(--cream);font-family:inherit;font-size:15px;font-weight:600;padding:11px 18px;border-radius:999px;transition:.2s}
 .chip:hover{border-color:rgba(201,161,74,.6)}
 .chip[aria-pressed="true"]{border-color:var(--gold);background:var(--gold);color:var(--navy)}
+.chip.band{border-color:rgba(201,161,74,.55);background:rgba(201,161,74,.12);color:#fff}
+.chip.band[aria-pressed="true"]{background:var(--gold);color:var(--navy)}
+.rec-line{font-size:15px;color:var(--cream);opacity:.9;margin:20px auto 0;max-width:42ch}
+.rec-line b{color:#fff}
+.reclbl{display:block;text-align:center;margin:20px 0 8px;color:var(--gold)}
+.reccap{font-size:12px;color:var(--cream);opacity:.6;margin:10px 0 0}
+.nomargintop{margin-top:14px}
+.planall{max-width:440px;margin:20px auto 0;text-align:left}
+.planall>summary{cursor:pointer;color:var(--gold);font-size:13px;font-weight:700;list-style:none}
+.planall>summary::-webkit-details-marker{display:none}
+.prow{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+.prow .txt{font-size:14px;padding:10px 12px}
+.prow-d{flex:0 0 142px}
+.prow-t{flex:1;min-width:0}
+.prow-x{flex:none;width:34px;height:34px;border-radius:var(--r);border:1px solid rgba(255,255,255,.2);background:transparent;color:var(--cream);font-size:18px;line-height:1}
+.prow-x:hover{border-color:var(--rust);color:#fff}
 
 /* toggles (learn-best) */
 .toggles{display:grid;gap:2px;max-width:440px;margin:0 auto;background:rgba(255,255,255,.05);border-radius:var(--r);overflow:hidden;text-align:left}
@@ -179,6 +207,26 @@ button{font-family:inherit;cursor:pointer}
 .plan-item.done .lab{color:var(--ink-faint);text-decoration:line-through}
 .plan-item .lab{color:var(--navy);font-weight:600;flex:1}
 .plan-item .fmt{font-size:12px;color:var(--ink-faint)}
+.kvline{font-size:14px;color:var(--ink-soft);margin:0 0 12px;line-height:1.5}
+.kvline b{color:var(--navy);font-weight:700}
+.kvline.subtle{font-size:12.5px;color:var(--ink-faint);margin:10px 0 0}
+.strip{display:flex;flex-direction:column;gap:6px}
+.striprow{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:var(--r);background:rgba(8,15,30,.03);font-size:13.5px}
+.striprow.next{background:rgba(201,161,74,.14);box-shadow:inset 0 0 0 1.5px rgba(201,161,74,.5)}
+.striprow.done{opacity:.5}
+.striprow .sd{flex:none;width:58px;font-weight:700;color:var(--rust);font-variant-numeric:tabular-nums}
+.striprow .st{flex:1;color:var(--navy);font-weight:600;min-width:0}
+.striprow.done .st{text-decoration:line-through}
+.sadv{flex:none;background:var(--navy);color:#fff;border:0;border-radius:999px;font-family:inherit;font-size:11px;font-weight:700;padding:5px 11px}
+.sadv:hover{background:#13234d}
+.sdone{flex:none;font-size:10.5px;font-weight:700;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.08em}
+.checkin{background:var(--white);border-left:4px solid var(--rust);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 20px;margin:0 0 18px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.checkin .ci-tx{flex:1;min-width:240px;font-size:14.5px;color:var(--ink-soft);line-height:1.5}
+.checkin .ci-tx b{color:var(--navy)}
+.ci-row{display:flex;gap:8px;flex-wrap:wrap}
+.ci-btn{border:1.5px solid var(--line);background:var(--white);border-radius:var(--r);font-family:inherit;font-weight:700;font-size:13px;padding:10px 14px;color:var(--navy);transition:.16s}
+.ci-btn:hover{border-color:var(--gold);transform:translateY(-1px)}
+.ci-btn.keep{background:rgba(8,15,30,.04)}
 
 /* ===================== SESSION RUNNER ===================== */
 #session{position:fixed;inset:0;z-index:40;background:var(--offwhite);display:flex;flex-direction:column;opacity:0}
@@ -420,26 +468,29 @@ const BUNDLES = [
 
 const CATALOG = [
   {group:'Foundational sciences', items:[
-    {name:'Anatomy', d:'Structures, regions, and the lab practical.', status:'live'},
-    {name:'Physiology', d:'Mechanisms and the systems that run them.', status:'soon'},
-    {name:'Anatomy & Physiology I', d:'Combined first-semester course.', status:'soon'},
-    {name:'Anatomy & Physiology II', d:'The second-semester systems.', status:'soon'},
-    {name:'Anatomy & Physiology (Non-Majors)', d:'One-semester survey for allied health and kinesiology.', status:'soon'},
-    {name:'Microbiology', d:'Organisms, identification, and infectious disease.', status:'soon'}
+    {name:'Anatomy', d:'Structures, regions, and the lab practical.', status:'live', profile:'lab-memorization'},
+    {name:'Physiology', d:'Mechanisms and the systems that run them.', status:'soon', profile:'lecture'},
+    {name:'Anatomy & Physiology I', d:'Combined first-semester course.', status:'soon', profile:'lab-memorization'},
+    {name:'Anatomy & Physiology II', d:'The second-semester systems.', status:'soon', profile:'lab-memorization'},
+    {name:'Anatomy & Physiology (Non-Majors)', d:'One-semester survey for allied health and kinesiology.', status:'soon', profile:'lab-memorization'},
+    {name:'Microbiology', d:'Organisms, identification, and infectious disease.', status:'soon', profile:'lab-memorization'}
   ]},
   {group:'Clinical sciences', items:[
-    {name:'Pathophysiology', d:'How normal function breaks, and why.', status:'soon'},
-    {name:'Pharmacology', d:'Drug classes, mechanisms, and safe administration.', status:'soon'}
+    {name:'Pathophysiology', d:'How normal function breaks, and why.', status:'soon', profile:'lecture'},
+    {name:'Pharmacology', d:'Drug classes, mechanisms, and safe administration.', status:'soon', profile:'lecture'}
   ]},
   {group:'Licensure prep', items:[
-    {name:'Nursing (NCLEX-RN)', d:'Clinical judgment, prioritization, patient safety, and pharmacology across the Next Gen format.', status:'soon'}
+    {name:'Nursing (NCLEX-RN)', d:'Clinical judgment, prioritization, patient safety, and pharmacology across the Next Gen format.', status:'soon', profile:'lecture'}
   ]}
 ];
 
 function freshState(){
+  const _d=new Date(); _d.setDate(_d.getDate()+14); const _iso=_d.toISOString().slice(0,10);
   return {
     setupDone:false, name:'', course:'Anatomy',
-    goal:'B', hours:6, examDays:14, mode:'Steady',
+    goal:'B', credits:4, hours:10,
+    nextPracticalDate:_iso, examDays:14, practicalCount:5, practicals:[],
+    mode:'Steady', checkInDue:false,
     needs:{}, bundles:[],
     mastery:{}, // topic -> {level:0..2, score:0..1}
     plan:[
@@ -449,7 +500,7 @@ function freshState(){
     ]
   };
 }
-let S = store.get('mastery-os') || freshState();
+let S = Object.assign(freshState(), store.get('mastery-os') || {});
 TOPICS.forEach(t=>{ if(!S.mastery[t]) S.mastery[t]={level:0, score: t==='Heart wall'?0.35: t==='Valves'?0.45:0.6}; });
 function save(){ store.set('mastery-os', S); }
 
@@ -475,8 +526,8 @@ const LOGO_DARK = `<span class="logo on-dark intro-logo" style="--logo-h:64px">
   </g></svg></span>`;
 
 let step = 0;
-const STEPS = ['welcome','name','course','goal','time','exam','needs','build','done'];
-const realSteps = ['name','course','goal','time','exam','needs']; // dotted progress only over these
+const STEPS = ['welcome','name','course','goal','time','practicals','needs','build','done'];
+const realSteps = ['name','course','goal','time','practicals','needs']; // dotted progress only over these
 
 function renderDots(){
   const dots = $('#dots'); dots.innerHTML='';
@@ -532,36 +583,46 @@ function setupView(){
   else if(which==='time'){
     html = `<p class="eyebrow" style="color:var(--gold)">Your time</p>
       <h2>How much study time per week?</h2>
-      <p class="sub">Be honest, not aspirational. The schedule is built around what you actually have.</p>
-      <div class="chips" id="hourChips">
-        ${[3,6,9,12].map(h=>`<button class="chip" data-h="${h}" aria-pressed="${S.hours===h}">${h} hours</button>`).join('')}
-      </div>`;
+      <p class="sub">We anchor to the standard guideline of about 2 to 3 hours of study per credit hour, then you set what you can actually give. The bar does not move either way.</p>
+      <div class="field" style="max-width:440px">
+        <label class="lbl" style="text-align:center">This course is</label>
+        <div class="chips" id="creditChips">
+          ${[3,4,5].map(c=>`<button class="chip" data-cr="${c}" aria-pressed="${S.credits===c}">${c} credits</button>`).join('')}
+        </div>
+      </div>
+      <div id="recRegion"></div>`;
   }
-  else if(which==='exam'){
-    const d=new Date(); d.setDate(d.getDate()+ (S.examDays||14));
-    const iso=d.toISOString().slice(0,10);
-    html = `<p class="eyebrow" style="color:var(--gold)">Your exam</p>
-      <h2>When is your practical?</h2>
-      <p class="sub">Every review is anchored to this date, with a guaranteed final pass the day before.</p>
-      <div class="field"><label class="lbl" for="exam">Practical date</label>
-      <input class="txt" id="exam" type="date" value="${iso}" min="${new Date().toISOString().slice(0,10)}"></div>`;
+  else if(which==='practicals'){
+    html = `<p class="eyebrow" style="color:var(--gold)">Your practicals</p>
+      <h2>When is your next practical?</h2>
+      <p class="sub">Anatomy courses usually run several practicals across the term. We anchor everything to your next one and keep earlier material sharp for any cumulative final.</p>
+      <div class="field"><label class="lbl" for="nextp">Next practical date</label>
+        <input class="txt" id="nextp" type="date" value="${S.nextPracticalDate}" min="${todayIso()}"></div>
+      <div class="field" style="margin-top:18px"><label class="lbl">How many practicals this term?</label>
+        <div class="chips" id="pcount">
+          ${[{v:1,l:'Just one'},{v:4,l:'4'},{v:5,l:'5'},{v:7,l:'7'}].map(o=>`<button class="chip" data-pc="${o.v}" aria-pressed="${S.practicalCount===o.v}">${o.l}</button>`).join('')}
+        </div></div>
+      <details class="planall">
+        <summary>Plan the whole term now (optional)</summary>
+        <p class="sub" style="margin:12px auto 12px;font-size:13.5px">Add each practical\u2019s date and topics so the schedule can space earlier material toward later practicals and the final. You can do this later, or your instructor can provide it.</p>
+        <div id="plist"></div>
+        <button class="btn ghost" id="addP" style="border:1px dashed rgba(255,255,255,.28);border-radius:var(--r);padding:11px 18px">+ Add a practical</button>
+      </details>`;
   }
   else if(which==='needs'){
+    const showOpts = S.bundles.length>0 || Object.values(S.needs).some(Boolean);
     html = `<p class="eyebrow" style="color:var(--gold)">How you learn best</p>
-      <h2>Let\u2019s fit the platform to you.</h2>
-      <p class="sub">Pick anything that sounds like you. These pre-set some options you can fine-tune next. You are choosing needs, never a diagnosis.</p>
-      <div class="choices" id="bundles">
-        ${BUNDLES.map(b=>`<button class="choice" data-bundle="${b.id}" aria-pressed="${S.bundles.includes(b.id)}">
+      <h2>Do you have any learning needs we should fit to?</h2>
+      <p class="sub">Optional and private. Most people are fine with the standard setup. If something sounds like you, take a look, you can see what each one changes before deciding. The bar stays the same either way.</p>
+      <div class="choices" id="gate">
+        <button class="choice" data-gate="standard" aria-pressed="${!showOpts}">
           <span class="ck">${I.check}</span>
-          <span><span class="ttl">${b.ttl}</span><span class="dsc">${b.dsc}</span></span></button>`).join('')}
+          <span><span class="ttl">No, the standard setup is fine</span><span class="dsc">Keep everything as it comes. You can change this later in settings.</span></span></button>
+        <button class="choice" data-gate="look" aria-pressed="${showOpts}">
+          <span class="ck">${I.check}</span>
+          <span><span class="ttl">Let me look at the options</span><span class="dsc">See what each one changes, then pick only what helps.</span></span></button>
       </div>
-      <details style="max-width:440px;margin:18px auto 0;text-align:left">
-        <summary style="cursor:pointer;color:var(--gold);font-size:13px;font-weight:700">Fine-tune the individual settings</summary>
-        <div class="toggles" style="margin-top:12px" id="needToggles">
-          ${NEEDS.map(n=>`<div class="tg"><span class="tx"><b>${n.b}</b><span>${n.s}</span></span>
-            <button class="sw" data-need="${n.key}" aria-pressed="${!!S.needs[n.key]}" aria-label="${n.b}"></button></div>`).join('')}
-        </div>
-      </details>
+      <div id="needOptions" class="${showOpts?'':'hidden'}"></div>
       <p class="note"><b>The bar does not move.</b> These remove friction, not rigor. The exam is the same exam.</p>`;
   }
   else if(which==='build'){
@@ -572,14 +633,15 @@ function setupView(){
     back.classList.add('hidden'); next.classList.add('hidden');
   }
   else if(which==='done'){
-    const d=new Date(); d.setDate(d.getDate()+S.examDays);
+    const pcount = S.practicals.filter(p=>p.date).length || S.practicalCount;
     html = `<div style="font-size:64px;line-height:1;margin-bottom:8px">${checkRing()}</div>
       <h2>You\u2019re all set${S.name?', '+esc(S.name):''}.</h2>
-      <p class="sub">Your route to the ${esc(S.course)} practical is mapped${ S.bundles.length?', tuned to how you learn,':',' } and your reviews are scheduled. Here\u2019s the plan in one line:</p>
+      <p class="sub">Your route to the next ${esc(S.course)} practical is mapped${ S.bundles.length?', tuned to how you learn,':',' } and your reviews are scheduled. Here\u2019s the plan in one line:</p>
       <div style="background:rgba(255,255,255,.06);border-radius:var(--r);padding:18px;max-width:420px;margin:0 auto;text-align:left;font-size:14px;line-height:1.7">
         <div>Target: <b style="color:#fff">${goalLabel(S.goal)}</b></div>
-        <div>Time: <b style="color:#fff">${S.hours} hours/week</b></div>
-        <div>Practical: <b style="color:#fff">${d.toLocaleDateString(undefined,{month:'long',day:'numeric'})}</b> (${S.examDays} days)</div>
+        <div>Time: <b style="color:#fff">${S.hours} hours/week</b> for ${S.credits} credits</div>
+        <div>Next practical: <b style="color:#fff">${fmtLong(S.nextPracticalDate)}</b> (${S.examDays} days)</div>
+        <div>Practicals this term: <b style="color:#fff">${pcount}</b></div>
         <div>Mode: <b style="color:#fff">${S.mode}</b>, set from your goal</div>
       </div>`;
     next.textContent='Open Mastery OS';
@@ -625,31 +687,35 @@ function wireStep(which){
     }));
   }
   if(which==='time'){
-    panelEl.querySelectorAll('[data-h]').forEach(b=>b.addEventListener('click',()=>{
-      panelEl.querySelectorAll('[data-h]').forEach(x=>x.setAttribute('aria-pressed','false'));
-      b.setAttribute('aria-pressed','true'); S.hours=+b.dataset.h;
+    panelEl.querySelectorAll('[data-cr]').forEach(b=>b.addEventListener('click',()=>{
+      panelEl.querySelectorAll('[data-cr]').forEach(x=>x.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true'); S.credits=+b.dataset.cr; S.hours=computeRec(S.credits).mid; renderRec();
     }));
+    const r0=computeRec(S.credits); if(!r0.chips.includes(S.hours)) S.hours=r0.mid;
+    renderRec();
   }
-  if(which==='exam'){
-    const ex=$('#exam');
-    ex.addEventListener('change',()=>{
-      const diff=Math.max(1, Math.round((new Date(ex.value)-new Date())/86400000));
-      S.examDays=diff;
-    });
+  if(which==='practicals'){
+    const np=$('#nextp');
+    np.addEventListener('change',()=>{ S.nextPracticalDate=np.value; S.examDays=daysUntil(np.value); });
+    panelEl.querySelectorAll('[data-pc]').forEach(b=>b.addEventListener('click',()=>{
+      panelEl.querySelectorAll('[data-pc]').forEach(x=>x.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true'); S.practicalCount=+b.dataset.pc;
+    }));
+    renderPlist();
+    $('#addP').addEventListener('click',()=>{ S.practicals.push({date:'',topic:'',done:false}); renderPlist(); });
   }
   if(which==='needs'){
-    const sync=()=>{ NEEDS.forEach(n=>{ const t=panelEl.querySelector(`[data-need="${n.key}"]`); if(t) t.setAttribute('aria-pressed', !!S.needs[n.key]); }); };
-    panelEl.querySelectorAll('[data-bundle]').forEach(b=>b.addEventListener('click',()=>{
-      const id=b.dataset.bundle, bun=BUNDLES.find(x=>x.id===id);
-      const isOn=S.bundles.includes(id);
-      if(isOn){ S.bundles=S.bundles.filter(x=>x!==id); }
-      else { S.bundles.push(id); bun.sets.forEach(k=>S.needs[k]=true); }
-      b.setAttribute('aria-pressed', !isOn);
-      sync();
+    const gateBtns=panelEl.querySelectorAll('[data-gate]');
+    const setGate=(g)=>gateBtns.forEach(x=>x.setAttribute('aria-pressed', x.dataset.gate===g));
+    gateBtns.forEach(b=>b.addEventListener('click',()=>{
+      if(b.dataset.gate==='standard'){
+        S.bundles=[]; S.needs={}; setGate('standard');
+        $('#needOptions').classList.add('hidden'); $('#needOptions').innerHTML='';
+      } else {
+        setGate('look'); $('#needOptions').classList.remove('hidden'); renderNeedOptions();
+      }
     }));
-    panelEl.querySelectorAll('[data-need]').forEach(t=>t.addEventListener('click',()=>{
-      const k=t.dataset.need; S.needs[k]=!S.needs[k]; t.setAttribute('aria-pressed', !!S.needs[k]);
-    }));
+    if(!$('#needOptions').classList.contains('hidden')) renderNeedOptions();
   }
 }
 
@@ -719,6 +785,13 @@ function renderHome(){
   const blocks = S.needs.shortBlocks?'15-min':'25-min';
 
   $('.main').innerHTML = `
+  ${S.checkInDue?`<div class="checkin fade-enter" id="checkin">
+    <div class="ci-tx"><b>You just wrapped a practical.</b> Reassess your weekly hours for the next stretch? The right number depends on how that one went and what you\u2019re aiming for.</div>
+    <div class="ci-row">
+      <button class="ci-btn" data-hr="up">Add 2 hrs</button>
+      <button class="ci-btn keep" data-hr="keep">Keep ${S.hours}</button>
+      <button class="ci-btn" data-hr="down">Cut 2 hrs</button>
+    </div></div>`:''}
   <div class="rightnow fade-enter">
     <p class="eyebrow">Right now</p>
     <h1>${nt.fmt==='Labeling'?'Label the heart, anterior view':'Recall: '+nt.topic.toLowerCase()}</h1>
@@ -731,7 +804,23 @@ function renderHome(){
     <button class="start" id="startBtn">${I.play} Start now</button>
   </div>
 
-  <div id="secondary" class="grid">
+  <div id="secondary" class="grid"></div>`;
+  $('#secondary').innerHTML = secondaryHTML();
+  $('#startBtn').addEventListener('click',()=>openSession(nt));
+  document.querySelectorAll('[data-adv]').forEach(b=>b.addEventListener('click',()=>{
+    const obj=termList()[+b.dataset.adv]; if(obj){ obj.done=true; advanceNext(); }
+  }));
+  document.querySelectorAll('[data-hr]').forEach(b=>b.addEventListener('click',()=>{
+    if(b.dataset.hr==='up') S.hours+=2;
+    else if(b.dataset.hr==='down') S.hours=Math.max(2,S.hours-2);
+    S.checkInDue=false; save(); renderHome();
+    toast(b.dataset.hr==='keep'?'Hours unchanged.':'Weekly hours set to '+S.hours+'.');
+  }));
+}
+
+function secondaryHTML(){
+  const days=S.examDays;
+  return `
     <div class="panel-card fade-enter">
       <h3>Practical readiness</h3>
       ${TOPICS.map(t=>{const p=Math.round(S.mastery[t].score*100);return `
@@ -746,13 +835,17 @@ function renderHome(){
       </div>
       <p style="font-size:13.5px;color:var(--ink-soft);margin:16px 0 0">These are pulled from your accuracy, not a guess. They move as you practice.</p>
     </div>
+    <div class="panel-card fade-enter">
+      <h3>Schedule</h3>
+      <p class="kvline">Next practical in <b>${days}</b> days, on ${fmtLong(S.nextPracticalDate)}. <b>${S.practicals.filter(p=>p.date).length||S.practicalCount}</b> this term.</p>
+      ${semesterStrip()}
+    </div>
     <div class="panel-card fade-enter" style="grid-column:1/-1">
       <h3>Today\u2019s plan</h3>
       ${S.plan.map(p=>`<div class="plan-item ${p.done?'done':''}"><span class="tk">${I.check}</span>
         <span class="lab">${p.lab}</span><span class="fmt">${p.fmt}</span></div>`).join('')}
     </div>
   </div>`;
-  $('#startBtn').addEventListener('click',()=>openSession(nt));
 }
 
 /* ====================================================================== */
@@ -1072,6 +1165,111 @@ function closeSettings(){ settingsEl.classList.remove('live'); settingsEl.setAtt
 function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function clamp(n){ return Math.max(0,Math.min(1,n)); }
 function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function todayIso(){ return new Date().toISOString().slice(0,10); }
+function daysUntil(iso){ return Math.max(1, Math.round((new Date(iso)-new Date())/86400000)); }
+function fmtLong(iso){ return new Date(iso).toLocaleDateString(undefined,{month:'long',day:'numeric'}); }
+function fmtShort(iso){ return new Date(iso).toLocaleDateString(undefined,{month:'short',day:'numeric'}); }
+
+/* Carnegie guideline (~2-3 study hrs per credit hr/wk), adjusted for the
+   grade goal (Carnegie targets a pass; an A needs more) and for lab-memorization
+   courses where lab is studied, not just attended (which Carnegie ignores). */
+function courseProfile(){
+  const c=CATALOG.flatMap(g=>g.items).find(i=>i.name===S.course);
+  return (c && c.profile) || 'lecture';
+}
+function computeRec(c){
+  const labHeavy = courseProfile()==='lab-memorization';
+  let low=c*2, high=c*3;
+  if(labHeavy){ low=Math.round(low*1.25); high=Math.round(high*1.25); }
+  const gF = S.goal==='A'?1.25 : S.goal==='B'?1.1 : 1.0;
+  low=Math.round(low*gF); high=Math.round(high*gF);
+  const mid=Math.round((low+high)/2), tight=Math.max(2,Math.round(low*0.75));
+  const chips=[...new Set([tight,low,mid,high])].sort((a,b)=>a-b);
+  return {low,high,mid,tight,chips,labHeavy};
+}
+function renderRec(){
+  const region=document.getElementById('recRegion'); if(!region) return;
+  const r=computeRec(S.credits), below=S.hours<r.low;
+  const goalNote = S.goal==='A'
+    ? `You\u2019re aiming for an A, so this sits above the pass-level baseline. Carnegie estimates a passing grade; mastery usually takes more.`
+    : S.goal==='Pass'
+    ? `This is near the Carnegie baseline for a passing grade. The right number still depends on you.`
+    : `This sits a little above the pass-level baseline for a strong, safe grade. The right number depends on you.`;
+  const labNote = r.labHeavy
+    ? `<p class="note nomargintop">Anatomy lab isn\u2019t a show-up-and-watch lab. You study the structures for the practical on top of lecture, which the standard Carnegie estimate leaves out, so we\u2019ve added to the baseline here.</p>`
+    : `<p class="note nomargintop">This follows the standard Carnegie guideline, which fits a lecture-based course.</p>`;
+  region.innerHTML=`
+    <p class="rec-line">Starting estimate: about <b>${r.low} to ${r.high} hours</b> a week for a ${S.credits}-credit course. ${goalNote}</p>
+    <label class="lbl reclbl">Your hours a week</label>
+    <div class="chips" id="hourChips">
+      ${r.chips.map(h=>`<button class="chip ${h>=r.low&&h<=r.high?'band':''}" data-h="${h}" aria-pressed="${S.hours===h}">${h} hrs</button>`).join('')}
+    </div>
+    <p class="reccap">Highlighted hours fall within the estimate. You\u2019ll reassess after each practical.</p>
+    ${labNote}
+    ${below?`<p class="note nomargintop">That\u2019s under the estimate. The plan still gets you there, it just runs tighter and leans harder on spaced review. <b>The bar does not move.</b></p>`:''}`;
+  region.querySelectorAll('[data-h]').forEach(b=>b.addEventListener('click',()=>{ S.hours=+b.dataset.h; renderRec(); }));
+}
+function renderPlist(){
+  const el=document.getElementById('plist'); if(!el) return;
+  el.innerHTML=S.practicals.map((p,i)=>`<div class="prow">
+    <input class="txt prow-d" type="date" data-i="${i}" value="${p.date}" min="${todayIso()}">
+    <input class="txt prow-t" data-i="${i}" placeholder="Topics (e.g. upper limb)" value="${esc(p.topic)}">
+    <button class="prow-x" data-x="${i}" aria-label="Remove practical">\u00d7</button>
+  </div>`).join('');
+  el.querySelectorAll('.prow-d').forEach(inp=>inp.addEventListener('change',()=>{ S.practicals[+inp.dataset.i].date=inp.value; }));
+  el.querySelectorAll('.prow-t').forEach(inp=>inp.addEventListener('input',()=>{ S.practicals[+inp.dataset.i].topic=inp.value; }));
+  el.querySelectorAll('[data-x]').forEach(btn=>btn.addEventListener('click',()=>{ S.practicals.splice(+btn.dataset.x,1); renderPlist(); }));
+}
+function renderNeedOptions(){
+  const box=document.getElementById('needOptions'); if(!box) return;
+  const wasOpen = box.querySelector('.finetune')?.open;
+  const fxFor=b=>'Turns on: '+b.sets.map(k=>NEEDS.find(n=>n.key===k).b.toLowerCase()).join('; ')+'.';
+  box.innerHTML=`
+    <div class="choices" id="bundles">
+      ${BUNDLES.map(b=>{const on=S.bundles.includes(b.id);return `
+        <button class="choice" data-bundle="${b.id}" aria-pressed="${on}">
+          <span class="ck">${I.check}</span>
+          <span><span class="ttl">${b.ttl}</span><span class="dsc">${b.dsc}</span>
+          <span class="fx ${on?'':'hidden'}">${fxFor(b)}</span></span></button>`;}).join('')}
+    </div>
+    <details class="finetune">
+      <summary>Fine-tune the individual settings</summary>
+      <div class="toggles" id="needToggles">
+        ${NEEDS.map(n=>`<div class="tg"><span class="tx"><b>${n.b}</b><span>${n.s}</span></span>
+          <button class="sw" data-need="${n.key}" aria-pressed="${!!S.needs[n.key]}" aria-label="${n.b}"></button></div>`).join('')}
+      </div>
+    </details>`;
+  if(wasOpen) box.querySelector('.finetune').open=true;
+  box.querySelectorAll('[data-bundle]').forEach(b=>b.addEventListener('click',()=>{
+    const id=b.dataset.bundle, bun=BUNDLES.find(x=>x.id===id), isOn=S.bundles.includes(id);
+    if(isOn) S.bundles=S.bundles.filter(x=>x!==id);
+    else { S.bundles.push(id); bun.sets.forEach(k=>S.needs[k]=true); }
+    renderNeedOptions();
+  }));
+  box.querySelectorAll('[data-need]').forEach(t=>t.addEventListener('click',()=>{
+    const k=t.dataset.need; S.needs[k]=!S.needs[k]; t.setAttribute('aria-pressed', !!S.needs[k]);
+  }));
+}
+function termList(){ return S.practicals.filter(p=>p.date).sort((a,b)=>new Date(a.date)-new Date(b.date)); }
+function semesterStrip(){
+  const list=termList();
+  if(!list.length) return `<p class="kvline subtle">Add your full term in setup or settings to space earlier topics toward the final.</p>`;
+  const todayStart=new Date(new Date().toDateString());
+  const nextIdx=list.findIndex(p=>!p.done && new Date(p.date)>=todayStart);
+  return `<div class="strip">${list.map((p,i)=>`
+    <div class="striprow ${p.done?'done':''} ${i===nextIdx?'next':''}">
+      <span class="sd">${fmtShort(p.date)}</span>
+      <span class="st">${esc(p.topic||('Practical '+(i+1)))}</span>
+      ${p.done?'<span class="sdone">done</span>':(i===nextIdx?`<button class="sadv" data-adv="${i}">mark done</button>`:'')}
+    </div>`).join('')}</div>
+    <p class="kvline subtle">Scoring a practical advances the target and folds its topics into spaced review.</p>`;
+}
+function advanceNext(){
+  const up=S.practicals.filter(p=>p.date&&!p.done).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  if(up.length){ S.nextPracticalDate=up[0].date; S.examDays=daysUntil(up[0].date); }
+  S.checkInDue=true;
+  save(); renderHome(); toast('Practical logged. Target moved to the next one.');
+}
 function heartSVG(){
   return `<svg viewBox="0 0 200 220" aria-label="Anterior view of the heart">
     <!-- great vessels -->
