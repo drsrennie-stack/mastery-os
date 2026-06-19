@@ -13,6 +13,8 @@
     --gold:#C9A14A; --gold-light:#D9B065; --cream:#F5F1E8; --white:#FFFFFF; --offwhite:#FAFAF9;
     --ink:#080F1E; --ink-soft:rgba(8,15,30,0.74); --line:rgba(8,15,30,0.10);
     --shadow:0 1px 3px rgba(8,15,30,0.08); --lift:0 10px 26px -12px rgba(8,15,30,0.26);
+    --card-rest:0 6px 18px -10px rgba(8,15,30,0.22),0 2px 5px -2px rgba(8,15,30,0.07);
+    --card-hover:0 18px 40px -14px rgba(8,15,30,0.30),0 6px 14px -5px rgba(8,15,30,0.12);
     --disp:'Plus Jakarta Sans',system-ui,sans-serif;
   }
   *{box-sizing:border-box} html,body{margin:0}
@@ -43,8 +45,9 @@
   li b{color:var(--navy)}
   .against li::before{background:var(--rust);border-radius:50%}
 
-  .card{background:var(--white);border-left:4px solid var(--gold);border-radius:8px;padding:18px 20px;box-shadow:var(--shadow);margin:0 0 14px}
-  .card.rust{border-left-color:var(--rust)}
+  .card{background:var(--white);border-radius:10px;padding:18px 20px;box-shadow:var(--card-rest);margin:0 0 14px;transition:box-shadow .22s cubic-bezier(.22,.61,.36,1),transform .22s cubic-bezier(.22,.61,.36,1)}
+  .card:hover{transform:translateY(-3px);box-shadow:var(--card-hover),inset 0 2px 0 0 var(--gold)}
+  .card.rust:hover{box-shadow:var(--card-hover),inset 0 2px 0 0 var(--rust)}
   .card p{margin:0}
 
   .built{background:var(--white);border-radius:8px;box-shadow:var(--shadow);padding:6px 20px}
@@ -248,7 +251,7 @@
   </div>
   <p class="kv"><b>Typeface.</b> Plus Jakarta Sans throughout. Headings weight 800 with tight letter-spacing (-0.02em). Eyebrows and labels are uppercase, weight 700, letter-spaced 0.18 to 0.28em, small.</p>
   <p class="kv"><b>Logo.</b> Three standing figures (left gold, center terracotta, right cream on dark; recolorable). Wordmark with the accent word in terracotta on light, gold on dark.</p>
-  <p class="kv"><b>Design language.</b> Navy headings and primary actions. Terracotta eyebrows, links, and accents. Gold as a left-border accent on info cards and as the dark-background accent. Small radii (3 to 10px). Subtle rest shadows with hover-lift on interactive elements only. No bookend borders. Dark navy footer with cream text and a gold byline. Strong accessibility (skip link, visible focus, reduced-motion support).</p>
+  <p class="kv"><b>Design language.</b> Navy headings and primary actions. Terracotta eyebrows, links, and accents. Gold as the dark-background accent. Info cards are white and sit lifted off the page on a soft layered shadow, with no edge borders; color arrives on hover as a deeper lift, a warmed section label, and a thin top accent line (gold, or terracotta on accent cards). Small radii (3 to 10px). No bookend borders anywhere. Dark navy footer with cream text and a gold byline. Strong accessibility (skip link, visible focus, reduced-motion support).</p>
   <p class="kv"><b>Reel palette decision.</b> The social and marketing reels use white, dark navy, and dark terracotta only. Cream is dropped from light slides. On dark navy, gold or a lighter terracotta carries emphasis for legibility; on white, deep terracotta carries it.</p>
   <p class="kv"><b>Domain.</b> medmasterscollaborative.com, set two-tone with "masters" in terracotta.</p>
   <p class="kv"><b>Navy update.</b> The house navy was deepened to a near-black #080F1E (deepest #04070F), replacing the earlier #0B1530. It carries the gold and terracotta accents harder and reads as more premium. All product surfaces, marketing pages, and reels follow the new value.</p>

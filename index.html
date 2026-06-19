@@ -14,6 +14,8 @@
   --ink:#080F1E; --ink-soft:rgba(8,15,30,0.74); --ink-faint:rgba(8,15,30,0.50);
   --line:rgba(8,15,30,0.10); --line-soft:rgba(8,15,30,0.06);
   --shadow:0 1px 3px rgba(8,15,30,0.08); --lift:0 14px 34px -16px rgba(8,15,30,0.34);
+  --card-rest:0 6px 18px -10px rgba(8,15,30,0.22),0 2px 5px -2px rgba(8,15,30,0.07);
+  --card-hover:0 18px 40px -14px rgba(8,15,30,0.30),0 6px 14px -5px rgba(8,15,30,0.12);
   --disp:'Plus Jakarta Sans',system-ui,sans-serif;
   --r-sm:4px; --r:8px; --r-lg:14px;
   --ease:cubic-bezier(.22,.61,.36,1);
@@ -57,6 +59,13 @@ button{font-family:inherit;cursor:pointer}
 .txt{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);color:#fff;font-family:inherit;font-size:18px;padding:14px 16px;border-radius:var(--r);outline:none;transition:border-color .2s,background .2s}
 .txt:focus{border-color:var(--gold);background:rgba(255,255,255,.10)}
 .txt::placeholder{color:rgba(245,241,232,.4)}
+input.txt[type="date"]{
+  color-scheme:dark;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23C9A14A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;background-size:19px 19px;
+}
+input.txt[type="date"]::-webkit-calendar-picker-indicator{opacity:0;width:30px;height:30px;cursor:pointer}
+.prow-d{background-position:right 10px center;background-size:17px 17px}
 
 /* choice cards */
 .choices{display:grid;gap:12px;max-width:440px;margin:0 auto;text-align:left}
@@ -70,6 +79,11 @@ button{font-family:inherit;cursor:pointer}
 .choice[aria-pressed="true"] .ck svg{opacity:1}
 .choice .ttl{font-weight:700;color:#fff;font-size:15px;display:block;margin-bottom:3px}
 .choice .dsc{font-size:13px;opacity:.78;line-height:1.45}
+.choice .fx{display:block;margin-top:9px;font-size:12px;color:var(--gold);line-height:1.45;font-weight:600}
+#needOptions{margin-top:6px}
+.finetune{max-width:440px;margin:16px auto 0;text-align:left}
+.finetune>summary{cursor:pointer;color:var(--gold);font-size:13px;font-weight:700;list-style:none}
+.finetune>summary::-webkit-details-marker{display:none}
 
 /* course catalog */
 .catalog{max-width:460px;margin:0 auto;text-align:left;max-height:46vh;overflow:auto;padding:2px 8px 4px 2px}
@@ -87,6 +101,22 @@ button{font-family:inherit;cursor:pointer}
 .chip{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.18);color:var(--cream);font-family:inherit;font-size:15px;font-weight:600;padding:11px 18px;border-radius:999px;transition:.2s}
 .chip:hover{border-color:rgba(201,161,74,.6)}
 .chip[aria-pressed="true"]{border-color:var(--gold);background:var(--gold);color:var(--navy)}
+.chip.band{border-color:rgba(201,161,74,.55);background:rgba(201,161,74,.12);color:#fff}
+.chip.band[aria-pressed="true"]{background:var(--gold);color:var(--navy)}
+.rec-line{font-size:15px;color:var(--cream);opacity:.9;margin:20px auto 0;max-width:42ch}
+.rec-line b{color:#fff}
+.reclbl{display:block;text-align:center;margin:20px 0 8px;color:var(--gold)}
+.reccap{font-size:12px;color:var(--cream);opacity:.6;margin:10px 0 0}
+.nomargintop{margin-top:14px}
+.planall{max-width:440px;margin:20px auto 0;text-align:left}
+.planall>summary{cursor:pointer;color:var(--gold);font-size:13px;font-weight:700;list-style:none}
+.planall>summary::-webkit-details-marker{display:none}
+.prow{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+.prow .txt{font-size:14px;padding:10px 12px}
+.prow-d{flex:0 0 142px}
+.prow-t{flex:1;min-width:0}
+.prow-x{flex:none;width:34px;height:34px;border-radius:var(--r);border:1px solid rgba(255,255,255,.2);background:transparent;color:var(--cream);font-size:18px;line-height:1}
+.prow-x:hover{border-color:var(--rust);color:#fff}
 
 /* toggles (learn-best) */
 .toggles{display:grid;gap:2px;max-width:440px;margin:0 auto;background:rgba(255,255,255,.05);border-radius:var(--r);overflow:hidden;text-align:left}
@@ -159,9 +189,11 @@ button{font-family:inherit;cursor:pointer}
 
 /* grid of cards under front door */
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:24px}
-.panel-card{background:var(--white);border-radius:var(--r);border-left:4px solid var(--gold);box-shadow:var(--shadow);padding:20px 22px}
-.panel-card.rust{border-left-color:var(--rust)}
-.panel-card h3{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);margin:0 0 14px}
+.panel-card{background:var(--white);border-radius:10px;box-shadow:var(--card-rest);padding:22px 24px;transition:box-shadow .22s var(--ease),transform .22s var(--ease)}
+.panel-card:hover{transform:translateY(-3px);box-shadow:var(--card-hover),inset 0 2px 0 0 var(--gold)}
+.panel-card.rust:hover{box-shadow:var(--card-hover),inset 0 2px 0 0 var(--rust)}
+.panel-card h3{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);margin:0 0 14px;transition:color .2s}
+.panel-card:hover h3{color:var(--rust)}
 .ready-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .ready-row:last-child{margin-bottom:0}
 .ready-row .nm{font-size:14px;font-weight:600;color:var(--navy);flex:none;width:96px}
@@ -179,6 +211,26 @@ button{font-family:inherit;cursor:pointer}
 .plan-item.done .lab{color:var(--ink-faint);text-decoration:line-through}
 .plan-item .lab{color:var(--navy);font-weight:600;flex:1}
 .plan-item .fmt{font-size:12px;color:var(--ink-faint)}
+.kvline{font-size:14px;color:var(--ink-soft);margin:0 0 12px;line-height:1.5}
+.kvline b{color:var(--navy);font-weight:700}
+.kvline.subtle{font-size:12.5px;color:var(--ink-faint);margin:10px 0 0}
+.strip{display:flex;flex-direction:column;gap:6px}
+.striprow{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:var(--r);background:rgba(8,15,30,.03);font-size:13.5px}
+.striprow.next{background:rgba(201,161,74,.14);box-shadow:inset 0 0 0 1.5px rgba(201,161,74,.5)}
+.striprow.done{opacity:.5}
+.striprow .sd{flex:none;width:58px;font-weight:700;color:var(--rust);font-variant-numeric:tabular-nums}
+.striprow .st{flex:1;color:var(--navy);font-weight:600;min-width:0}
+.striprow.done .st{text-decoration:line-through}
+.sadv{flex:none;background:var(--navy);color:#fff;border:0;border-radius:999px;font-family:inherit;font-size:11px;font-weight:700;padding:5px 11px}
+.sadv:hover{background:#13234d}
+.sdone{flex:none;font-size:10.5px;font-weight:700;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.08em}
+.checkin{background:var(--white);border-radius:10px;box-shadow:var(--card-rest),inset 0 2px 0 0 var(--rust);padding:18px 20px;margin:0 0 18px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.checkin .ci-tx{flex:1;min-width:240px;font-size:14.5px;color:var(--ink-soft);line-height:1.5}
+.checkin .ci-tx b{color:var(--navy)}
+.ci-row{display:flex;gap:8px;flex-wrap:wrap}
+.ci-btn{border:1.5px solid var(--line);background:var(--white);border-radius:var(--r);font-family:inherit;font-weight:700;font-size:13px;padding:10px 14px;color:var(--navy);transition:.16s}
+.ci-btn:hover{border-color:var(--gold);transform:translateY(-1px)}
+.ci-btn.keep{background:rgba(8,15,30,.04)}
 
 /* ===================== SESSION RUNNER ===================== */
 #session{position:fixed;inset:0;z-index:40;background:var(--offwhite);display:flex;flex-direction:column;opacity:0}
@@ -199,6 +251,13 @@ button{font-family:inherit;cursor:pointer}
 
 /* activity picker */
 .picker h2{font-size:24px;font-weight:800;margin:0 0 4px}
+.intro h2{font-size:26px;font-weight:800;margin:4px 0 14px}
+.introp{color:var(--ink-soft);font-size:15.5px;line-height:1.6;margin:0 0 18px;max-width:60ch}
+.introp.small{font-size:14px;color:var(--ink-faint)}
+.introrow{display:flex;gap:12px;margin:0 0 20px;flex-wrap:wrap}
+.introrow div{flex:1;min-width:130px;background:var(--white);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;text-align:center;border-top:3px solid var(--gold)}
+.introrow b{display:block;color:var(--navy);font-size:16px;font-weight:800;margin-bottom:2px}
+.introrow span{font-size:12px;color:var(--ink-faint)}
 .picker .lead{color:var(--ink-soft);font-size:15px;margin:0 0 4px}
 .picker .sysline{color:var(--rust);font-size:13px;font-weight:700;margin:0 0 24px}
 .acts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -232,6 +291,9 @@ button{font-family:inherit;cursor:pointer}
 .label-lab .lead{color:var(--ink-soft);font-size:15px;margin:0 0 6px}
 .label-lab .prompt{font-size:21px;font-weight:800;color:var(--navy);margin:0 0 20px}
 .label-lab .prompt em{color:var(--rust);font-style:normal}
+.lab-speak{vertical-align:middle;margin-left:10px;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--line);background:var(--white);color:var(--rust);display:inline-grid;place-items:center;box-shadow:var(--card-rest);transition:.16s;cursor:pointer}
+.lab-speak:hover{transform:translateY(-1px);border-color:var(--gold);color:var(--navy)}
+.lab-speak svg{width:17px;height:17px}
 .diagram{position:relative;background:var(--white);border-radius:var(--r-lg);box-shadow:var(--lift);padding:18px;margin:0 auto;max-width:380px}
 .diagram svg{display:block;width:100%;height:auto}
 .hot{position:absolute;width:26px;height:26px;border-radius:50%;border:2.5px solid var(--rust);background:rgba(139,58,46,.12);transform:translate(-50%,-50%);transition:.16s;cursor:pointer}
@@ -243,9 +305,36 @@ button{font-family:inherit;cursor:pointer}
 .lab-feedback.ok{color:#2f7d4f}
 .lab-feedback.no{color:var(--rust)}
 
-/* tutor (prompt export) */
+/* tutor */
 .tutor .promptbox{background:var(--navy);color:var(--cream);border-radius:var(--r);padding:20px;font-size:13.5px;line-height:1.6;white-space:pre-wrap;max-height:280px;overflow:auto;font-family:ui-monospace,Menlo,monospace}
 .tutor .row{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+.exam-cfg .lead{color:var(--ink-soft);font-size:15px;margin:0 0 6px}
+.exam-cfg .prompt{font-size:21px;font-weight:800;color:var(--navy);margin:0 0 12px}
+.exam-cfg .prompt em{color:var(--rust);font-style:normal}
+.exam-cfg .cfg-line{font-size:14px;color:var(--ink-soft);line-height:1.6;margin:0 0 18px;max-width:60ch}
+.exam-cfg .cfg-line b{color:var(--navy)}
+.adj{margin-top:12px}
+.adjlbl{display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--rust);margin:12px 0 6px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{border:1.5px solid var(--line);background:var(--white);border-radius:var(--r);font-family:inherit;font-weight:700;font-size:13px;padding:9px 14px;color:var(--ink-soft);transition:.15s}
+.seg button[aria-pressed="true"]{border-color:var(--gold);background:rgba(201,161,74,.14);color:var(--navy)}
+/* chat */
+.chat{display:flex;flex-direction:column;height:100%}
+.chat-log{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:4px 2px 14px;min-height:240px;max-height:52vh}
+.bub{max-width:84%;padding:13px 16px;border-radius:14px;font-size:15px;line-height:1.55}
+.bub.assistant{align-self:flex-start;background:var(--white);color:var(--navy);box-shadow:var(--card-rest);border-bottom-left-radius:4px}
+.bub.user{align-self:flex-end;background:var(--navy);color:#fff;border-bottom-right-radius:4px}
+.bub.typing{color:var(--ink-faint);font-style:italic}
+.bub.typing span{animation:blink 1.2s infinite}.bub.typing span:nth-child(2){animation-delay:.2s}.bub.typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}
+.chat-in{display:flex;gap:10px;align-items:flex-end}
+.chat-in textarea,.txtin{flex:1;font-family:inherit;font-size:15px;border:1.5px solid var(--line);border-radius:var(--r);padding:12px 14px;outline:none;resize:none;background:var(--white);color:var(--navy);transition:border-color .18s}
+.chat-in textarea:focus,.txtin:focus{border-color:var(--gold)}
+.chat-send{flex:none;background:var(--navy);color:#fff;border:0;border-radius:var(--r);font-family:inherit;font-weight:700;font-size:14px;padding:13px 20px;transition:.15s;align-self:stretch}
+.chat-send:hover{background:#13234d}
+.chat-send[disabled]{opacity:.5}
+.notconn .prompt{font-size:20px;font-weight:800;color:var(--navy)}
+.notconn .lead{color:var(--ink-soft);font-size:14.5px;line-height:1.6;margin:0 0 16px;max-width:60ch}
 
 /* break screen */
 .breakscreen{text-align:center;max-width:440px;margin:0 auto}
@@ -405,41 +494,45 @@ const HOTSPOTS = [
 /* ---------- state ---------- */
 const NEEDS = [
   {key:'shortBlocks', b:'Shorter focus blocks', s:'Work in 15-minute stretches instead of 25.'},
-  {key:'noClock', b:'No clock on recall', s:'A timer measures speed, not knowing. The recall stays.'},
+  {key:'noClock', b:'Turn off the countdown clock', s:'A clock can measure speed, not knowing. We hide it and keep the gentle break rhythm.'},
   {key:'clutterfree', b:'One thing at a time', s:'Hide everything except the task in front of you.'},
   {key:'larger', b:'Larger, easier-to-read text', s:'Bigger type and more breathing room.'},
   {key:'calm', b:'Calmer visuals', s:'Drop ambient glow and heavy shadows.'},
-  {key:'easierread', b:'Generous line spacing', s:'Looser lines for easier tracking.'}
+  {key:'easierread', b:'Generous line spacing', s:'Looser lines for easier tracking.'},
+  {key:'readAloud', b:'Read structures aloud', s:'A voice names each structure as it comes up.'}
 ];
 const BUNDLES = [
   {id:'adhd', ttl:'Hard to stay on one thing', dsc:'Short blocks, frequent breaks, one task on screen.', sets:['shortBlocks','clutterfree']},
-  {id:'slow', ttl:'I need more time, not less knowing', dsc:'Takes the clock off recall and shortens blocks.', sets:['noClock','shortBlocks']},
+  {id:'slow', ttl:'I need more time, not less knowing', dsc:'Turns the clock off and shortens blocks.', sets:['noClock','shortBlocks']},
   {id:'over', ttl:'Big tasks feel overwhelming', dsc:'One task at a time, calmer screen.', sets:['clutterfree','calm']},
-  {id:'read', ttl:'Reading on screen is tiring', dsc:'Larger text and generous spacing.', sets:['larger','easierread']}
+  {id:'read', ttl:'Reading on screen is tiring', dsc:'Larger text, generous spacing, structures read aloud.', sets:['larger','easierread','readAloud']}
 ];
 
 const CATALOG = [
   {group:'Foundational sciences', items:[
-    {name:'Anatomy', d:'Structures, regions, and the lab practical.', status:'live'},
-    {name:'Physiology', d:'Mechanisms and the systems that run them.', status:'soon'},
-    {name:'Anatomy & Physiology I', d:'Combined first-semester course.', status:'soon'},
-    {name:'Anatomy & Physiology II', d:'The second-semester systems.', status:'soon'},
-    {name:'Anatomy & Physiology (Non-Majors)', d:'One-semester survey for allied health and kinesiology.', status:'soon'},
-    {name:'Microbiology', d:'Organisms, identification, and infectious disease.', status:'soon'}
+    {name:'Anatomy', d:'Structures, regions, and the lab practical.', status:'live', profile:'lab-memorization'},
+    {name:'Physiology', d:'Mechanisms and the systems that run them.', status:'soon', profile:'lecture'},
+    {name:'Anatomy & Physiology I', d:'Combined first-semester course.', status:'soon', profile:'lab-memorization'},
+    {name:'Anatomy & Physiology II', d:'The second-semester systems.', status:'soon', profile:'lab-memorization'},
+    {name:'Anatomy & Physiology (Non-Majors)', d:'One-semester survey for allied health and kinesiology.', status:'soon', profile:'lab-memorization'},
+    {name:'Microbiology', d:'Organisms, identification, and infectious disease.', status:'soon', profile:'lab-memorization'}
   ]},
   {group:'Clinical sciences', items:[
-    {name:'Pathophysiology', d:'How normal function breaks, and why.', status:'soon'},
-    {name:'Pharmacology', d:'Drug classes, mechanisms, and safe administration.', status:'soon'}
+    {name:'Pathophysiology', d:'How normal function breaks, and why.', status:'soon', profile:'lecture'},
+    {name:'Pharmacology', d:'Drug classes, mechanisms, and safe administration.', status:'soon', profile:'lecture'}
   ]},
   {group:'Licensure prep', items:[
-    {name:'Nursing (NCLEX-RN)', d:'Clinical judgment, prioritization, patient safety, and pharmacology across the Next Gen format.', status:'soon'}
+    {name:'Nursing (NCLEX-RN)', d:'Clinical judgment, prioritization, patient safety, and pharmacology across the Next Gen format.', status:'soon', profile:'lecture'}
   ]}
 ];
 
 function freshState(){
+  const _d=new Date(); _d.setDate(_d.getDate()+14); const _iso=_d.toISOString().slice(0,10);
   return {
     setupDone:false, name:'', course:'Anatomy',
-    goal:'B', hours:6, examDays:14, mode:'Steady',
+    goal:'B', credits:4, hours:10,
+    nextPracticalDate:_iso, examDays:14, practicalCount:5, practicals:[],
+    mode:'Steady', checkInDue:false, seenPomodoroIntro:false, apiKey:'', tutorEndpoint:'',
     needs:{}, bundles:[],
     mastery:{}, // topic -> {level:0..2, score:0..1}
     plan:[
@@ -449,7 +542,7 @@ function freshState(){
     ]
   };
 }
-let S = store.get('mastery-os') || freshState();
+let S = Object.assign(freshState(), store.get('mastery-os') || {});
 TOPICS.forEach(t=>{ if(!S.mastery[t]) S.mastery[t]={level:0, score: t==='Heart wall'?0.35: t==='Valves'?0.45:0.6}; });
 function save(){ store.set('mastery-os', S); }
 
@@ -475,8 +568,8 @@ const LOGO_DARK = `<span class="logo on-dark intro-logo" style="--logo-h:64px">
   </g></svg></span>`;
 
 let step = 0;
-const STEPS = ['welcome','name','course','goal','time','exam','needs','build','done'];
-const realSteps = ['name','course','goal','time','exam','needs']; // dotted progress only over these
+const STEPS = ['welcome','name','course','goal','time','practicals','needs','build','done'];
+const realSteps = ['name','course','goal','time','practicals','needs']; // dotted progress only over these
 
 function renderDots(){
   const dots = $('#dots'); dots.innerHTML='';
@@ -532,36 +625,46 @@ function setupView(){
   else if(which==='time'){
     html = `<p class="eyebrow" style="color:var(--gold)">Your time</p>
       <h2>How much study time per week?</h2>
-      <p class="sub">Be honest, not aspirational. The schedule is built around what you actually have.</p>
-      <div class="chips" id="hourChips">
-        ${[3,6,9,12].map(h=>`<button class="chip" data-h="${h}" aria-pressed="${S.hours===h}">${h} hours</button>`).join('')}
-      </div>`;
+      <p class="sub">We anchor to the standard guideline of about 2 to 3 hours of study per credit hour, then you set what you can actually give. The bar does not move either way.</p>
+      <div class="field" style="max-width:440px">
+        <label class="lbl" style="text-align:center">This course is</label>
+        <div class="chips" id="creditChips">
+          ${[3,4,5].map(c=>`<button class="chip" data-cr="${c}" aria-pressed="${S.credits===c}">${c} credits</button>`).join('')}
+        </div>
+      </div>
+      <div id="recRegion"></div>`;
   }
-  else if(which==='exam'){
-    const d=new Date(); d.setDate(d.getDate()+ (S.examDays||14));
-    const iso=d.toISOString().slice(0,10);
-    html = `<p class="eyebrow" style="color:var(--gold)">Your exam</p>
-      <h2>When is your practical?</h2>
-      <p class="sub">Every review is anchored to this date, with a guaranteed final pass the day before.</p>
-      <div class="field"><label class="lbl" for="exam">Practical date</label>
-      <input class="txt" id="exam" type="date" value="${iso}" min="${new Date().toISOString().slice(0,10)}"></div>`;
+  else if(which==='practicals'){
+    html = `<p class="eyebrow" style="color:var(--gold)">Your practicals</p>
+      <h2>When is your next practical?</h2>
+      <p class="sub">Anatomy courses usually run several practicals across the term. We anchor everything to your next one and keep earlier material sharp for any cumulative final.</p>
+      <div class="field"><label class="lbl" for="nextp">Next practical date</label>
+        <input class="txt" id="nextp" type="date" value="${S.nextPracticalDate}" min="${todayIso()}"></div>
+      <div class="field" style="margin-top:18px"><label class="lbl">How many practicals this term?</label>
+        <div class="chips" id="pcount">
+          ${[{v:1,l:'Just one'},{v:4,l:'4'},{v:5,l:'5'},{v:7,l:'7'}].map(o=>`<button class="chip" data-pc="${o.v}" aria-pressed="${S.practicalCount===o.v}">${o.l}</button>`).join('')}
+        </div></div>
+      <details class="planall">
+        <summary>Plan the whole term now (optional)</summary>
+        <p class="sub" style="margin:12px auto 12px;font-size:13.5px">Add each practical\u2019s date and topics so the schedule can space earlier material toward later practicals and the final. You can do this later, or your instructor can provide it.</p>
+        <div id="plist"></div>
+        <button class="btn ghost" id="addP" style="border:1px dashed rgba(255,255,255,.28);border-radius:var(--r);padding:11px 18px">+ Add a practical</button>
+      </details>`;
   }
   else if(which==='needs'){
+    const showOpts = S.bundles.length>0 || Object.values(S.needs).some(Boolean);
     html = `<p class="eyebrow" style="color:var(--gold)">How you learn best</p>
-      <h2>Let\u2019s fit the platform to you.</h2>
-      <p class="sub">Pick anything that sounds like you. These pre-set some options you can fine-tune next. You are choosing needs, never a diagnosis.</p>
-      <div class="choices" id="bundles">
-        ${BUNDLES.map(b=>`<button class="choice" data-bundle="${b.id}" aria-pressed="${S.bundles.includes(b.id)}">
+      <h2>Do you have any learning needs we should fit to?</h2>
+      <p class="sub">Optional and private. Most people are fine with the standard setup. If something sounds like you, take a look, you can see what each one changes before deciding. The bar stays the same either way.</p>
+      <div class="choices" id="gate">
+        <button class="choice" data-gate="standard" aria-pressed="${!showOpts}">
           <span class="ck">${I.check}</span>
-          <span><span class="ttl">${b.ttl}</span><span class="dsc">${b.dsc}</span></span></button>`).join('')}
+          <span><span class="ttl">No, the standard setup is fine</span><span class="dsc">Keep everything as it comes. You can change this later in settings.</span></span></button>
+        <button class="choice" data-gate="look" aria-pressed="${showOpts}">
+          <span class="ck">${I.check}</span>
+          <span><span class="ttl">Let me look at the options</span><span class="dsc">See what each one changes, then pick only what helps.</span></span></button>
       </div>
-      <details style="max-width:440px;margin:18px auto 0;text-align:left">
-        <summary style="cursor:pointer;color:var(--gold);font-size:13px;font-weight:700">Fine-tune the individual settings</summary>
-        <div class="toggles" style="margin-top:12px" id="needToggles">
-          ${NEEDS.map(n=>`<div class="tg"><span class="tx"><b>${n.b}</b><span>${n.s}</span></span>
-            <button class="sw" data-need="${n.key}" aria-pressed="${!!S.needs[n.key]}" aria-label="${n.b}"></button></div>`).join('')}
-        </div>
-      </details>
+      <div id="needOptions" class="${showOpts?'':'hidden'}"></div>
       <p class="note"><b>The bar does not move.</b> These remove friction, not rigor. The exam is the same exam.</p>`;
   }
   else if(which==='build'){
@@ -572,14 +675,15 @@ function setupView(){
     back.classList.add('hidden'); next.classList.add('hidden');
   }
   else if(which==='done'){
-    const d=new Date(); d.setDate(d.getDate()+S.examDays);
+    const pcount = S.practicals.filter(p=>p.date).length || S.practicalCount;
     html = `<div style="font-size:64px;line-height:1;margin-bottom:8px">${checkRing()}</div>
       <h2>You\u2019re all set${S.name?', '+esc(S.name):''}.</h2>
-      <p class="sub">Your route to the ${esc(S.course)} practical is mapped${ S.bundles.length?', tuned to how you learn,':',' } and your reviews are scheduled. Here\u2019s the plan in one line:</p>
+      <p class="sub">Your route to the next ${esc(S.course)} practical is mapped${ S.bundles.length?', tuned to how you learn,':',' } and your reviews are scheduled. Here\u2019s the plan in one line:</p>
       <div style="background:rgba(255,255,255,.06);border-radius:var(--r);padding:18px;max-width:420px;margin:0 auto;text-align:left;font-size:14px;line-height:1.7">
         <div>Target: <b style="color:#fff">${goalLabel(S.goal)}</b></div>
-        <div>Time: <b style="color:#fff">${S.hours} hours/week</b></div>
-        <div>Practical: <b style="color:#fff">${d.toLocaleDateString(undefined,{month:'long',day:'numeric'})}</b> (${S.examDays} days)</div>
+        <div>Time: <b style="color:#fff">${S.hours} hours/week</b> for ${S.credits} credits</div>
+        <div>Next practical: <b style="color:#fff">${fmtLong(S.nextPracticalDate)}</b> (${S.examDays} days)</div>
+        <div>Practicals this term: <b style="color:#fff">${pcount}</b></div>
         <div>Mode: <b style="color:#fff">${S.mode}</b>, set from your goal</div>
       </div>`;
     next.textContent='Open Mastery OS';
@@ -625,31 +729,35 @@ function wireStep(which){
     }));
   }
   if(which==='time'){
-    panelEl.querySelectorAll('[data-h]').forEach(b=>b.addEventListener('click',()=>{
-      panelEl.querySelectorAll('[data-h]').forEach(x=>x.setAttribute('aria-pressed','false'));
-      b.setAttribute('aria-pressed','true'); S.hours=+b.dataset.h;
+    panelEl.querySelectorAll('[data-cr]').forEach(b=>b.addEventListener('click',()=>{
+      panelEl.querySelectorAll('[data-cr]').forEach(x=>x.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true'); S.credits=+b.dataset.cr; S.hours=computeRec(S.credits).mid; renderRec();
     }));
+    const r0=computeRec(S.credits); if(!r0.chips.includes(S.hours)) S.hours=r0.mid;
+    renderRec();
   }
-  if(which==='exam'){
-    const ex=$('#exam');
-    ex.addEventListener('change',()=>{
-      const diff=Math.max(1, Math.round((new Date(ex.value)-new Date())/86400000));
-      S.examDays=diff;
-    });
+  if(which==='practicals'){
+    const np=$('#nextp');
+    np.addEventListener('change',()=>{ S.nextPracticalDate=np.value; S.examDays=daysUntil(np.value); });
+    panelEl.querySelectorAll('[data-pc]').forEach(b=>b.addEventListener('click',()=>{
+      panelEl.querySelectorAll('[data-pc]').forEach(x=>x.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true'); S.practicalCount=+b.dataset.pc;
+    }));
+    renderPlist();
+    $('#addP').addEventListener('click',()=>{ S.practicals.push({date:'',topic:'',done:false}); renderPlist(); });
   }
   if(which==='needs'){
-    const sync=()=>{ NEEDS.forEach(n=>{ const t=panelEl.querySelector(`[data-need="${n.key}"]`); if(t) t.setAttribute('aria-pressed', !!S.needs[n.key]); }); };
-    panelEl.querySelectorAll('[data-bundle]').forEach(b=>b.addEventListener('click',()=>{
-      const id=b.dataset.bundle, bun=BUNDLES.find(x=>x.id===id);
-      const isOn=S.bundles.includes(id);
-      if(isOn){ S.bundles=S.bundles.filter(x=>x!==id); }
-      else { S.bundles.push(id); bun.sets.forEach(k=>S.needs[k]=true); }
-      b.setAttribute('aria-pressed', !isOn);
-      sync();
+    const gateBtns=panelEl.querySelectorAll('[data-gate]');
+    const setGate=(g)=>gateBtns.forEach(x=>x.setAttribute('aria-pressed', x.dataset.gate===g));
+    gateBtns.forEach(b=>b.addEventListener('click',()=>{
+      if(b.dataset.gate==='standard'){
+        S.bundles=[]; S.needs={}; setGate('standard');
+        $('#needOptions').classList.add('hidden'); $('#needOptions').innerHTML='';
+      } else {
+        setGate('look'); $('#needOptions').classList.remove('hidden'); renderNeedOptions();
+      }
     }));
-    panelEl.querySelectorAll('[data-need]').forEach(t=>t.addEventListener('click',()=>{
-      const k=t.dataset.need; S.needs[k]=!S.needs[k]; t.setAttribute('aria-pressed', !!S.needs[k]);
-    }));
+    if(!$('#needOptions').classList.contains('hidden')) renderNeedOptions();
   }
 }
 
@@ -719,6 +827,13 @@ function renderHome(){
   const blocks = S.needs.shortBlocks?'15-min':'25-min';
 
   $('.main').innerHTML = `
+  ${S.checkInDue?`<div class="checkin fade-enter" id="checkin">
+    <div class="ci-tx"><b>You just wrapped a practical.</b> Reassess your weekly hours for the next stretch? The right number depends on how that one went and what you\u2019re aiming for.</div>
+    <div class="ci-row">
+      <button class="ci-btn" data-hr="up">Add 2 hrs</button>
+      <button class="ci-btn keep" data-hr="keep">Keep ${S.hours}</button>
+      <button class="ci-btn" data-hr="down">Cut 2 hrs</button>
+    </div></div>`:''}
   <div class="rightnow fade-enter">
     <p class="eyebrow">Right now</p>
     <h1>${nt.fmt==='Labeling'?'Label the heart, anterior view':'Recall: '+nt.topic.toLowerCase()}</h1>
@@ -731,7 +846,23 @@ function renderHome(){
     <button class="start" id="startBtn">${I.play} Start now</button>
   </div>
 
-  <div id="secondary" class="grid">
+  <div id="secondary" class="grid"></div>`;
+  $('#secondary').innerHTML = secondaryHTML();
+  $('#startBtn').addEventListener('click',()=>openSession(nt));
+  document.querySelectorAll('[data-adv]').forEach(b=>b.addEventListener('click',()=>{
+    const obj=termList()[+b.dataset.adv]; if(obj){ obj.done=true; advanceNext(); }
+  }));
+  document.querySelectorAll('[data-hr]').forEach(b=>b.addEventListener('click',()=>{
+    if(b.dataset.hr==='up') S.hours+=2;
+    else if(b.dataset.hr==='down') S.hours=Math.max(2,S.hours-2);
+    S.checkInDue=false; save(); renderHome();
+    toast(b.dataset.hr==='keep'?'Hours unchanged.':'Weekly hours set to '+S.hours+'.');
+  }));
+}
+
+function secondaryHTML(){
+  const days=S.examDays;
+  return `
     <div class="panel-card fade-enter">
       <h3>Practical readiness</h3>
       ${TOPICS.map(t=>{const p=Math.round(S.mastery[t].score*100);return `
@@ -746,13 +877,17 @@ function renderHome(){
       </div>
       <p style="font-size:13.5px;color:var(--ink-soft);margin:16px 0 0">These are pulled from your accuracy, not a guess. They move as you practice.</p>
     </div>
+    <div class="panel-card fade-enter">
+      <h3>Schedule</h3>
+      <p class="kvline">Next practical in <b>${days}</b> days, on ${fmtLong(S.nextPracticalDate)}. <b>${S.practicals.filter(p=>p.date).length||S.practicalCount}</b> this term.</p>
+      ${semesterStrip()}
+    </div>
     <div class="panel-card fade-enter" style="grid-column:1/-1">
       <h3>Today\u2019s plan</h3>
       ${S.plan.map(p=>`<div class="plan-item ${p.done?'done':''}"><span class="tk">${I.check}</span>
         <span class="lab">${p.lab}</span><span class="fmt">${p.fmt}</span></div>`).join('')}
     </div>
   </div>`;
-  $('#startBtn').addEventListener('click',()=>openSession(nt));
 }
 
 /* ====================================================================== */
@@ -761,11 +896,31 @@ function renderHome(){
 let sess=null, timerInt=null;
 function openSession(nt){
   const focusMin = S.needs.shortBlocks?15:25;
-  sess={ task:nt, phase:'pick', focusSec:focusMin*60, left:focusMin*60, headsDown:0, results:{right:0,total:0} };
+  sess={ task:nt, phase:'intro', focusSec:focusMin*60, left:focusMin*60, headsDown:0, results:{right:0,total:0} };
   sessionEl.setAttribute('aria-hidden','false'); sessionEl.classList.add('live');
   renderSessionShell();
-  renderPicker();
+  if(S.seenPomodoroIntro) renderPicker(); else renderIntro();
   startTimer();
+}
+function renderIntro(){
+  sess.phase='intro'; updateTimer();
+  const mins = S.needs.shortBlocks?15:25;
+  const clockLine = S.needs.noClock
+    ? `You\u2019ve turned the clock off, so you\u2019ll see the gentle rhythm without a ticking countdown. The breaks still arrive on their own.`
+    : `If a ticking clock stresses you more than it helps, the no-clock option in settings hides it and keeps the rhythm.`;
+  $('#sInner').innerHTML=`<div class="intro fade-enter">
+    <p class="eyebrow" style="color:var(--rust)">How sessions work</p>
+    <h2>This runs on the Pomodoro rhythm.</h2>
+    <p class="introp">You work in one focused block, take a short break, then go again. The breaks aren\u2019t slacking off, they\u2019re what makes long, effortful study sustainable and help you get through dense material without burning out. It\u2019s one of the most recommended techniques for focus and momentum.</p>
+    <div class="introrow">
+      <div><b>${mins} min</b><span>focused block</span></div>
+      <div><b>Short break</b><span>then back in</span></div>
+      <div><b>Repeat</b><span>momentum builds</span></div>
+    </div>
+    <p class="introp small">${clockLine}</p>
+    <button class="btn primary block" id="introGo" style="background:var(--navy);color:#fff;max-width:320px;margin:6px auto 0">Start the first block</button>
+  </div>`;
+  $('#introGo').addEventListener('click',()=>{ S.seenPomodoroIntro=true; save(); renderPicker(); });
 }
 function closeSession(){
   clearInterval(timerInt); timerInt=null;
@@ -789,7 +944,7 @@ function renderSessionShell(){
 function startTimer(){
   clearInterval(timerInt);
   timerInt=setInterval(()=>{
-    if(sess.phase==='break'){ return; }
+    if(sess.phase==='break' || sess.phase==='intro'){ return; }
     sess.left--;
     if(sess.left<=0){ sess.left=0; updateTimer(); enterBreak(); return; }
     updateTimer();
@@ -797,9 +952,8 @@ function startTimer(){
 }
 function updateTimer(){
   const t=$('#timeval'); if(!t) return;
-  const noClock = S.needs.noClock && sess.phase==='recall';
-  if(noClock){ $('#timer').style.visibility='hidden'; }
-  else { $('#timer').style.visibility='visible'; }
+  const hide = S.needs.noClock || sess.phase==='intro';   // clock-off hides the countdown everywhere; rhythm bar stays
+  $('#timer').style.visibility = hide ? 'hidden' : 'visible';
   const m=Math.floor(sess.left/60), s=sess.left%60;
   t.textContent=`${m}:${String(s).padStart(2,'0')}`;
   const r=$('#rhythm'); if(r) r.style.width=(100*(1-sess.left/sess.focusSec))+'%';
@@ -811,7 +965,7 @@ function renderPicker(){
     {id:'recall',ic:I.recall,b:'Recall',s:'Produce answers from memory.'},
     {id:'label',ic:I.label,b:'Label the diagram',s:'Put structures back in place.'},
     {id:'draw',ic:I.draw,b:'Draw it',s:'Sketch the structure from scratch.'},
-    {id:'tutor',ic:I.tutor,b:'AI tutor',s:'Get a prompt for your own Claude.'},
+    {id:'tutor',ic:I.tutor,b:'Tutored exam',s:'Live questions, your reasoning, instant feedback.'},
     {id:'teach',ic:I.teach,b:'Teach it back',s:'Explain it out loud in your words.'}
   ];
   $('#sInner').innerHTML=`<div class="picker fade-enter">
@@ -827,7 +981,7 @@ function renderPicker(){
     if(a==='recall'||a==='teach') startRecall(a==='teach');
     else if(a==='label') startLabel();
     else if(a==='draw') startDraw();
-    else if(a==='tutor') startTutor();
+    else if(a==='tutor') startExamTutor();
   }));
 }
 
@@ -882,11 +1036,16 @@ function showLabel(fb,fbCls){
   const target=labelOrder[labelStep];
   $('#sInner').innerHTML=`<div class="label-lab fade-enter">
     <p class="lead">Click the structure. ${labelStep+1} of ${labelOrder.length}.</p>
-    <p class="prompt">Find the <em>${target.name}</em></p>
+    <p class="prompt">Find the <em>${target.name}</em>
+      <button class="lab-speak" id="labSpeak" aria-label="Hear ${esc(target.name)}" title="Hear it">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg>
+      </button></p>
     <div class="diagram" id="diagram">${heartSVG()}
       ${HOTSPOTS.map(h=>`<button class="hot" data-id="${h.id}" style="left:${h.x}%;top:${h.y}%" aria-label="structure"></button>`).join('')}
     </div>
     <p class="lab-feedback ${fbCls||''}">${fb||''}</p></div>`;
+  if(S.needs.readAloud) speak(target.name);
+  $('#labSpeak').addEventListener('click',()=>speak(target.name));
   $('#diagram').querySelectorAll('.hot').forEach(h=>h.addEventListener('click',()=>{
     if(h.dataset.id===target.id){
       h.classList.add('right'); sess.results.total++; sess.results.right++;
@@ -936,37 +1095,171 @@ function startDraw(){
 }
 
 /* --- tutor (prompt export, no API cost) --- */
-function startTutor(){
-  sess.phase='tutor'; updateTimer();
-  const prompt=`You are my anatomy tutor. I am preparing for a lab practical on the heart.
-
-Topic I am working on: ${sess.task.topic}.
-My goal: ${goalLabel(S.goal)}.
-
-Please tutor me with the Socratic method:
-1. Ask me one question at a time about ${sess.task.topic}.
-2. Wait for my answer before telling me anything.
-3. If I am wrong, give me a hint, not the answer.
-4. Move from naming the structure, to its location and relationships, to a clinical "what if" once I am solid.
-Start now with your first question.`;
-  $('#sInner').innerHTML=`<div class="tutor fade-enter">
-    <p class="lead" style="color:var(--ink-soft);font-size:15px;margin:0 0 4px">Your tutor, no subscription needed.</p>
-    <p class="prompt" style="font-size:21px;font-weight:800;color:var(--navy);margin:0 0 18px">Copy this into your own free Claude</p>
-    <div class="promptbox" id="promptBox">${esc(prompt)}</div>
-    <div class="row">
-      <button class="btn primary" id="copyPrompt" style="background:var(--navy);color:#fff">Copy prompt</button>
-      <button class="linkbtn" id="tutorDone">I\u2019ve finished tutoring</button>
-    </div>
-    <p style="font-size:12.5px;color:var(--ink-faint);margin-top:16px">Bring-your-own-key is optional later. By default the work happens in your own free tutor, so there\u2019s no cost to run this.</p>
-  </div>`;
-  $('#copyPrompt').addEventListener('click',()=>{
-    const t=prompt;
-    if(navigator.clipboard){ navigator.clipboard.writeText(t).then(()=>toast('Prompt copied')).catch(()=>fallbackCopy(t)); }
-    else fallbackCopy(t);
-  });
-  $('#tutorDone').addEventListener('click',()=>{ bumpScore(0.04); completeActivity(); });
+/* ===== Exam engine (lifted from the MedMasters generator) ===== */
+function dokInstruction(val,n){
+  const rubric=`DOK LEVELS: DOK 1 recall (define, identify, name); DOK 2 application (explain why, apply to a scenario, compare, predict); DOK 3 analysis (clinical reasoning, evaluate mechanisms, justify); DOK 4 extended thinking (integrate multiple systems, weigh competing explanations).`;
+  const map={
+    dok1:`Write all ${n} questions at DOK 1 (recall).`,
+    dok2:`Write all ${n} questions at DOK 2 (application).`,
+    dok3:`Write all ${n} questions at DOK 3 (analysis and clinical reasoning).`,
+    dok4:`Write all ${n} questions at DOK 4 (extended, multi-system integration).`,
+    mixed:`Spread across all four DOK levels; label each [DOK n] in feedback.`
+  };
+  if(map[val]) return rubric+"\nDOK TARGET: "+map[val];
+  const half=Math.floor(n/2);
+  return rubric+`\nDOK TARGET (balanced): ${half} at DOK 2 and ${n-half} at DOK 3; label each [DOK 2] or [DOK 3].`;
 }
-function fallbackCopy(t){ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');toast('Prompt copied');}catch(e){toast('Select and copy the text');} ta.remove(); }
+function balancedKey(n){
+  const p=["A","B","C","D"], seq=[];
+  for(let i=0;i<n;i++) seq.push(p[i%4]);
+  for(let i=seq.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[seq[i],seq[j]]=[seq[j],seq[i]];}
+  return seq;
+}
+function disciplineText(v){
+  return ({both:'Anatomy and Physiology (50/50 across the session)',anatomy:'Anatomy only (structures, location, relationships, identification)',physiology:'Physiology only (mechanisms and function)',pharmacology:'Pharmacology only (mechanisms, indications, adverse effects, interactions)',pathophysiology:'Pathophysiology only (disease mechanisms, manifestations, complications)',nclex:'Nursing (NCLEX): NGN item types, clinical judgment, prioritization, safety, the nursing process'})[v]||'Medical science';
+}
+function buildExamPrompt(o){
+  const types = o.types.map(t=>({tf:'True/False',mc:'Multiple Choice',sa:'Short Answer',cl:'Clinical Application'})[t]);
+  const topicsBlock = o.topics.length ? `\nTOPICS TO COVER:\n${o.topics.map((t,i)=>`${i+1}. ${t}`).join("\n")}` : "";
+  let balance="";
+  if(o.types.includes('mc')){
+    balance=`\nANSWER POSITION BALANCE (mandatory): place the correct option for the Nth multiple-choice question at the matching position in this sequence: [${balancedKey(o.count).join(", ")}]. Non-MC questions do not advance the counter. This prevents defaulting to B or C. Keep all options the same length and plausibility; do not let wording signal the answer.`;
+  }
+  const strictTail = o.strictness==='coaching' ? 'Gentle guidance and hints before grading.' : o.strictness==='strict' ? 'Precise justification required, no hints before grading, exam-level rigor.' : 'Fair, concise feedback with a clear rationale.';
+  const justify = o.justify ? 'REQUIRED: ask the student to explain their reasoning before you grade each answer.' : 'Reasoning encouraged but optional.';
+  const retry = o.retry ? 'If incorrect: give a minimal one-sentence hint, allow ONE retry, grade it, then reveal the answer.' : 'If incorrect: reveal the correct answer directly.';
+  const bonus = o.bonus==='off' ? 'Grade correct/incorrect only.' : `After grading, rate the reasoning 0 to ${o.scale}. ${o.aboveBeyond?'Give explicit "Above & Beyond" recognition for exceptional insight. ':''}Do not penalize reasoning on wrong answers.`;
+  const report = o.report==='full' ? 'END REPORT: score and %, breakdown by type, top 3 weak topics with study actions, and one concrete next step.' : o.report==='none' ? 'END REPORT: score and % only.' : 'END REPORT: score, %, and weak topics.';
+  return `You are an expert medical-science educator running a live, interactive study exam inside a learning platform. Stay in this role; do not break character or mention prompts.
+DISCIPLINE: ${disciplineText(o.discipline)}
+${dokInstruction(o.dok,o.count)}
+QUESTION TYPES: ${types.join(", ")}
+TOTAL QUESTIONS: ${o.count}${topicsBlock}${balance}
+
+INTERACTION:
+- Strictness: ${o.strictness}. ${strictTail}
+- Justification: ${justify}
+- ${retry}
+- Score: ${o.score?'show the running score after each question (e.g. Score: 3/4)':'show the score only at the end'}.
+- The student may ask you questions at any time; answer them, then continue the loop.
+
+LOOP for every question: present ONE question (number it, never reveal the answer or upcoming items) -> wait for the student's answer and reasoning -> grade Correct/Incorrect/Partial with a brief rationale -> ${o.retry?'hint and one retry if wrong -> ':''}reveal the answer with a short explanation${o.bonus!=='off'?' -> rate the reasoning':''} -> next question.
+
+${bonus}
+${report}
+Base everything on current, authoritative sources; zero factual errors; no ambiguity. Begin immediately with Question 1, no preamble.`;
+}
+function deriveDiscipline(course){
+  return ({'Anatomy':'anatomy','Physiology':'physiology','Anatomy & Physiology I':'both','Anatomy & Physiology II':'both','Anatomy & Physiology (Non-Majors)':'both','Microbiology':'both','Pathophysiology':'pathophysiology','Pharmacology':'pharmacology','Nursing (NCLEX-RN)':'nclex'})[course]||'both';
+}
+function examOptsFor(topic){
+  const lvl = S.mastery[topic] ? S.mastery[topic].level : 1;        // depth from mastery (velocity)
+  const dok = ['dok1','dok2','dok3'][lvl] || 'balanced';
+  const strictness = S.mode==='Rebuild'?'coaching' : S.mode==='Stretch'?'strict' : 'standard';   // grading from mode
+  return { topics:[topic], types:['mc','sa','cl'], count:6, dok, strictness,
+    justify:true, retry:true, score:true, bonus:'light', scale:'5', aboveBeyond:true,
+    discipline:deriveDiscipline(S.course), report:'brief' };
+}
+
+/* ===== live in-system tutor ===== */
+let examOpts=null, tutorMsgs=[], tutorSystem='', tutorBusy=false;
+function startExamTutor(){
+  sess.phase='tutor'; updateTimer();
+  examOpts = examOptsFor(sess.task.topic);
+  const depthLabel = {dok1:'recognition',dok2:'recall',dok3:'application',balanced:'mixed depth'}[examOpts.dok];
+  $('#sInner').innerHTML=`<div class="exam-cfg fade-enter">
+    <p class="lead">A live tutor runs the exam with you, right here.</p>
+    <p class="prompt">Tutored exam: <em>${esc(sess.task.topic)}</em></p>
+    <p class="cfg-line">Depth set to <b>${depthLabel}</b> from your mastery, grading set to <b>${examOpts.strictness}</b> from your mode. You answer and explain your reasoning; it grades, hints, and you can ask it questions back.</p>
+    <button class="btn primary block" id="examBegin" style="background:var(--navy);color:#fff;max-width:300px;margin:6px auto 0">Begin the exam</button>
+    <details class="finetune" style="margin-top:16px"><summary>Adjust depth or grading</summary>
+      <div class="adj">
+        <label class="adjlbl">Depth</label>
+        <div class="seg" id="segDok">${[['dok1','Recall'],['dok2','Apply'],['dok3','Analyze'],['balanced','Mixed']].map(([v,l])=>`<button data-dok="${v}" aria-pressed="${examOpts.dok===v}">${l}</button>`).join('')}</div>
+        <label class="adjlbl">Grading</label>
+        <div class="seg" id="segStrict">${[['coaching','Coaching'],['standard','Standard'],['strict','Strict']].map(([v,l])=>`<button data-st="${v}" aria-pressed="${examOpts.strictness===v}">${l}</button>`).join('')}</div>
+        <label class="adjlbl">Questions</label>
+        <div class="seg" id="segCount">${[5,6,8,10].map(c=>`<button data-c="${c}" aria-pressed="${examOpts.count===c}">${c}</button>`).join('')}</div>
+      </div>
+    </details>`;
+  const wire=(sel,attr,key,cast)=>$('#sInner').querySelectorAll(sel).forEach(b=>b.addEventListener('click',()=>{
+    $('#sInner').querySelectorAll(sel).forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true'); examOpts[key]=cast?cast(b.dataset[attr]):b.dataset[attr];
+  }));
+  wire('[data-dok]','dok','dok'); wire('[data-st]','st','strictness'); wire('[data-c]','c','count',Number);
+  $('#examBegin').addEventListener('click',startExamChat);
+}
+function startExamChat(){
+  tutorSystem = buildExamPrompt(examOpts);
+  tutorMsgs = [{role:'user', content:'Begin the exam now with Question 1.'}];
+  renderChat();
+  callTutor();
+}
+function renderChat(){
+  const bubbles = tutorMsgs.filter(m=>m.content!=='Begin the exam now with Question 1.').map(m=>
+    `<div class="bub ${m.role}">${esc(m.content).replace(/\n/g,'<br>')}</div>`).join('');
+  $('#sInner').innerHTML=`<div class="chat fade-enter">
+    <div class="chat-log" id="chatLog">${bubbles}${tutorBusy?'<div class="bub tutor typing">tutoring<span>.</span><span>.</span><span>.</span></div>':''}</div>
+    <div class="chat-in">
+      <textarea id="chatBox" rows="2" placeholder="Type your answer and your reasoning, or ask a question" ${tutorBusy?'disabled':''}></textarea>
+      <button class="chat-send" id="chatSend" ${tutorBusy?'disabled':''} aria-label="Send">Send</button>
+    </div>
+    <button class="linkbtn" id="examEnd" style="margin-top:8px">End and score this block</button>`;
+  const log=$('#chatLog'); if(log) log.scrollTop=log.scrollHeight;
+  const box=$('#chatBox');
+  if(box && !tutorBusy){ box.focus(); box.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendTurn(); } }); }
+  $('#chatSend') && $('#chatSend').addEventListener('click',sendTurn);
+  $('#examEnd') && $('#examEnd').addEventListener('click',endExam);
+}
+function sendTurn(){
+  const box=$('#chatBox'); if(!box) return;
+  const text=box.value.trim(); if(!text||tutorBusy) return;
+  tutorMsgs.push({role:'user',content:text});
+  renderChat(); callTutor();
+}
+async function callTutor(){
+  tutorBusy=true; renderChat();
+  try{
+    const endpoint = S.tutorEndpoint || 'https://api.anthropic.com/v1/messages';
+    const headers = {'Content-Type':'application/json'};
+    if(S.apiKey){ headers['x-api-key']=S.apiKey; headers['anthropic-version']='2023-06-01'; headers['anthropic-dangerous-direct-browser-access']='true'; }
+    const res = await fetch(endpoint,{ method:'POST', headers, body:JSON.stringify({
+      model:'claude-sonnet-4-6', max_tokens:1024, system:tutorSystem, messages:tutorMsgs }) });
+    if(!res.ok) throw new Error('status '+res.status);
+    const data = await res.json();
+    const text = (data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n').trim() || '(no response)';
+    tutorMsgs.push({role:'assistant',content:text});
+    tutorBusy=false; renderChat();
+  }catch(e){
+    tutorBusy=false; renderNotConnected();
+  }
+}
+function renderNotConnected(){
+  $('#sInner').innerHTML=`<div class="notconn fade-enter">
+    <p class="prompt" style="margin-bottom:8px">The live tutor isn\u2019t connected here yet.</p>
+    <p class="lead">In Mastery OS this runs in-app with no setup. On an embedded site it needs to be connected once, either through your course\u2019s tutor endpoint or with a key below. Nothing leaves the system.</p>
+    <label class="adjlbl" for="keyIn">Anthropic API key (stored only on this device)</label>
+    <div class="chat-in">
+      <input class="txtin" id="keyIn" type="password" placeholder="sk-ant-..." value="${esc(S.apiKey||'')}">
+      <button class="chat-send" id="keySave">Connect</button>
+    </div>
+    <button class="linkbtn" id="ncBack" style="margin-top:12px">Back to activities</button>
+  </div>`;
+  $('#keySave').addEventListener('click',()=>{
+    const v=$('#keyIn').value.trim(); if(!v){ toast('Enter a key to connect'); return; }
+    S.apiKey=v; save(); toast('Connected. Starting the tutor.'); startExamChat();
+  });
+  $('#ncBack').addEventListener('click',renderPicker);
+}
+function endExam(){
+  const last=[...tutorMsgs].reverse().find(m=>m.role==='assistant');
+  const m=last && last.content.match(/Score:\s*(\d+)\s*\/\s*(\d+)/i);
+  const mt=S.mastery[sess.task.topic];
+  if(m){ const frac=Math.min(1, (+m[1])/Math.max(1,+m[2])); mt.score=clamp(mt.score*0.5 + frac*0.5); if(mt.score>0.8&&mt.level<2)mt.level++; }
+  else bumpScore(0.04);
+  completeActivity();
+}
+function fallbackCopy(t){ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');toast('Copied');}catch(e){toast('Select and copy the text');} ta.remove(); }
 
 /* --- after an activity: break or finish --- */
 function completeActivity(){
@@ -1072,6 +1365,119 @@ function closeSettings(){ settingsEl.classList.remove('live'); settingsEl.setAtt
 function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function clamp(n){ return Math.max(0,Math.min(1,n)); }
 function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function todayIso(){ return new Date().toISOString().slice(0,10); }
+function daysUntil(iso){ return Math.max(1, Math.round((new Date(iso)-new Date())/86400000)); }
+function speak(text){
+  try{
+    if(!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) return false;
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text); u.rate=0.92; u.pitch=1;
+    window.speechSynthesis.speak(u); return true;
+  }catch(e){ return false; }
+}
+function fmtLong(iso){ return new Date(iso).toLocaleDateString(undefined,{month:'long',day:'numeric'}); }
+function fmtShort(iso){ return new Date(iso).toLocaleDateString(undefined,{month:'short',day:'numeric'}); }
+
+/* Carnegie guideline (~2-3 study hrs per credit hr/wk), adjusted for the
+   grade goal (Carnegie targets a pass; an A needs more) and for lab-memorization
+   courses where lab is studied, not just attended (which Carnegie ignores). */
+function courseProfile(){
+  const c=CATALOG.flatMap(g=>g.items).find(i=>i.name===S.course);
+  return (c && c.profile) || 'lecture';
+}
+function computeRec(c){
+  const labHeavy = courseProfile()==='lab-memorization';
+  let low=c*2, high=c*3;
+  if(labHeavy){ low=Math.round(low*1.25); high=Math.round(high*1.25); }
+  const gF = S.goal==='A'?1.25 : S.goal==='B'?1.1 : 1.0;
+  low=Math.round(low*gF); high=Math.round(high*gF);
+  const mid=Math.round((low+high)/2), tight=Math.max(2,Math.round(low*0.75));
+  const chips=[...new Set([tight,low,mid,high])].sort((a,b)=>a-b);
+  return {low,high,mid,tight,chips,labHeavy};
+}
+function renderRec(){
+  const region=document.getElementById('recRegion'); if(!region) return;
+  const r=computeRec(S.credits), below=S.hours<r.low;
+  const goalNote = S.goal==='A'
+    ? `You\u2019re aiming for an A, so this sits above the pass-level baseline. Carnegie estimates a passing grade; mastery usually takes more.`
+    : S.goal==='Pass'
+    ? `This is near the Carnegie baseline for a passing grade. The right number still depends on you.`
+    : `This sits a little above the pass-level baseline for a strong, safe grade. The right number depends on you.`;
+  const labNote = r.labHeavy
+    ? `<p class="note nomargintop">Anatomy lab isn\u2019t a show-up-and-watch lab. You study the structures for the practical on top of lecture, which the standard Carnegie estimate leaves out, so we\u2019ve added to the baseline here.</p>`
+    : `<p class="note nomargintop">This follows the standard Carnegie guideline, which fits a lecture-based course.</p>`;
+  region.innerHTML=`
+    <p class="rec-line">Starting estimate: about <b>${r.low} to ${r.high} hours</b> a week for a ${S.credits}-credit course. ${goalNote}</p>
+    <label class="lbl reclbl">Your hours a week</label>
+    <div class="chips" id="hourChips">
+      ${r.chips.map(h=>`<button class="chip ${h>=r.low&&h<=r.high?'band':''}" data-h="${h}" aria-pressed="${S.hours===h}">${h} hrs</button>`).join('')}
+    </div>
+    <p class="reccap">Highlighted hours fall within the estimate. You\u2019ll reassess after each practical.</p>
+    ${labNote}
+    ${below?`<p class="note nomargintop">That\u2019s under the estimate. The plan still gets you there, it just runs tighter and leans harder on spaced review. <b>The bar does not move.</b></p>`:''}`;
+  region.querySelectorAll('[data-h]').forEach(b=>b.addEventListener('click',()=>{ S.hours=+b.dataset.h; renderRec(); }));
+}
+function renderPlist(){
+  const el=document.getElementById('plist'); if(!el) return;
+  el.innerHTML=S.practicals.map((p,i)=>`<div class="prow">
+    <input class="txt prow-d" type="date" data-i="${i}" value="${p.date}" min="${todayIso()}">
+    <input class="txt prow-t" data-i="${i}" placeholder="Topics (e.g. upper limb)" value="${esc(p.topic)}">
+    <button class="prow-x" data-x="${i}" aria-label="Remove practical">\u00d7</button>
+  </div>`).join('');
+  el.querySelectorAll('.prow-d').forEach(inp=>inp.addEventListener('change',()=>{ S.practicals[+inp.dataset.i].date=inp.value; }));
+  el.querySelectorAll('.prow-t').forEach(inp=>inp.addEventListener('input',()=>{ S.practicals[+inp.dataset.i].topic=inp.value; }));
+  el.querySelectorAll('[data-x]').forEach(btn=>btn.addEventListener('click',()=>{ S.practicals.splice(+btn.dataset.x,1); renderPlist(); }));
+}
+function renderNeedOptions(){
+  const box=document.getElementById('needOptions'); if(!box) return;
+  const wasOpen = box.querySelector('.finetune')?.open;
+  const fxFor=b=>'Turns on: '+b.sets.map(k=>NEEDS.find(n=>n.key===k).b.toLowerCase()).join('; ')+'.';
+  box.innerHTML=`
+    <div class="choices" id="bundles">
+      ${BUNDLES.map(b=>{const on=S.bundles.includes(b.id);return `
+        <button class="choice" data-bundle="${b.id}" aria-pressed="${on}">
+          <span class="ck">${I.check}</span>
+          <span><span class="ttl">${b.ttl}</span><span class="dsc">${b.dsc}</span>
+          <span class="fx ${on?'':'hidden'}">${fxFor(b)}</span></span></button>`;}).join('')}
+    </div>
+    <details class="finetune">
+      <summary>Fine-tune the individual settings</summary>
+      <div class="toggles" id="needToggles">
+        ${NEEDS.map(n=>`<div class="tg"><span class="tx"><b>${n.b}</b><span>${n.s}</span></span>
+          <button class="sw" data-need="${n.key}" aria-pressed="${!!S.needs[n.key]}" aria-label="${n.b}"></button></div>`).join('')}
+      </div>
+    </details>`;
+  if(wasOpen) box.querySelector('.finetune').open=true;
+  box.querySelectorAll('[data-bundle]').forEach(b=>b.addEventListener('click',()=>{
+    const id=b.dataset.bundle, bun=BUNDLES.find(x=>x.id===id), isOn=S.bundles.includes(id);
+    if(isOn) S.bundles=S.bundles.filter(x=>x!==id);
+    else { S.bundles.push(id); bun.sets.forEach(k=>S.needs[k]=true); }
+    renderNeedOptions();
+  }));
+  box.querySelectorAll('[data-need]').forEach(t=>t.addEventListener('click',()=>{
+    const k=t.dataset.need; S.needs[k]=!S.needs[k]; t.setAttribute('aria-pressed', !!S.needs[k]);
+  }));
+}
+function termList(){ return S.practicals.filter(p=>p.date).sort((a,b)=>new Date(a.date)-new Date(b.date)); }
+function semesterStrip(){
+  const list=termList();
+  if(!list.length) return `<p class="kvline subtle">Add your full term in setup or settings to space earlier topics toward the final.</p>`;
+  const todayStart=new Date(new Date().toDateString());
+  const nextIdx=list.findIndex(p=>!p.done && new Date(p.date)>=todayStart);
+  return `<div class="strip">${list.map((p,i)=>`
+    <div class="striprow ${p.done?'done':''} ${i===nextIdx?'next':''}">
+      <span class="sd">${fmtShort(p.date)}</span>
+      <span class="st">${esc(p.topic||('Practical '+(i+1)))}</span>
+      ${p.done?'<span class="sdone">done</span>':(i===nextIdx?`<button class="sadv" data-adv="${i}">mark done</button>`:'')}
+    </div>`).join('')}</div>
+    <p class="kvline subtle">Scoring a practical advances the target and folds its topics into spaced review.</p>`;
+}
+function advanceNext(){
+  const up=S.practicals.filter(p=>p.date&&!p.done).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  if(up.length){ S.nextPracticalDate=up[0].date; S.examDays=daysUntil(up[0].date); }
+  S.checkInDue=true;
+  save(); renderHome(); toast('Practical logged. Target moved to the next one.');
+}
 function heartSVG(){
   return `<svg viewBox="0 0 200 220" aria-label="Anterior view of the heart">
     <!-- great vessels -->
