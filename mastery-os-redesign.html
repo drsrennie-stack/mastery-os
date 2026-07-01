@@ -1,0 +1,1251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mastery OS</title>
+<meta name="description" content="A personal learning operating system: diagnose weaknesses, repair gaps, build durable memory, and prove mastery.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1530; --card-navy:#1C2E4F; --near-black:#060A18;
+  --rust:#8B3A2E; --rust-hover:#A0452F; --terra:#C2734D; --clay:#CE8166;
+  --gold:#C9A14A; --gold-light:#D9B065; --cream:#F5F1E8;
+  --white:#FFFFFF; --offwhite:#FAFAF9; --slate:#8C90A0;
+  --ink:#0B1530; --ink-soft:rgba(11,21,48,0.74); --ink-faint:rgba(11,21,48,0.52);
+  --line:rgba(11,21,48,0.12); --line-soft:rgba(11,21,48,0.07);
+  --ok:#3F7A5B; --warn:#B4772E; --bad:#8B3A2E;
+  --shadow:0 1px 3px rgba(11,21,48,0.08);
+  --lift:0 14px 34px -16px rgba(11,21,48,0.30);
+  --disp:'Plus Jakarta Sans',system-ui,sans-serif;
+  --serif:'Lora',Georgia,serif;
+  --mono:'DM Sans',system-ui,sans-serif;
+  --r-sm:6px; --r:10px; --r-lg:16px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--offwhite);color:var(--ink);font-family:var(--disp);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4{letter-spacing:-0.02em;color:var(--navy);line-height:1.15;margin:0}
+p{margin:0}
+button{font-family:inherit;cursor:pointer}
+a{color:var(--rust)}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin:0 0 8px}
+.serif{font-family:var(--serif);font-style:italic;color:var(--ink-soft)}
+.skip{position:absolute;left:-999px;top:0;background:var(--navy);color:#fff;padding:10px 16px;border-radius:var(--r);z-index:999;text-decoration:none;font-weight:700}
+.skip:focus{left:12px;top:12px}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:var(--r-sm)}
+.on-dark :focus-visible{outline-color:var(--gold-light)}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1.5px solid var(--line);background:var(--white);color:var(--navy);font-weight:700;font-size:15px;padding:11px 18px;border-radius:var(--r);transition:transform .18s var(--ease),box-shadow .18s var(--ease),border-color .18s,background .18s}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--lift);border-color:var(--navy)}
+.btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.primary:hover{background:var(--near-black);border-color:var(--near-black)}
+.btn.gold{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.btn.gold:hover{background:var(--gold-light);border-color:var(--gold-light)}
+.btn.rust{background:var(--rust);color:#fff;border-color:var(--rust)}
+.btn.rust:hover{background:var(--rust-hover);border-color:var(--rust-hover)}
+.btn.big{font-size:17px;padding:16px 26px}
+.btn.block{width:100%}
+.btn.ghost{background:transparent}
+.btn svg{width:18px;height:18px;flex:none}
+
+/* ---------- logo / header ---------- */
+.site-header{position:sticky;top:0;z-index:30;background:rgba(250,250,249,.86);backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line-soft)}
+.hbar{max-width:1120px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:14px}
+.logo{display:inline-flex;align-items:center;gap:12px}
+.logo svg{height:38px;flex:none}
+.logo .lt{font-size:20px;font-weight:800;color:var(--navy);letter-spacing:-.02em;line-height:1}
+.logo .lt .ac{color:var(--rust)}
+.logo .ls{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);display:block;margin-top:3px}
+.spacer{flex:1}
+.hbadge{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);background:var(--cream);border:1px solid var(--line);padding:6px 12px;border-radius:999px}
+.icbtn{width:40px;height:40px;border-radius:var(--r);border:1.5px solid var(--line);background:var(--white);color:var(--navy);display:grid;place-items:center;transition:.18s}
+.icbtn:hover{border-color:var(--navy);transform:translateY(-1px)}
+.icbtn svg{width:19px;height:19px}
+
+/* section nav */
+.secnav{position:sticky;top:63px;z-index:20;background:rgba(250,250,249,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line-soft);overflow-x:auto;scrollbar-width:none}
+.secnav::-webkit-scrollbar{display:none}
+.secnav ul{max-width:1120px;margin:0 auto;padding:8px 16px;display:flex;gap:4px;list-style:none}
+.secnav a{white-space:nowrap;font-size:13px;font-weight:700;color:var(--ink-soft);text-decoration:none;padding:8px 13px;border-radius:999px;transition:.15s}
+.secnav a:hover{color:var(--navy);background:var(--cream)}
+.secnav a[aria-current="true"]{color:var(--navy);background:var(--cream)}
+
+/* ---------- layout ---------- */
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+section.block{padding:44px 0;border-top:1px solid var(--line-soft)}
+section.block:first-of-type{border-top:none}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.sec-head h2{font-size:clamp(21px,3.2vw,27px);font-weight:800}
+.sec-head .lead{font-family:var(--serif);font-style:italic;color:var(--ink-soft);font-size:15px;margin-top:4px;max-width:60ch}
+.card{background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);transition:transform .2s var(--ease),box-shadow .2s var(--ease)}
+.card.hover:hover{transform:translateY(-2px);box-shadow:var(--lift)}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:860px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* ---------- Section 1: Today's plan ---------- */
+.plan{background:var(--navy);background:radial-gradient(140% 135% at 12% 0%,#12203f 0%,var(--navy) 48%,var(--near-black) 100%);color:var(--cream);border-radius:var(--r-lg);padding:28px;box-shadow:var(--lift)}
+.plan .peyebrow{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:0 0 6px}
+.plan h1{color:#fff;font-size:clamp(24px,4vw,32px);font-weight:800;margin:0 0 6px}
+.plan .psub{font-family:var(--serif);font-style:italic;color:var(--cream);opacity:.86;margin:0 0 22px;max-width:60ch}
+.plan-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:22px;align-items:start}
+@media(max-width:760px){.plan-grid{grid-template-columns:1fr}}
+.plan-list{display:grid;gap:12px}
+.pl-item{display:flex;gap:13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:13px 15px}
+.pl-item .ic{flex:none;width:34px;height:34px;border-radius:9px;background:rgba(201,161,74,.16);color:var(--gold);display:grid;place-items:center}
+.pl-item .ic svg{width:18px;height:18px}
+.pl-item h3{color:#fff;font-size:13px;font-weight:700;margin:0 0 3px;letter-spacing:0}
+.pl-item p{color:var(--cream);opacity:.82;font-size:13px;line-height:1.4}
+.plan-side{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:18px}
+.count{text-align:center;padding:8px 0 14px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:14px}
+.count .num{font-size:44px;font-weight:800;color:#fff;line-height:1}
+.count .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-top:4px}
+.metric-row{display:flex;justify-content:space-between;font-size:14px;padding:7px 0;color:var(--cream)}
+.metric-row b{color:#fff}
+.plan-cta{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap}
+
+/* ---------- Section 2: dashboard rings ---------- */
+.ring-card{padding:18px;text-align:center}
+.ring{width:112px;height:112px;margin:0 auto 10px}
+.ring text{font-family:var(--disp)}
+.ring-card h3{font-size:14px;font-weight:700;color:var(--navy)}
+.ring-card .rsub{font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin-top:2px}
+.readiness{grid-column:1/-1;display:flex;align-items:center;gap:26px;padding:22px 26px;background:var(--navy);background:linear-gradient(120deg,#17284a,var(--navy));color:#fff;flex-wrap:wrap}
+.readiness .ring text{fill:#fff}
+.readiness .rtext h3{color:#fff;font-size:20px}
+.readiness .rtext p{color:var(--cream);opacity:.85;font-family:var(--serif);font-style:italic;margin-top:4px;max-width:52ch}
+
+/* ---------- Section 3: competency map ---------- */
+.unit{margin-bottom:12px;overflow:hidden}
+.unit-head{width:100%;display:flex;align-items:center;gap:14px;padding:16px 20px;background:var(--white);border:none;text-align:left}
+.unit-head:hover{background:var(--cream)}
+.unit-head .chev{transition:transform .2s;color:var(--ink-faint)}
+.unit-head[aria-expanded="true"] .chev{transform:rotate(90deg)}
+.unit-head h3{font-size:16px;font-weight:700}
+.unit-head .umeta{font-family:var(--mono);font-size:11px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.08em}
+.ubar{flex:1;max-width:180px;height:8px;background:var(--line-soft);border-radius:99px;overflow:hidden}
+.ubar span{display:block;height:100%;border-radius:99px;background:var(--gold)}
+.unit-body{padding:4px 12px 14px;background:var(--offwhite);border-top:1px solid var(--line-soft)}
+.comp-row{display:grid;grid-template-columns:1.6fr 90px 1fr auto;gap:14px;align-items:center;padding:12px 12px;border-radius:var(--r);background:var(--white);border:1px solid var(--line-soft);margin-top:8px}
+@media(max-width:760px){.comp-row{grid-template-columns:1fr;gap:8px}}
+.comp-name{font-weight:700;font-size:14px;color:var(--navy)}
+.comp-name .ev{font-family:var(--mono);font-size:11px;color:var(--ink-faint);font-weight:500;margin-top:3px;display:block}
+.mpill{font-family:var(--mono);font-weight:700;font-size:13px;padding:4px 10px;border-radius:999px;text-align:center;white-space:nowrap}
+.m-lo{background:#f6e4e0;color:var(--bad)}
+.m-md{background:#f6ecd9;color:var(--warn)}
+.m-hi{background:#e2efe8;color:var(--ok)}
+.comp-meta{font-size:12px;color:var(--ink-soft);line-height:1.5}
+.comp-meta .conf{font-weight:700}
+.conf-low{color:var(--bad)}.conf-med{color:var(--warn)}.conf-high{color:var(--ok)}
+.overdue{color:var(--bad);font-weight:700}
+.comp-row .btn{padding:8px 13px;font-size:13px}
+
+/* ---------- Section 4: weakness ---------- */
+.weak-head{display:flex;align-items:center;gap:18px;background:linear-gradient(120deg,#f6e4e0,#faf1ea);border:1px solid #eccfc7;border-radius:var(--r-lg);padding:20px 24px;margin-bottom:18px;flex-wrap:wrap}
+.weak-head .wc{font-size:40px;font-weight:800;color:var(--rust);line-height:1}
+.weak-head .wl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--rust)}
+.weak-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line-soft)}
+.weak-item:last-child{border-bottom:none}
+.weak-item .tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.tag-missed{background:#f6e4e0;color:var(--bad)}
+.tag-conf{background:#f6ecd9;color:var(--warn)}
+.tag-overdue{background:#e5e9f2;color:var(--navy)}
+.weak-item .wn{font-weight:700;font-size:14px;flex:1}
+.weak-item .wu{font-size:12px;color:var(--ink-faint)}
+
+/* ---------- Section 5: workflow ---------- */
+.flow{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+@media(max-width:900px){.flow{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.flow{grid-template-columns:repeat(2,1fr)}}
+.stage{padding:18px 16px;text-align:left;display:flex;flex-direction:column;gap:8px;cursor:pointer;background:var(--white)}
+.stage .sn{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--gold);letter-spacing:.1em}
+.stage .si{width:38px;height:38px;border-radius:10px;background:var(--cream);color:var(--navy);display:grid;place-items:center}
+.stage .si svg{width:20px;height:20px}
+.stage h3{font-size:15px;font-weight:700}
+.stage p{font-size:12.5px;color:var(--ink-soft);line-height:1.45}
+.stage .go{font-size:12px;font-weight:700;color:var(--rust);margin-top:auto}
+
+/* ---------- Section 6: evidence ---------- */
+.ev-card{padding:18px;display:flex;flex-direction:column;gap:10px;text-align:left}
+.ev-card .ei{width:40px;height:40px;border-radius:10px;background:var(--cream);color:var(--navy);display:grid;place-items:center}
+.ev-card .ei svg{width:21px;height:21px}
+.ev-card h3{font-size:15px;font-weight:700}
+.ev-card p{font-size:12.5px;color:var(--ink-soft);line-height:1.45;flex:1}
+.ev-card .btn{font-size:13px;padding:8px 12px;align-self:flex-start}
+
+/* ---------- Section 7: skills ---------- */
+.skill-row{display:grid;grid-template-columns:180px 1fr 48px;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+@media(max-width:560px){.skill-row{grid-template-columns:1fr 40px;gap:6px}.skill-row .sbar{grid-column:1/-1;order:3}}
+.skill-row .snm{font-weight:700;font-size:14px}
+.skill-row .snm span{display:block;font-weight:500;font-size:11.5px;color:var(--ink-faint)}
+.sbar{height:9px;background:var(--line-soft);border-radius:99px;overflow:hidden}
+.sbar span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--terra),var(--gold))}
+.skill-row .spct{font-family:var(--mono);font-weight:700;text-align:right;color:var(--navy)}
+
+/* ---------- Section 8: coach ---------- */
+.coach{display:grid;grid-template-columns:1fr;gap:0;overflow:hidden}
+.coach-log{padding:20px;min-height:230px;max-height:420px;overflow:auto;display:flex;flex-direction:column;gap:14px;background:var(--offwhite)}
+.msg{max-width:80%;padding:12px 15px;border-radius:14px;font-size:14px;line-height:1.5}
+.msg.bot{background:var(--white);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
+.msg.you{background:var(--navy);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.msg .m-actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.msg .m-actions .btn{font-size:12.5px;padding:7px 12px}
+.coach-prompts{padding:14px 18px;display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line-soft);background:var(--white)}
+.pchip{font-size:12.5px;font-weight:700;color:var(--navy);background:var(--cream);border:1px solid var(--line);padding:8px 13px;border-radius:999px;transition:.15s}
+.pchip:hover{background:var(--gold);border-color:var(--gold)}
+.coach-input{display:flex;gap:10px;padding:14px 18px;border-top:1px solid var(--line-soft);background:var(--white)}
+.coach-input input{flex:1;font-family:inherit;font-size:15px;padding:12px 14px;border:1.5px solid var(--line);border-radius:var(--r);background:var(--offwhite)}
+.coach-input input:focus{border-color:var(--gold);outline:none;background:#fff}
+
+/* ---------- overlays (session, instructor, onboarding) ---------- */
+.overlay{position:fixed;inset:0;z-index:60;background:rgba(6,10,24,.55);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s}
+.overlay.open{opacity:1;pointer-events:auto}
+.sheet{background:var(--white);border-radius:var(--r-lg);max-width:640px;width:100%;max-height:90vh;overflow:auto;box-shadow:var(--lift);animation:pop .28s var(--ease)}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+.sheet-head{display:flex;align-items:center;gap:12px;padding:20px 24px;border-bottom:1px solid var(--line-soft);position:sticky;top:0;background:var(--white);z-index:2}
+.sheet-head h2{font-size:19px;font-weight:800;flex:1}
+.sheet-head .ssub{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--terra)}
+.sheet-body{padding:24px}
+.dots{display:flex;gap:6px;margin-bottom:18px}
+.dots i{flex:1;height:5px;border-radius:99px;background:var(--line-soft)}
+.dots i.on{background:var(--gold)}
+.dots i.done{background:var(--navy)}
+.step-icon{width:52px;height:52px;border-radius:13px;background:var(--cream);color:var(--navy);display:grid;place-items:center;margin-bottom:14px}
+.step-icon svg{width:26px;height:26px}
+.step h3{font-size:20px;font-weight:800;margin-bottom:6px}
+.step .sn{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.step .prompt{font-family:var(--serif);font-style:italic;color:var(--ink-soft);font-size:15px;margin-bottom:16px}
+.step ul.items{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:8px}
+.step ul.items li{background:var(--offwhite);border:1px solid var(--line-soft);border-radius:var(--r);padding:11px 14px;font-size:14px;display:flex;gap:10px;align-items:center}
+.step ul.items li b{color:var(--navy)}
+.step .actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.reflect textarea{width:100%;min-height:96px;font-family:inherit;font-size:15px;padding:13px;border:1.5px solid var(--line);border-radius:var(--r);resize:vertical;background:var(--offwhite)}
+.reflect textarea:focus{border-color:var(--gold);outline:none;background:#fff}
+.sheet-foot{display:flex;justify-content:space-between;gap:12px;padding:16px 24px;border-top:1px solid var(--line-soft);position:sticky;bottom:0;background:var(--white)}
+
+/* instructor config fields */
+.field{margin-bottom:16px}
+.field label{display:block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
+.field input,.field textarea{width:100%;font-family:inherit;font-size:15px;padding:11px 13px;border:1.5px solid var(--line);border-radius:var(--r);background:var(--offwhite)}
+.field input:focus,.field textarea:focus{border-color:var(--gold);outline:none;background:#fff}
+.field .hint{font-size:12px;color:var(--ink-faint);margin-top:5px;font-family:var(--serif);font-style:italic}
+.note{background:var(--cream);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;font-size:13px;color:var(--ink-soft);line-height:1.5;margin-bottom:18px}
+
+/* ---------- onboarding ---------- */
+#onboard{position:fixed;inset:0;z-index:80;background:radial-gradient(120% 120% at 50% 0%,#12203f 0%,var(--navy) 46%,var(--near-black) 100%);color:var(--cream);display:flex;flex-direction:column}
+#onboard[hidden]{display:none}
+.ob-stage{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 24px;overflow:auto}
+.ob-panel{width:100%;max-width:540px;text-align:center}
+#onboard h2{color:#fff;font-size:clamp(24px,5vw,34px);font-weight:800;margin:0 0 12px}
+#onboard p.sub{font-family:var(--serif);font-style:italic;color:var(--cream);opacity:.86;font-size:16px;max-width:46ch;margin:0 auto 26px;line-height:1.6}
+.ob-choices{display:grid;gap:11px;max-width:440px;margin:0 auto;text-align:left}
+.ob-choice{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.16);border-radius:var(--r);padding:15px 17px;color:var(--cream);transition:.18s;display:flex;gap:13px;align-items:flex-start;text-align:left;width:100%}
+.ob-choice:hover{border-color:rgba(201,161,74,.6);transform:translateY(-1px)}
+.ob-choice[aria-pressed="true"]{border-color:var(--gold);background:rgba(201,161,74,.14)}
+.ob-choice .ck{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.35);margin-top:1px;display:grid;place-items:center;transition:.2s}
+.ob-choice[aria-pressed="true"] .ck{border-color:var(--gold);background:var(--gold)}
+.ob-choice .ck svg{width:12px;height:12px;opacity:0}
+.ob-choice[aria-pressed="true"] .ck svg{opacity:1}
+.ob-choice .ttl{font-weight:700;color:#fff;font-size:15px;display:block;margin-bottom:2px}
+.ob-choice .dsc{font-size:13px;opacity:.78;line-height:1.4}
+.ob-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:440px;margin:0 auto}
+.ob-chip{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.18);color:var(--cream);font-family:inherit;font-size:15px;font-weight:600;padding:11px 18px;border-radius:999px;transition:.18s}
+.ob-chip:hover{border-color:rgba(201,161,74,.6)}
+.ob-chip[aria-pressed="true"]{border-color:var(--gold);background:var(--gold);color:var(--navy)}
+.ob-txt{width:100%;max-width:420px;margin:0 auto;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.18);color:#fff;font-family:inherit;font-size:18px;padding:14px 16px;border-radius:var(--r);outline:none;text-align:center}
+.ob-txt:focus{border-color:var(--gold);background:rgba(255,255,255,.1)}
+.ob-foot{padding:18px 24px 26px;display:flex;justify-content:center;gap:12px}
+.ob-dots{display:flex;gap:7px;justify-content:center;margin-bottom:26px}
+.ob-dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2)}
+.ob-dots i.on{background:var(--gold)}
+
+/* toast */
+#toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);background:var(--navy);color:#fff;padding:13px 20px;border-radius:var(--r);font-weight:700;font-size:14px;box-shadow:var(--lift);opacity:0;pointer-events:none;transition:.3s var(--ease);z-index:90;max-width:90vw}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+.foot{padding:34px 0 46px;text-align:center;color:var(--ink-faint);font-size:13px;border-top:1px solid var(--line-soft);margin-top:20px}
+.foot .sig{font-weight:700;color:var(--ink-soft)}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#s-plan">Skip to today's plan</a>
+
+<!-- ============ ONBOARDING ============ -->
+<div id="onboard" hidden aria-label="Student setup">
+  <div class="ob-stage">
+    <div class="ob-panel" id="obPanel"><!-- filled by JS --></div>
+  </div>
+  <div class="ob-foot">
+    <button class="btn ghost" id="obBack" style="background:transparent;color:var(--cream);border-color:rgba(255,255,255,.25)">Back</button>
+    <button class="btn gold" id="obNext">Continue</button>
+  </div>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="hbar">
+    <span class="logo">
+      <svg viewBox="40 10 125 148" aria-hidden="true"><g transform="translate(0,18)">
+        <g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g>
+        <g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g>
+        <g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#0B1530"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/></g>
+      </g></svg>
+      <span><span class="lt">Mastery <span class="ac">OS</span></span><span class="ls">Human Anatomy</span></span>
+    </span>
+    <span class="spacer"></span>
+    <span class="hbadge" id="greetBadge">Welcome</span>
+    <button class="icbtn" id="openInstructor" aria-label="Instructor configuration" title="Instructor configuration">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+    </button>
+    <button class="icbtn" id="openReset" aria-label="Reset setup" title="Reset setup">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ============ SECTION NAV ============ -->
+<nav class="secnav" aria-label="Sections">
+  <ul>
+    <li><a href="#s-plan">Today</a></li>
+    <li><a href="#s-dash">Dashboard</a></li>
+    <li><a href="#s-map">Competencies</a></li>
+    <li><a href="#s-weak">Weaknesses</a></li>
+    <li><a href="#s-flow">Self-Tutoring</a></li>
+    <li><a href="#s-evidence">Evidence</a></li>
+    <li><a href="#s-skills">Learning Skills</a></li>
+    <li><a href="#s-coach">Coach</a></li>
+  </ul>
+</nav>
+
+<main id="main">
+  <!-- 1 TODAY'S PLAN -->
+  <section class="block" id="s-plan" aria-labelledby="h-plan" tabindex="-1">
+    <div class="wrap"><div class="plan" id="planCard"><!-- JS --></div></div>
+  </section>
+
+  <!-- 2 DASHBOARD -->
+  <section class="block" id="s-dash" aria-labelledby="h-dash">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">Section 2</p><h2 id="h-dash">Mastery Dashboard</h2><p class="lead">Where you are strong and where you are exposed, at a glance.</p></div>
+      </div>
+      <div class="grid g4" id="dashGrid"><!-- JS --></div>
+    </div>
+  </section>
+
+  <!-- 3 COMPETENCY MAP -->
+  <section class="block" id="s-map" aria-labelledby="h-map">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">Section 3</p><h2 id="h-map">Competency Map</h2><p class="lead">Not chapters. Measurable competencies you can prove, one at a time.</p></div>
+      </div>
+      <div id="mapWrap"><!-- JS --></div>
+    </div>
+  </section>
+
+  <!-- 4 WEAKNESS -->
+  <section class="block" id="s-weak" aria-labelledby="h-weak">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">Section 4</p><h2 id="h-weak">Weakness Dashboard</h2><p class="lead">Automatically collected from misses, low confidence, and overdue recall.</p></div>
+      </div>
+      <div id="weakWrap"><!-- JS --></div>
+    </div>
+  </section>
+
+  <!-- 5 SELF-TUTORING -->
+  <section class="block" id="s-flow" aria-labelledby="h-flow">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">Section 5</p><h2 id="h-flow">Self-Tutoring Workflow</h2><p class="lead">The same six-step cycle every session, so learning becomes a habit, not a guess.</p></div>
+        <button class="btn primary" data-session="today">Run the full cycle</button>
+      </div>
+      <div class="flow" id="flowWrap"><!-- JS --></div>
+    </div>
+  </section>
+
+  <!-- 6 EVIDENCE -->
+  <section class="block" id="s-evidence" aria-labelledby="h-ev">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">Section 6</p><h2 id="h-ev">Evidence of Mastery</h2><p class="lead">Mastery moves only when you prove it. Pick how you will demonstrate it today.</p></div>
+      </div>
+      <div class="grid g3" id="evGrid"><!-- JS --></div>
+    </div>
+  </section>
+
+  <!-- 7 LEARNING SKILLS -->
+  <section class="block" id="s-skills" aria-labelledby="h-sk">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">Section 7</p><h2 id="h-sk">Learning Skills Dashboard</h2><p class="lead">How you learn, not only what you know. These are the transferable skills.</p></div>
+      </div>
+      <div class="card" style="padding:8px 22px"><div id="skillWrap"></div></div>
+    </div>
+  </section>
+
+  <!-- 8 COACH -->
+  <section class="block" id="s-coach" aria-labelledby="h-co">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">Section 8</p><h2 id="h-co">AI Mastery Coach</h2><p class="lead">Ask for the next best move. The coach reads your progress and points you at one action.</p></div>
+      </div>
+      <div class="card coach">
+        <div class="coach-log" id="coachLog" role="log" aria-live="polite" aria-label="Coach conversation"></div>
+        <div class="coach-prompts" id="coachPrompts" aria-label="Suggested prompts"></div>
+        <form class="coach-input" id="coachForm">
+          <label class="visually-hidden" for="coachInput">Ask the coach</label>
+          <input id="coachInput" type="text" placeholder="Ask the coach anything..." autocomplete="off">
+          <button class="btn primary" type="submit">Send</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot wrap">
+    <p>Mastery OS prototype with sample data. <span class="sig">Dr. Sharilyn Rennie</span></p>
+  </div>
+</main>
+
+<!-- ============ SESSION OVERLAY ============ -->
+<div class="overlay" id="sessionOverlay" role="dialog" aria-modal="true" aria-labelledby="sessTitle" aria-hidden="true">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div style="flex:1"><span class="ssub" id="sessSub">Session</span><h2 id="sessTitle">Session</h2></div>
+      <button class="icbtn" id="sessClose" aria-label="Close session"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="sheet-body" id="sessBody"></div>
+    <div class="sheet-foot">
+      <button class="btn ghost" id="sessBack">Back</button>
+      <button class="btn primary" id="sessNext">Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ INSTRUCTOR OVERLAY ============ -->
+<div class="overlay" id="instrOverlay" role="dialog" aria-modal="true" aria-labelledby="instrTitle" aria-hidden="true">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div style="flex:1"><span class="ssub">Configure once</span><h2 id="instrTitle">Instructor Configuration</h2></div>
+      <button class="icbtn" id="instrClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <div class="note">Upload once. Mastery OS generates the daily plans, spaced-recall schedule, competency tracking, weakness dashboard, and recommendations automatically. Students never build the course structure.</div>
+      <div class="field"><label for="cfgCourse">Course label</label><input id="cfgCourse" type="text"></div>
+      <div class="field"><label for="cfgExam">Next practical / exam date</label><input id="cfgExam" type="date"><p class="hint">Drives the exam countdown and how aggressively recall is scheduled.</p></div>
+      <div class="field"><label for="cfgLecture">Today's lecture competencies</label><input id="cfgLecture" type="text"><p class="hint">Comma-separated. Normally pulled from the uploaded lecture sequence.</p></div>
+      <div class="field"><label for="cfgLab">Today's lab competencies</label><input id="cfgLab" type="text"><p class="hint">Comma-separated. Normally pulled from the uploaded lab sequence.</p></div>
+      <div class="field"><label for="cfgHighyield">High-yield concepts</label><textarea id="cfgHighyield" rows="2"></textarea><p class="hint">Weighted heavier in the weakness dashboard and readiness score.</p></div>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn ghost" id="instrCancel">Cancel</button>
+      <button class="btn gold" id="instrSave">Save configuration</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+(function(){
+/* =========================================================
+   STORAGE
+========================================================= */
+var mem={};
+var store={
+  get:function(k){try{var v=localStorage.getItem(k);return v==null?(mem[k]||null):JSON.parse(v);}catch(e){return mem[k]||null;}},
+  set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}mem[k]=v;},
+  del:function(k){try{localStorage.removeItem(k);}catch(e){}delete mem[k];}
+};
+var KEY='mastery-os-redesign';
+var TODAY='2026-07-01'; /* prototype "today" */
+
+/* =========================================================
+   ICONS
+========================================================= */
+var I={
+  target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>',
+  flask:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18l-5-9V3"/><path d="M7 15h10"/></svg>',
+  recall:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4M9 4h6"/><rect x="5" y="8" width="14" height="12" rx="2"/><path d="M9 13h6M9 16h4"/></svg>',
+  weak:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>',
+  bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  diagnose:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>',
+  repair:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2-2z"/></svg>',
+  retrieve:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v6h6"/><path d="M4 10a8 8 0 1 1 2 5"/></svg>',
+  apply:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 7v6c0 5 3.4 7.7 8 9 4.6-1.3 8-4 8-9V7z"/></svg>',
+  teach:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11h-6M19 8v6"/></svg>',
+  reflect:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-4 10.5V17h8v-3.5A6 6 0 0 0 12 3z"/><path d="M9 21h6"/></svg>',
+  draw:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18z"/></svg>',
+  label:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 12 22l-9-9V3h10z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor"/></svg>',
+  eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>',
+  micro:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 19v3"/></svg>',
+  speak:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+  clinical:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M12 9v6M9 12h6"/></svg>',
+  build:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="3"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="#0B1530" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>',
+  chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>'
+};
+
+/* =========================================================
+   FAKE SEED DATA  (BIO 004 Human Anatomy)
+   Evidence types: retrieval, draw, label, cadaver, histo, explain, teach, clinical, questions
+========================================================= */
+function C(id,name,mastery,conf,last,next,ev,today){return {id:id,name:name,mastery:mastery,conf:conf,last:last,next:next,ev:ev||[],today:today||null};}
+var SEED={
+  profile:{onboarded:false,name:'',grade:'',days:4,minutes:45,activities:['retrieval','draw'],confidence:'building'},
+  course:{
+    label:'BIO 004 Human Anatomy',
+    exam:'2026-07-13',
+    lecture:['Muscle Naming Logic','Muscles of the Upper Limb'],
+    lab:['Upper Limb Cadaver ID','Muscle Histology'],
+    highyield:'Tissue types, heart blood flow, brachial plexus, skin layers'
+  },
+  dims:[
+    {k:'lecture',name:'Lecture Mastery',val:72},
+    {k:'lab',name:'Lab Mastery',val:58},
+    {k:'cadaver',name:'Cadaver Mastery',val:44},
+    {k:'histo',name:'Histology Mastery',val:61},
+    {k:'clinical',name:'Clinical Application',val:53},
+    {k:'imaging',name:'Imaging',val:47},
+    {k:'draw',name:'Draw-to-Know-It',val:66},
+    {k:'recall',name:'Spaced Recall',val:70}
+  ],
+  skills:[
+    {name:'Planning',sub:'Setting a plan before you study',val:80},
+    {name:'Retrieval',sub:'Pulling from memory, not rereading',val:68},
+    {name:'Gap Identification',sub:'Naming what you do not know',val:55},
+    {name:'Repair Skills',sub:'Closing a gap once you find it',val:60},
+    {name:'Spaced Recall Consistency',sub:'Returning on schedule',val:74},
+    {name:'Reflection',sub:'Learning from each session',val:48},
+    {name:'Transfer',sub:'Using it in a new context',val:52},
+    {name:'Teaching Ability',sub:'Explaining it to someone else',val:40}
+  ],
+  units:[
+    {id:'u-integ',name:'Integumentary System',week:1,comps:[
+      C('skin-layers','Skin Layers',78,'high','2026-06-29','2026-07-04',['retrieval','draw','histo']),
+      C('accessory','Accessory Structures',52,'med','2026-06-25','2026-07-01',['retrieval']),
+      C('hair','Hair',44,'low','2026-06-22','2026-06-29',['label']),
+      C('nails','Nails',61,'med','2026-06-27','2026-07-03',['retrieval']),
+      C('sweat','Sweat Glands',38,'low','2026-06-20','2026-06-28',[]),
+      C('sebaceous','Sebaceous Glands',49,'low','2026-06-24','2026-06-30',['histo']),
+      C('integ-clin','Clinical Applications',41,'low','2026-06-21','2026-06-29',['clinical']),
+      C('integ-histo','Histology',64,'med','2026-06-28','2026-07-05',['histo','label']),
+      C('integ-cad','Cadaver Identification',47,'low','2026-06-23','2026-07-01',['cadaver'])
+    ]},
+    {id:'u-tissue',name:'Tissues and Histology Foundations',week:1,comps:[
+      C('epithelial','Epithelial Tissue',71,'high','2026-06-28','2026-07-05',['retrieval','histo','draw']),
+      C('connective','Connective Tissue',66,'med','2026-06-27','2026-07-04',['retrieval','histo']),
+      C('muscle-t','Muscle Tissue',58,'med','2026-06-26','2026-07-02',['histo']),
+      C('nervous-t','Nervous Tissue',54,'low','2026-06-24','2026-07-01',['retrieval']),
+      C('membranes','Body Membranes',62,'med','2026-06-27','2026-07-03',['retrieval'])
+    ]},
+    {id:'u-skel',name:'Skeletal System',week:2,comps:[
+      C('axial','Axial Skeleton',69,'high','2026-06-29','2026-07-06',['retrieval','label']),
+      C('append','Appendicular Skeleton',57,'med','2026-06-26','2026-07-02',['label','cadaver']),
+      C('bone-histo','Bone Histology',50,'low','2026-06-25','2026-07-01',['histo']),
+      C('joints','Joints',63,'med','2026-06-28','2026-07-04',['retrieval','clinical']),
+      C('skel-cad','Cadaver Identification',48,'low','2026-06-23','2026-06-30',['cadaver']),
+      C('skel-img','Imaging',42,'low','2026-06-22','2026-06-29',['clinical'])
+    ]},
+    {id:'u-musc',name:'Muscular System',week:3,comps:[
+      C('muscle-naming','Muscle Naming Logic',60,'med','2026-06-30','2026-07-05',['retrieval'],'lecture'),
+      C('head-neck','Head and Neck Muscles',46,'low','2026-06-24','2026-07-01',['label']),
+      C('trunk-m','Trunk Muscles',51,'med','2026-06-26','2026-07-02',['retrieval']),
+      C('upper-limb','Muscles of the Upper Limb',39,'low','2026-06-21','2026-06-30',['label'],'lecture'),
+      C('lower-limb','Muscles of the Lower Limb',43,'low','2026-06-23','2026-07-01',[]),
+      C('musc-histo','Muscle Histology',55,'med','2026-06-27','2026-07-03',['histo'],'lab'),
+      C('musc-cad','Upper Limb Cadaver ID',37,'low','2026-06-20','2026-06-28',['cadaver'],'lab')
+    ]},
+    {id:'u-nerv',name:'Nervous System',week:4,comps:[
+      C('neuron','Neuron Structure',67,'med','2026-06-29','2026-07-05',['retrieval','draw']),
+      C('brain','Brain Regions',49,'low','2026-06-24','2026-07-01',['label']),
+      C('spinal','Spinal Cord',53,'med','2026-06-26','2026-07-02',['retrieval']),
+      C('cranial','Cranial Nerves',35,'low','2026-06-19','2026-06-27',[]),
+      C('nerv-cad','Cadaver Identification',45,'low','2026-06-23','2026-07-01',['cadaver'])
+    ]},
+    {id:'u-cardio',name:'Cardiovascular System',week:5,comps:[
+      C('chambers','Heart Chambers',72,'high','2026-06-30','2026-07-06',['retrieval','draw']),
+      C('valves','Heart Valves',59,'med','2026-06-27','2026-07-03',['retrieval']),
+      C('vessels','Great Vessels',54,'med','2026-06-26','2026-07-02',['label']),
+      C('coronary','Coronary Circulation',48,'low','2026-06-24','2026-07-01',['clinical']),
+      C('cardio-histo','Cardiac Histology',56,'med','2026-06-27','2026-07-03',['histo']),
+      C('cardio-cad','Cadaver Identification',44,'low','2026-06-23','2026-06-30',['cadaver'])
+    ]}
+  ]
+};
+
+/* evidence method metadata */
+var EVIDENCE=[
+  {k:'retrieval',name:'Retrieval practice',icon:I.recall,desc:'Answer questions from memory across DOK levels.',cta:'Open Reps',href:'reps.html'},
+  {k:'draw',name:'Draw from memory',icon:I.draw,desc:'Reconstruct the structure with nothing in front of you.',cta:'Open Freestyle',href:'freestyle.html'},
+  {k:'label',name:'Label diagrams',icon:I.label,desc:'Place every marker on a blank figure.',cta:'Open Anatomy Canvas',href:'anatomy-canvas.html'},
+  {k:'cadaver',name:'Cadaver identification',icon:I.eye,desc:'Name the structure on the specimen, not the textbook.',cta:'Open Anatomy Canvas',href:'anatomy-canvas.html'},
+  {k:'histo',name:'Histology identification',icon:I.micro,desc:'Identify the tissue at the microscope level.',cta:'Open Anatomy Canvas',href:'anatomy-canvas.html'},
+  {k:'explain',name:'Explain aloud',icon:I.speak,desc:'Say it out loud in plain language, no notes.',cta:'Start explaining',href:null},
+  {k:'teach',name:'Teach another learner',icon:I.teach,desc:'The real test: can someone else follow you?',cta:'Start teaching',href:null},
+  {k:'clinical',name:'Clinical case',icon:I.clinical,desc:'Apply the structure to a patient scenario.',cta:'Open Gauntlet',href:'gauntlet.html'},
+  {k:'questions',name:'Create practice questions',icon:I.build,desc:'Write items that would trip up a classmate.',cta:'Open Bank Builder',href:'canvas-bank-builder.html'}
+];
+var EVMAP={};EVIDENCE.forEach(function(e){EVMAP[e.k]=e;});
+
+/* workflow stages */
+var STAGES=[
+  {k:'diagnose',n:'Step 1',t:'Diagnose',icon:I.diagnose,p:'Where are the gaps? Start by naming what you cannot yet do.'},
+  {k:'repair',n:'Step 2',t:'Repair',icon:I.repair,p:'Close the gap. Reread, redraw, or relearn the exact missing piece.'},
+  {k:'retrieve',n:'Step 3',t:'Retrieve',icon:I.retrieve,p:'Pull it back from memory. No notes. This is where memory is built.'},
+  {k:'apply',n:'Step 4',t:'Apply',icon:I.apply,p:'Use it in a new context: a case, an image, an unfamiliar angle.'},
+  {k:'teach',n:'Step 5',t:'Teach',icon:I.teach,p:'Explain it to someone else. If they follow you, you know it.'},
+  {k:'reflect',n:'Step 6',t:'Reflect',icon:I.reflect,p:'What stuck, what slipped, and what returns tomorrow?'}
+];
+
+/* =========================================================
+   STATE
+========================================================= */
+var S=store.get(KEY)||clone(SEED);
+function clone(o){return JSON.parse(JSON.stringify(o));}
+function save(){store.set(KEY,S);}
+var $=function(s,r){return (r||document).querySelector(s);};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+/* =========================================================
+   DATE HELPERS
+========================================================= */
+function dparse(s){var p=String(s).split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
+function dayDiff(a,b){return Math.round((dparse(a)-dparse(b))/86400000);}
+function isDue(d){return dayDiff(d,TODAY)<=0;}
+function isOverdue(d){return dayDiff(d,TODAY)<0;}
+function fmtShort(d){var m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];var x=dparse(d);return m[x.getMonth()]+' '+x.getDate();}
+function relRecall(d){var n=dayDiff(d,TODAY);if(n<0)return 'overdue '+(-n)+'d';if(n===0)return 'due today';if(n===1)return 'tomorrow';return 'in '+n+'d';}
+function daysToExam(){return dayDiff(S.course.exam,TODAY);}
+
+/* =========================================================
+   DERIVED
+========================================================= */
+function allComps(){var out=[];S.units.forEach(function(u){u.comps.forEach(function(c){out.push({c:c,u:u});});});return out;}
+function findComp(id){var a=allComps();for(var i=0;i<a.length;i++)if(a[i].c.id===id)return a[i];return null;}
+function unitMastery(u){var s=0;u.comps.forEach(function(c){s+=c.mastery;});return Math.round(s/u.comps.length);}
+function readiness(){var s=0;S.dims.forEach(function(d){s+=d.val;});return Math.round(s/S.dims.length);}
+function weaknesses(){
+  var out=[];
+  allComps().forEach(function(x){
+    var c=x.c,reasons=[];
+    if(c.mastery<50)reasons.push('missed');
+    if(c.conf==='low')reasons.push('conf');
+    if(isOverdue(c.next))reasons.push('overdue');
+    if(reasons.length)out.push({c:c,u:x.u,reasons:reasons,score:c.mastery+(isOverdue(c.next)?-10:0)});
+  });
+  out.sort(function(a,b){return a.score-b.score;});
+  return out;
+}
+function dueToday(){return allComps().filter(function(x){return isDue(x.c.next);});}
+function todayLecture(){return allComps().filter(function(x){return x.c.today==='lecture';});}
+function todayLab(){return allComps().filter(function(x){return x.c.today==='lab';});}
+function recommendedChallenge(){
+  var w=weaknesses();
+  var hardest=w.length?w[0]:allComps()[0];
+  return hardest;
+}
+function estMinutes(){return S.profile.minutes||45;}
+
+/* =========================================================
+   TOAST
+========================================================= */
+var toastT;
+function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('show');},2600);}
+
+/* =========================================================
+   RENDER: SECTION 1 - TODAY'S PLAN
+========================================================= */
+function renderPlan(){
+  var lec=todayLecture(),lab=todayLab(),due=dueToday(),weak=weaknesses(),rec=recommendedChallenge();
+  var name=S.profile.name?(', '+esc(S.profile.name)):'';
+  function names(arr){return arr.length?arr.map(function(x){return esc(x.c.name);}).join(', '):'None scheduled';}
+  var exam=daysToExam();
+  var html=''+
+  '<p class="peyebrow">Section 1 · Today\'s Mastery Plan</p>'+
+  '<h1 id="h-plan">Here is your highest-value work'+name+'.</h1>'+
+  '<p class="psub">One session. Diagnose, repair, retrieve, apply, teach, reflect. Everything below was chosen for you from where you are exposed right now.</p>'+
+  '<div class="plan-grid">'+
+    '<div class="plan-list">'+
+      plItem(I.target,'Today\'s lecture competencies',names(lec))+
+      plItem(I.flask,'Today\'s lab competencies',names(lab))+
+      plItem(I.recall,'Retrieval practice due today',due.length+' competenc'+(due.length===1?'y':'ies')+' up for recall')+
+      plItem(I.weak,'Weaknesses to repair',weak.length+' flagged · start with '+(weak[0]?esc(weak[0].c.name):'none'))+
+      plItem(I.bolt,'Recommended mastery challenge','Prove '+(rec?esc(rec.c.name):'a weak competency')+' with a fresh method')+
+    '</div>'+
+    '<div class="plan-side">'+
+      '<div class="count"><div class="num">'+(exam>0?exam:0)+'</div><div class="lbl">days to practical</div></div>'+
+      '<div class="metric-row"><span>Estimated session</span><b>'+estMinutes()+' min</b></div>'+
+      '<div class="metric-row"><span>Overall readiness</span><b>'+readiness()+'%</b></div>'+
+      '<div class="metric-row"><span>Recall due</span><b>'+due.length+'</b></div>'+
+      '<div class="metric-row"><span>Weak spots</span><b>'+weak.length+'</b></div>'+
+    '</div>'+
+  '</div>'+
+  '<div class="plan-cta">'+
+    '<button class="btn gold big" data-session="today">'+I.bolt+'Start Today\'s Session</button>'+
+    '<button class="btn ghost big" data-session="repair" style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">Repair weaknesses only</button>'+
+  '</div>';
+  $('#planCard').innerHTML=html;
+}
+function plItem(icon,title,body){return '<div class="pl-item"><span class="ic">'+icon+'</span><div><h3>'+title+'</h3><p>'+body+'</p></div></div>';}
+
+/* =========================================================
+   RENDER: SECTION 2 - DASHBOARD
+========================================================= */
+function ring(pct,color,big){
+  var r=big?46:42,c=2*Math.PI*r,off=c*(1-pct/100),sz=big?120:112,cx=sz/2;
+  return '<svg class="ring" viewBox="0 0 '+sz+' '+sz+'" width="'+sz+'" height="'+sz+'" role="img" aria-label="'+pct+' percent">'+
+    '<circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="rgba(11,21,48,.10)" stroke-width="9"/>'+
+    '<circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'" transform="rotate(-90 '+cx+' '+cx+')"/>'+
+    '<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="'+(big?26:23)+'" font-weight="800" fill="var(--navy)">'+pct+'</text>'+
+  '</svg>';
+}
+function ringColor(v){return v>=70?'#3F7A5B':v>=50?'#C9A14A':'#8B3A2E';}
+function renderDashboard(){
+  var rd=readiness();
+  var top='<div class="card readiness">'+ring(rd,'#C9A14A',true)+'<div class="rtext"><p class="eyebrow" style="color:var(--gold)">Overall Exam Readiness</p><h3>You are '+rd+'% ready for the practical</h3><p>'+readinessLine(rd)+'</p></div><div style="flex:1"></div><button class="btn gold" data-session="today">Close the gap</button></div>';
+  var cards=S.dims.map(function(d){
+    return '<div class="card hover ring-card"><div class="ring-wrap">'+ring(d.val,ringColor(d.val))+'</div><h3>'+esc(d.name)+'</h3><p class="rsub">'+bandWord(d.val)+'</p></div>';
+  }).join('');
+  $('#dashGrid').innerHTML=top+cards;
+}
+function bandWord(v){return v>=70?'Strong':v>=50?'Building':'Exposed';}
+function readinessLine(v){return v>=75?'On track. Keep the recall schedule and protect your weak spots.':v>=55?'Getting there. The fastest gains are in your lowest three dimensions below.':'Real gaps remain. Repair weaknesses first, then rebuild recall consistency.';}
+
+/* =========================================================
+   RENDER: SECTION 3 - COMPETENCY MAP
+========================================================= */
+function mband(m){return m>=70?'m-hi':m>=50?'m-md':'m-lo';}
+function renderMap(){
+  var open=S.__openUnits||{};
+  var html=S.units.map(function(u){
+    var um=unitMastery(u),isOpen=!!open[u.id];
+    var rows=u.comps.map(function(c){
+      var evTxt=c.ev.length?c.ev.map(function(k){return EVMAP[k]?EVMAP[k].name:k;}).join(' · '):'No evidence yet';
+      var over=isOverdue(c.next);
+      return '<div class="comp-row">'+
+        '<div class="comp-name">'+esc(c.name)+'<span class="ev">'+esc(evTxt)+'</span></div>'+
+        '<div class="mpill '+mband(c.mastery)+'">'+c.mastery+'%</div>'+
+        '<div class="comp-meta">Confidence <span class="conf conf-'+c.conf+'">'+c.conf+'</span><br>Reviewed '+fmtShort(c.last)+' · Recall <span class="'+(over?'overdue':'')+'">'+relRecall(c.next)+'</span></div>'+
+        '<button class="btn" data-prove="'+c.id+'">Prove it</button>'+
+      '</div>';
+    }).join('');
+    return '<div class="card unit">'+
+      '<button class="unit-head" aria-expanded="'+(isOpen?'true':'false')+'" data-unit="'+u.id+'">'+
+        '<span class="chev">'+I.chev+'</span>'+
+        '<div style="flex:1;min-width:0"><h3>'+esc(u.name)+'</h3><span class="umeta">Week '+u.week+' · '+u.comps.length+' competencies</span></div>'+
+        '<span class="ubar" aria-hidden="true"><span style="width:'+um+'%"></span></span>'+
+        '<span class="mpill '+mband(um)+'">'+um+'%</span>'+
+      '</button>'+
+      '<div class="unit-body" '+(isOpen?'':'hidden')+'>'+rows+'</div>'+
+    '</div>';
+  }).join('');
+  $('#mapWrap').innerHTML=html;
+}
+
+/* =========================================================
+   RENDER: SECTION 4 - WEAKNESS
+========================================================= */
+function renderWeakness(){
+  var w=weaknesses();
+  var tagMap={missed:['tag-missed','Frequently missed'],conf:['tag-conf','Low confidence'],overdue:['tag-overdue','Overdue recall']};
+  var items=w.slice(0,10).map(function(x){
+    var tags=x.reasons.map(function(r){return '<span class="tag '+tagMap[r][0]+'">'+tagMap[r][1]+'</span>';}).join('');
+    return '<div class="weak-item">'+tags+'<span class="wn">'+esc(x.c.name)+'</span><span class="wu">'+esc(x.u.name)+'</span><button class="btn" data-prove="'+x.c.id+'" style="padding:7px 12px;font-size:12.5px">Repair</button></div>';
+  }).join('');
+  var head='<div class="weak-head"><div><div class="wc">'+w.length+'</div><div class="wl">competencies need repair</div></div>'+
+    '<p class="serif" style="flex:1;min-width:200px">Collected automatically from missed questions, low-confidence concepts, and overdue recall items. One session repairs the top ones.</p>'+
+    '<button class="btn rust big" data-session="repair">'+I.repair+'Repair My Weaknesses</button></div>';
+  $('#weakWrap').innerHTML=head+'<div class="card">'+(items||'<div style="padding:22px;text-align:center;color:var(--ink-faint)">No weaknesses flagged. Strong work.</div>')+'</div>';
+}
+
+/* =========================================================
+   RENDER: SECTION 5 - WORKFLOW
+========================================================= */
+function renderFlow(){
+  $('#flowWrap').innerHTML=STAGES.map(function(s){
+    return '<button class="card hover stage" data-stage="'+s.k+'"><span class="si">'+s.icon+'</span><span class="sn">'+s.n+'</span><h3>'+s.t+'</h3><p>'+s.p+'</p><span class="go">Start here '+I.chev+'</span></button>';
+  }).join('');
+}
+
+/* =========================================================
+   RENDER: SECTION 6 - EVIDENCE
+========================================================= */
+function renderEvidence(){
+  $('#evGrid').innerHTML=EVIDENCE.map(function(e){
+    var link=e.href?('data-tool="'+e.href+'"'):'data-selfev="'+e.k+'"';
+    return '<div class="card hover ev-card"><span class="ei">'+e.icon+'</span><h3>'+esc(e.name)+'</h3><p>'+esc(e.desc)+'</p><button class="btn" '+link+'>'+esc(e.cta)+'</button></div>';
+  }).join('');
+}
+
+/* =========================================================
+   RENDER: SECTION 7 - SKILLS
+========================================================= */
+function renderSkills(){
+  $('#skillWrap').innerHTML=S.skills.map(function(s){
+    return '<div class="skill-row"><div class="snm">'+esc(s.name)+'<span>'+esc(s.sub)+'</span></div><div class="sbar" role="img" aria-label="'+s.val+' percent"><span style="width:'+s.val+'%"></span></div><div class="spct">'+s.val+'%</div></div>';
+  }).join('');
+}
+
+/* =========================================================
+   RENDER: SECTION 8 - COACH
+========================================================= */
+var COACH_PROMPTS=[
+  {id:'study-today',t:'What should I study today?'},
+  {id:'twenty',t:'I only have 20 minutes.'},
+  {id:'prep-lab',t:'Help me prepare for lab.'},
+  {id:'test-weak',t:'Test me on my weaknesses.'},
+  {id:'forget',t:'I keep forgetting this topic.'},
+  {id:'ready',t:'Am I ready for the exam?'},
+  {id:'another',t:'Explain this another way.'},
+  {id:'durable',t:'Help me build durable memory.'}
+];
+function renderCoachPrompts(){
+  $('#coachPrompts').innerHTML=COACH_PROMPTS.map(function(p){return '<button class="pchip" data-prompt="'+p.id+'">'+esc(p.t)+'</button>';}).join('');
+}
+function coachSay(who,html,actions){
+  var log=$('#coachLog');
+  var a=(actions&&actions.length)?'<div class="m-actions">'+actions.map(function(x){return '<button class="btn '+(x.kind||'')+'" '+x.attr+'>'+esc(x.label)+'</button>';}).join('')+'</div>':'';
+  var div=document.createElement('div');
+  div.className='msg '+(who==='you'?'you':'bot');
+  div.innerHTML=html+a;
+  log.appendChild(div);
+  log.scrollTop=log.scrollHeight;
+}
+function coachRespond(id,rawText){
+  var w=weaknesses(),due=dueToday(),lec=todayLecture(),lab=todayLab(),rd=readiness(),exam=daysToExam();
+  function nm(arr){return arr.map(function(x){return esc(x.c.name);}).join(', ')||'nothing scheduled';}
+  var reply='',actions=[];
+  switch(id){
+    case 'study-today':
+      reply='Start your full cycle. Today\'s lecture is <b>'+nm(lec)+'</b> and lab is <b>'+nm(lab)+'</b>. You also have <b>'+due.length+'</b> recall items due and <b>'+w.length+'</b> weak spots. The single highest-value move is one guided session that hits all of it.';
+      actions=[{label:'Start Today\'s Session',kind:'gold',attr:'data-session="today"'}];break;
+    case 'twenty':
+      reply='Twenty minutes is enough for a focused repair. I would spend it on your two weakest: <b>'+(w[0]?esc(w[0].c.name):'')+'</b> and <b>'+(w[1]?esc(w[1].c.name):'')+'</b>. Retrieve, then draw from memory. No rereading.';
+      actions=[{label:'Run 20-min micro-session',kind:'gold',attr:'data-session="micro"'}];break;
+    case 'prep-lab':
+      reply='Lab today is <b>'+nm(lab)+'</b>. Lab is identification under pressure, so practice naming on blank figures and specimens, not reading. Cadaver and histology are your lowest dimensions right now.';
+      actions=[{label:'Open Anatomy Canvas',kind:'',attr:'data-tool="anatomy-canvas.html"'},{label:'Run lab prep',kind:'primary',attr:'data-session="lab"'}];break;
+    case 'test-weak':
+      reply='You have <b>'+w.length+'</b> flagged competencies. I will build a session from only those, hardest first, starting with <b>'+(w[0]?esc(w[0].c.name):'')+'</b>.';
+      actions=[{label:'Repair My Weaknesses',kind:'rust',attr:'data-session="repair"'}];break;
+    case 'forget':
+      reply='Forgetting is the signal, not the failure. The fix is spacing: pull it from memory today, again in two days, then further apart each time it sticks. Rereading feels productive but does not build durable memory. Retrieval does.';
+      actions=[{label:'Open Spaced Recall',kind:'',attr:'data-tool="spaced-recall.html"'},{label:'Schedule this repair',kind:'primary',attr:'data-session="repair"'}];break;
+    case 'ready':
+      reply='You are <b>'+rd+'%</b> ready with <b>'+(exam>0?exam:0)+'</b> days to the practical. '+readinessLine(rd)+' Your lowest dimensions are '+lowDims(3)+'.';
+      actions=[{label:'See dashboard',kind:'',attr:'data-scroll="#s-dash"'},{label:'Close the gap',kind:'gold',attr:'data-session="today"'}];break;
+    case 'another':
+      reply='Tell me the competency and I will reframe it three ways: a plain-language version, a picture to draw, and a clinical example. Which one is fighting you? A good place to start is your weakest, <b>'+(w[0]?esc(w[0].c.name):'')+'</b>.';
+      actions=[{label:'Prove '+(w[0]?esc(w[0].c.name):'it'),kind:'primary',attr:w[0]?('data-prove="'+w[0].c.id+'"'):'data-session="repair"'}];break;
+    case 'durable':
+      reply='Durable memory is built four ways, in this order: retrieve it cold, draw it from memory, explain it aloud, then space the return. Consuming content again does almost nothing. Your Spaced Recall Consistency is '+dimVal('recall')+'% and Teaching Ability is '+dimSkill('Teaching Ability')+'%, so teaching is your biggest untapped lever.';
+      actions=[{label:'Run the full cycle',kind:'gold',attr:'data-session="today"'}];break;
+    default:
+      reply=coachFreeText(rawText||'');
+      actions=coachFreeActions(rawText||'');
+  }
+  coachSay('bot',reply,actions);
+}
+function lowDims(n){var d=S.dims.slice().sort(function(a,b){return a.val-b.val;}).slice(0,n);return d.map(function(x){return esc(x.name.replace(' Mastery',''))+' ('+x.val+'%)';}).join(', ');}
+function dimVal(k){var d=S.dims.filter(function(x){return x.k===k;})[0];return d?d.val:0;}
+function dimSkill(nm){var d=S.skills.filter(function(x){return x.name===nm;})[0];return d?d.val:0;}
+function coachFreeText(t){
+  t=t.toLowerCase();
+  if(/lab|cadaver|specimen/.test(t))return 'Lab is identification under pressure. Practice naming on blank figures, not rereading. Cadaver Mastery is one of your lower dimensions right now.';
+  if(/forget|remember|stick|memor/.test(t))return 'The fix is retrieval plus spacing: recall it cold today, again in two days, then further out. Rereading feels good and does little.';
+  if(/exam|ready|test|practical/.test(t))return 'You are '+readiness()+'% ready with '+Math.max(0,daysToExam())+' days left. Repair your weakest three competencies first.';
+  if(/time|minute|quick|short/.test(t))return 'Short on time? Spend it on retrieval of your two weakest competencies. Twenty focused minutes beats an hour of rereading.';
+  if(/weak|gap|bad at|struggl/.test(t))return 'You have '+weaknesses().length+' flagged competencies. Start with the hardest and prove it with a fresh method.';
+  return 'I can point you at the single best next move. Try one of the prompts below, or ask about today, your weaknesses, lab prep, or exam readiness.';
+}
+function coachFreeActions(t){
+  t=t.toLowerCase();
+  if(/weak|gap|struggl/.test(t))return [{label:'Repair My Weaknesses',kind:'rust',attr:'data-session="repair"'}];
+  if(/lab|cadaver/.test(t))return [{label:'Open Anatomy Canvas',kind:'',attr:'data-tool="anatomy-canvas.html"'}];
+  return [{label:'Start Today\'s Session',kind:'gold',attr:'data-session="today"'}];
+}
+
+/* =========================================================
+   SESSION ENGINE
+========================================================= */
+var SESS=null;
+function buildTodaySession(){
+  var due=dueToday(),weak=weaknesses(),lec=todayLecture(),lab=todayLab();
+  var picks=weak.slice(0,3).map(function(x){return x.c;});
+  return {title:'Today\'s Session',sub:'Full mastery cycle',comps:picks,
+    steps:STAGES.map(function(st){return stageStep(st,{due:due,weak:weak,lec:lec,lab:lab,picks:picks});})};
+}
+function buildRepairSession(){
+  var weak=weaknesses(),picks=weak.slice(0,4).map(function(x){return x.c;});
+  var pick=['diagnose','repair','retrieve','reflect'];
+  return {title:'Repair Session',sub:weak.length+' weak competencies',comps:picks,
+    steps:STAGES.filter(function(s){return pick.indexOf(s.k)>-1;}).map(function(st){return stageStep(st,{weak:weak,picks:picks});})};
+}
+function buildMicroSession(){
+  var weak=weaknesses(),picks=weak.slice(0,2).map(function(x){return x.c;});
+  return {title:'20-Minute Micro-Session',sub:'Two weakest competencies',comps:picks,
+    steps:[stageStep(STAGES[2],{picks:picks}),stageStep(STAGES[0],{weak:weak,picks:picks}),stageStep(STAGES[5],{picks:picks})]};
+}
+function buildLabSession(){
+  var lab=todayLab(),picks=lab.map(function(x){return x.c;});
+  return {title:'Lab Prep',sub:'Identification under pressure',comps:picks,
+    steps:[stageStep(STAGES[0],{picks:picks}),stageStep(STAGES[1],{picks:picks}),stageStep(STAGES[2],{picks:picks}),stageStep(STAGES[3],{picks:picks})]};
+}
+function buildStageSession(k){
+  var st=STAGES.filter(function(s){return s.k===k;})[0]||STAGES[0];
+  var weak=weaknesses(),picks=weak.slice(0,3).map(function(x){return x.c;});
+  return {title:st.t,sub:'Single stage',comps:picks,steps:[stageStep(st,{weak:weak,picks:picks,due:dueToday(),lec:todayLecture(),lab:todayLab()})]};
+}
+function stageStep(st,ctx){
+  ctx=ctx||{};
+  var items=[],actions=[];
+  var picks=ctx.picks||[];
+  if(st.k==='diagnose'){
+    (ctx.weak||weaknesses()).slice(0,4).forEach(function(x){items.push('<b>'+esc(x.c.name)+'</b>, '+x.c.mastery+'%, confidence '+x.c.conf);});
+    actions=[{label:'See full weakness list',attr:'data-scroll="#s-weak" data-sclose'}];
+  }else if(st.k==='repair'){
+    picks.forEach(function(c){items.push('Reread and redraw <b>'+esc(c.name)+'</b>, then close the book');});
+    actions=[{label:'Draw from memory',attr:'data-tool="freestyle.html"'},{label:'Label a blank figure',attr:'data-tool="anatomy-canvas.html"'}];
+  }else if(st.k==='retrieve'){
+    picks.forEach(function(c){items.push('Recall <b>'+esc(c.name)+'</b> cold, no notes');});
+    if(ctx.due&&ctx.due.length)items.push(ctx.due.length+' scheduled recall items are due today');
+    actions=[{label:'Open Reps',kind:'primary',attr:'data-tool="reps.html"'},{label:'Spaced Recall',attr:'data-tool="spaced-recall.html"'}];
+  }else if(st.k==='apply'){
+    picks.forEach(function(c){items.push('Use <b>'+esc(c.name)+'</b> in a case or on an image');});
+    actions=[{label:'Open Gauntlet',kind:'primary',attr:'data-tool="gauntlet.html"'}];
+  }else if(st.k==='teach'){
+    picks.forEach(function(c){items.push('Explain <b>'+esc(c.name)+'</b> out loud in plain language');});
+    actions=[{label:'Mark taught',kind:'gold',attr:'data-logev="teach:'+(picks[0]?picks[0].id:'')+'"'}];
+  }else if(st.k==='reflect'){
+    items.push('What returned easily? What slipped?');
+    items.push('Which competency comes back tomorrow?');
+  }
+  return {stage:st,items:items,actions:actions,reflect:st.k==='reflect'};
+}
+function openSession(kind){
+  if(kind==='today')SESS=buildTodaySession();
+  else if(kind==='repair')SESS=buildRepairSession();
+  else if(kind==='micro')SESS=buildMicroSession();
+  else if(kind==='lab')SESS=buildLabSession();
+  else if(kind==='stage')SESS=buildStageSession(SESS&&SESS._stageK);
+  else SESS=buildTodaySession();
+  SESS.i=0;
+  $('#sessTitle').textContent=SESS.title;
+  $('#sessSub').textContent=SESS.sub;
+  renderSessStep();
+  var ov=$('#sessionOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');
+  lastFocus=document.activeElement;
+  $('#sessClose').focus();
+}
+function renderSessStep(){
+  var step=SESS.steps[SESS.i],st=step.stage;
+  var dots=SESS.steps.map(function(s,idx){return '<i class="'+(idx<SESS.i?'done':idx===SESS.i?'on':'')+'"></i>';}).join('');
+  var body='<div class="dots" aria-hidden="true">'+dots+'</div><div class="step '+(step.reflect?'reflect':'')+'">'+
+    '<div class="step-icon">'+st.icon+'</div>'+
+    '<div class="sn">'+st.n+'</div><h3>'+st.t+'</h3>'+
+    '<p class="prompt">'+esc(st.p)+'</p>';
+  if(step.items.length)body+='<ul class="items">'+step.items.map(function(x){return '<li><span style="color:var(--gold)">'+I.chev+'</span><span>'+x+'</span></li>';}).join('')+'</ul>';
+  if(step.actions&&step.actions.length)body+='<div class="actions">'+step.actions.map(function(a){return '<button class="btn '+(a.kind||'')+'" '+a.attr+'>'+esc(a.label)+'</button>';}).join('')+'</div>';
+  if(step.reflect)body+='<label class="visually-hidden" for="reflectBox">Reflection</label><textarea id="reflectBox" placeholder="One line: what stuck, what slipped..."></textarea>';
+  body+='</div>';
+  $('#sessBody').innerHTML=body;
+  $('#sessBack').textContent=SESS.i===0?'Close':'Back';
+  var last=SESS.i===SESS.steps.length-1;
+  $('#sessNext').textContent=last?'Finish session':'Next';
+}
+function sessNext(){
+  if(SESS.i<SESS.steps.length-1){SESS.i++;renderSessStep();return;}
+  /* finish: log evidence, bump mastery on picks, reschedule recall */
+  (SESS.comps||[]).forEach(function(c){bumpComp(c,6);});
+  bumpSkill('Reflection',3);bumpSkill('Retrieval',2);
+  save();renderAll();
+  closeSession();
+  toast('Session complete. Mastery and recall dates updated.');
+}
+function closeSession(){var ov=$('#sessionOverlay');ov.classList.remove('open');ov.setAttribute('aria-hidden','true');if(lastFocus)lastFocus.focus();}
+
+/* =========================================================
+   EVIDENCE / MASTERY MUTATION (fake tracking)
+========================================================= */
+function bumpComp(c,amt){
+  c.mastery=Math.min(100,c.mastery+amt);
+  c.last=TODAY;
+  var gap=c.mastery>=70?6:c.mastery>=50?3:2;
+  c.next=addDays(TODAY,gap);
+  if(c.mastery>=70&&c.conf!=='high')c.conf='high';
+  else if(c.mastery>=50&&c.conf==='low')c.conf='med';
+}
+function addDays(d,n){var x=dparse(d);x.setDate(x.getDate()+n);return x.getFullYear()+'-'+pad(x.getMonth()+1)+'-'+pad(x.getDate());}
+function pad(n){return n<10?'0'+n:''+n;}
+function bumpSkill(name,amt){var s=S.skills.filter(function(x){return x.name===name;})[0];if(s)s.val=Math.min(100,s.val+amt);}
+function bumpDim(k,amt){var d=S.dims.filter(function(x){return x.k===k;})[0];if(d)d.val=Math.min(100,d.val+amt);}
+function logEvidence(k,compId){
+  var c=compId?(findComp(compId)||{}).c:null;
+  if(c){if(c.ev.indexOf(k)<0)c.ev.push(k);bumpComp(c,5);}
+  var dimFor={retrieval:'recall',draw:'draw',label:'lab',cadaver:'cadaver',histo:'histo',clinical:'clinical'};
+  if(dimFor[k])bumpDim(dimFor[k],3);
+  var skillFor={retrieval:'Retrieval',teach:'Teaching Ability',clinical:'Transfer',questions:'Gap Identification',explain:'Teaching Ability'};
+  if(skillFor[k])bumpSkill(skillFor[k],3);
+  save();renderAll();
+  toast('Evidence logged: '+(EVMAP[k]?EVMAP[k].name:k)+(c?' · '+c.name:''));
+}
+
+/* =========================================================
+   PROVE-IT (competency evidence picker)
+========================================================= */
+function openProve(id){
+  var f=findComp(id);if(!f)return;var c=f.c;
+  SESS={title:'Prove: '+c.name,sub:'Choose your evidence',comps:[c],i:0,steps:[{stage:{n:'Evidence',t:'How will you prove '+c.name+'?',icon:I.target,p:'Mastery moves only after you demonstrate it. Pick a method.'},items:[],actions:EVIDENCE.filter(function(e){return ['retrieval','draw','label','cadaver','histo','explain','teach','clinical','questions'].indexOf(e.k)>-1;}).map(function(e){
+    return e.href?{label:e.name,attr:'data-tool="'+e.href+'" data-logafter="'+e.k+':'+c.id+'"'}:{label:e.name,kind:'primary',attr:'data-logev="'+e.k+':'+c.id+'"'};
+  }),reflect:false}]};
+  $('#sessTitle').textContent=SESS.title;$('#sessSub').textContent=SESS.sub;
+  renderSessStep();
+  var ov=$('#sessionOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');
+  lastFocus=document.activeElement;$('#sessClose').focus();
+  /* single step: Next becomes Done */
+  $('#sessNext').textContent='Done';
+}
+
+/* =========================================================
+   TOOL LINK (open sibling tool, respecting iframe target)
+========================================================= */
+function openTool(href,logAfter){
+  if(logAfter){var p=logAfter.split(':');logEvidence(p[0],p[1]);}
+  /* target=_top so the tool replaces the framed page in Kajabi/GitHub Pages */
+  try{window.open(href,'_top');}catch(e){window.location.href=href;}
+}
+
+/* =========================================================
+   INSTRUCTOR CONFIG
+========================================================= */
+function openInstructor(){
+  $('#cfgCourse').value=S.course.label;
+  $('#cfgExam').value=S.course.exam;
+  $('#cfgLecture').value=S.course.lecture.join(', ');
+  $('#cfgLab').value=S.course.lab.join(', ');
+  $('#cfgHighyield').value=S.course.highyield;
+  var ov=$('#instrOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');
+  lastFocus=document.activeElement;$('#instrClose').focus();
+}
+function closeInstructor(){var ov=$('#instrOverlay');ov.classList.remove('open');ov.setAttribute('aria-hidden','true');if(lastFocus)lastFocus.focus();}
+function saveInstructor(){
+  S.course.label=$('#cfgCourse').value.trim()||S.course.label;
+  S.course.exam=$('#cfgExam').value||S.course.exam;
+  S.course.lecture=splitList($('#cfgLecture').value);
+  S.course.lab=splitList($('#cfgLab').value);
+  S.course.highyield=$('#cfgHighyield').value.trim();
+  /* map lecture/lab labels back onto competencies by name match */
+  allComps().forEach(function(x){x.c.today=null;});
+  S.course.lecture.forEach(function(n){markToday(n,'lecture');});
+  S.course.lab.forEach(function(n){markToday(n,'lab');});
+  save();renderAll();closeInstructor();toast('Configuration saved. Daily plan regenerated.');
+}
+function splitList(s){return s.split(',').map(function(x){return x.trim();}).filter(Boolean);}
+function markToday(name,type){var lc=name.toLowerCase();var m=allComps().filter(function(x){return x.c.name.toLowerCase()===lc;})[0]||allComps().filter(function(x){return x.c.name.toLowerCase().indexOf(lc)>-1||lc.indexOf(x.c.name.toLowerCase())>-1;})[0];if(m)m.c.today=type;}
+
+/* =========================================================
+   ONBOARDING
+========================================================= */
+var OB={step:0,data:{}};
+var OB_STEPS=[
+  {t:'Welcome to Mastery OS',s:'This is your learning operating system. It tells you the single highest-value thing to do next, then coaches you through proving you know it.',kind:'intro'},
+  {t:'What should we call you?',s:'Just a first name is fine. It stays on this device.',kind:'name'},
+  {t:'What grade are you aiming for?',s:'Your target sets how aggressively we schedule recall and repair.',kind:'grade',opts:[['A','Mastery. Recall stays tight, weaknesses repaired fast.'],['B','Strong. Steady schedule with room to breathe.'],['C to pass','Focused on the high-yield essentials to clear the bar.']]},
+  {t:'How many days a week will you study?',s:'Be honest. A plan you keep beats a plan you admire.',kind:'days'},
+  {t:'How long is a typical study session?',s:'This sets your estimated daily plan length.',kind:'minutes'},
+  {t:'Which ways of proving mastery do you like?',s:'Pick any. We weight your plan toward these, but still stretch you.',kind:'activities',opts:[['retrieval','Retrieval practice'],['draw','Draw from memory'],['label','Label diagrams'],['cadaver','Cadaver ID'],['histo','Histology ID'],['teach','Teach someone'],['clinical','Clinical cases']]},
+  {t:'How confident do you feel right now?',s:'No wrong answer. It just tunes the tone of your coach.',kind:'confidence',opts:[['shaky','Shaky. I need structure.'],['building','Building. I know some of it.'],['solid','Solid. I want to be pushed.']]},
+  {t:'You are set',s:'Your Mastery OS is built. Every day it will show you the one best move.',kind:'done'}
+];
+function showOnboard(){
+  var ob=$('#onboard');ob.hidden=false;
+  renderOB();
+}
+function renderOB(){
+  var st=OB_STEPS[OB.step],d=OB.data,p=$('#obPanel');
+  var dots='<div class="ob-dots" aria-hidden="true">'+OB_STEPS.map(function(x,i){return '<i class="'+(i<=OB.step?'on':'')+'"></i>';}).join('')+'</div>';
+  var inner='';
+  if(st.kind==='intro'||st.kind==='done'){
+    inner='<h2>'+esc(st.t)+'</h2><p class="sub">'+esc(st.s)+'</p>';
+  }else if(st.kind==='name'){
+    inner='<h2>'+esc(st.t)+'</h2><p class="sub">'+esc(st.s)+'</p><input class="ob-txt" id="obName" type="text" placeholder="Your name" value="'+esc(d.name||'')+'" autocomplete="given-name">';
+  }else if(st.kind==='grade'){
+    inner='<h2>'+esc(st.t)+'</h2><p class="sub">'+esc(st.s)+'</p><div class="ob-choices" role="group">'+st.opts.map(function(o){var on=d.grade===o[0];return '<button class="ob-choice" aria-pressed="'+(on?'true':'false')+'" data-obgrade="'+esc(o[0])+'"><span class="ck">'+I.check+'</span><span><span class="ttl">'+esc(o[0])+'</span><span class="dsc">'+esc(o[1])+'</span></span></button>';}).join('')+'</div>';
+  }else if(st.kind==='days'){
+    inner='<h2>'+esc(st.t)+'</h2><p class="sub">'+esc(st.s)+'</p><div class="ob-chips" role="group">'+[2,3,4,5,6,7].map(function(n){var on=(d.days||4)===n;return '<button class="ob-chip" aria-pressed="'+(on?'true':'false')+'" data-obdays="'+n+'">'+n+' days</button>';}).join('')+'</div>';
+  }else if(st.kind==='minutes'){
+    inner='<h2>'+esc(st.t)+'</h2><p class="sub">'+esc(st.s)+'</p><div class="ob-chips" role="group">'+[20,30,45,60,90].map(function(n){var on=(d.minutes||45)===n;return '<button class="ob-chip" aria-pressed="'+(on?'true':'false')+'" data-obmin="'+n+'">'+n+' min</button>';}).join('')+'</div>';
+  }else if(st.kind==='activities'){
+    var sel=d.activities||['retrieval','draw'];
+    inner='<h2>'+esc(st.t)+'</h2><p class="sub">'+esc(st.s)+'</p><div class="ob-chips" role="group">'+st.opts.map(function(o){var on=sel.indexOf(o[0])>-1;return '<button class="ob-chip" aria-pressed="'+(on?'true':'false')+'" data-obact="'+esc(o[0])+'">'+esc(o[1])+'</button>';}).join('')+'</div>';
+  }else if(st.kind==='confidence'){
+    inner='<h2>'+esc(st.t)+'</h2><p class="sub">'+esc(st.s)+'</p><div class="ob-choices" role="group">'+st.opts.map(function(o){var on=d.confidence===o[0];return '<button class="ob-choice" aria-pressed="'+(on?'true':'false')+'" data-obconf="'+esc(o[0])+'"><span class="ck">'+I.check+'</span><span><span class="ttl">'+esc(o[1].split('.')[0])+'</span><span class="dsc">'+esc(o[1])+'</span></span></button>';}).join('')+'</div>';
+  }
+  p.innerHTML=dots+inner;
+  $('#obBack').style.visibility=OB.step===0?'hidden':'visible';
+  $('#obNext').textContent=st.kind==='done'?'Enter Mastery OS':(st.kind==='intro'?'Get started':'Continue');
+  var nameI=$('#obName');if(nameI)nameI.focus();
+}
+function obNext(){
+  var st=OB_STEPS[OB.step];
+  if(st.kind==='name'){var v=$('#obName');OB.data.name=v?v.value.trim():'';}
+  if(OB.step<OB_STEPS.length-1){OB.step++;renderOB();return;}
+  /* finish */
+  var d=OB.data;
+  S.profile={onboarded:true,name:d.name||'',grade:d.grade||'B',days:d.days||4,minutes:d.minutes||45,activities:d.activities||['retrieval','draw'],confidence:d.confidence||'building'};
+  save();
+  $('#onboard').hidden=true;
+  renderAll();
+  toast('Welcome'+(S.profile.name?', '+S.profile.name:'')+'. Your plan is ready.');
+}
+function obBack(){if(OB.step>0){OB.step--;renderOB();}}
+
+/* =========================================================
+   RENDER ALL
+========================================================= */
+function renderAll(){
+  $('#greetBadge').textContent=S.profile.name?('Hi, '+S.profile.name):'Welcome';
+  renderPlan();renderDashboard();renderMap();renderWeakness();renderFlow();renderEvidence();renderSkills();
+}
+
+/* =========================================================
+   EVENTS (delegation)
+========================================================= */
+var lastFocus=null;
+document.addEventListener('click',function(e){
+  var t=e.target.closest('[data-session],[data-prove],[data-tool],[data-selfev],[data-logev],[data-logafter],[data-stage],[data-unit],[data-prompt],[data-scroll],[data-sclose]');
+  if(!t)return;
+  if(t.hasAttribute('data-session')){var k=t.getAttribute('data-session');if(k==='stage')return;openSession(k);}
+  else if(t.hasAttribute('data-prove')){openProve(t.getAttribute('data-prove'));}
+  else if(t.hasAttribute('data-tool')){
+    var la=t.getAttribute('data-logafter');
+    if(t.hasAttribute('data-sclose'))closeSession();
+    openTool(t.getAttribute('data-tool'),la);
+  }
+  else if(t.hasAttribute('data-selfev')){logEvidence(t.getAttribute('data-selfev'),null);}
+  else if(t.hasAttribute('data-logev')){var pv=t.getAttribute('data-logev').split(':');logEvidence(pv[0],pv[1]);closeSession();}
+  else if(t.hasAttribute('data-stage')){SESS={_stageK:t.getAttribute('data-stage')};openSession('stage');}
+  else if(t.hasAttribute('data-unit')){toggleUnit(t.getAttribute('data-unit'));}
+  else if(t.hasAttribute('data-prompt')){var id=t.getAttribute('data-prompt');coachSay('you',esc(t.textContent));coachRespond(id,'');}
+  else if(t.hasAttribute('data-scroll')){if(t.hasAttribute('data-sclose'))closeSession();var el=$(t.getAttribute('data-scroll'));if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
+});
+function toggleUnit(id){S.__openUnits=S.__openUnits||{};S.__openUnits[id]=!S.__openUnits[id];renderMap();}
+
+/* session controls */
+$('#sessNext').addEventListener('click',function(){
+  if(SESS&&SESS.steps&&SESS.steps.length===1&&SESS.steps[0].stage&&/^Prove/.test(SESS.title)){closeSession();return;}
+  sessNext();
+});
+$('#sessBack').addEventListener('click',function(){if(SESS&&SESS.i>0){SESS.i--;renderSessStep();}else closeSession();});
+$('#sessClose').addEventListener('click',closeSession);
+$('#sessionOverlay').addEventListener('click',function(e){if(e.target===this)closeSession();});
+
+/* instructor controls */
+$('#openInstructor').addEventListener('click',openInstructor);
+$('#instrClose').addEventListener('click',closeInstructor);
+$('#instrCancel').addEventListener('click',closeInstructor);
+$('#instrSave').addEventListener('click',saveInstructor);
+$('#instrOverlay').addEventListener('click',function(e){if(e.target===this)closeInstructor();});
+
+/* reset */
+$('#openReset').addEventListener('click',function(){
+  if(confirm('Reset all progress and setup? This clears the sample data on this device.')){store.del(KEY);S=clone(SEED);OB={step:0,data:{}};showOnboard();}
+});
+
+/* coach form */
+$('#coachForm').addEventListener('submit',function(e){
+  e.preventDefault();var inp=$('#coachInput');var v=inp.value.trim();if(!v)return;
+  coachSay('you',esc(v));var m=matchPrompt(v);coachRespond(m,v);inp.value='';
+});
+function matchPrompt(v){v=v.toLowerCase();
+  if(/today|now|start|plan/.test(v))return 'study-today';
+  if(/20|twenty|quick|short|little time/.test(v))return 'twenty';
+  if(/lab|cadaver|specimen/.test(v))return 'prep-lab';
+  if(/weak|test me|gap|struggl/.test(v))return 'test-weak';
+  if(/forget|remember|stick/.test(v))return 'forget';
+  if(/ready|exam|practical|prepared/.test(v))return 'ready';
+  if(/another way|explain|confus|dont get|understand/.test(v))return 'another';
+  if(/durable|long.?term|memor/.test(v))return 'durable';
+  return 'free';
+}
+
+/* onboarding controls */
+$('#obNext').addEventListener('click',obNext);
+$('#obBack').addEventListener('click',obBack);
+$('#onboard').addEventListener('click',function(e){
+  var b=e.target.closest('[data-obgrade],[data-obdays],[data-obmin],[data-obact],[data-obconf]');
+  if(!b)return;
+  var d=OB.data;
+  if(b.hasAttribute('data-obgrade')){d.grade=b.getAttribute('data-obgrade');renderOB();}
+  else if(b.hasAttribute('data-obdays')){d.days=+b.getAttribute('data-obdays');renderOB();}
+  else if(b.hasAttribute('data-obmin')){d.minutes=+b.getAttribute('data-obmin');renderOB();}
+  else if(b.hasAttribute('data-obact')){d.activities=d.activities||['retrieval','draw'];var k=b.getAttribute('data-obact');var ix=d.activities.indexOf(k);if(ix>-1)d.activities.splice(ix,1);else d.activities.push(k);renderOB();}
+  else if(b.hasAttribute('data-obconf')){d.confidence=b.getAttribute('data-obconf');renderOB();}
+});
+$('#onboard').addEventListener('keydown',function(e){if(e.key==='Enter'&&$('#obName')===document.activeElement){e.preventDefault();obNext();}});
+
+/* escape closes overlays */
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    if($('#sessionOverlay').classList.contains('open'))closeSession();
+    else if($('#instrOverlay').classList.contains('open'))closeInstructor();
+  }
+});
+
+/* section nav active state */
+var secLinks=$$('.secnav a');
+var sections=secLinks.map(function(a){return $(a.getAttribute('href'));});
+if('IntersectionObserver' in window){
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){var id='#'+en.target.id;secLinks.forEach(function(a){a.setAttribute('aria-current',a.getAttribute('href')===id?'true':'false');});}
+    });
+  },{rootMargin:'-40% 0px -55% 0px'});
+  sections.forEach(function(s){if(s)io.observe(s);});
+}
+
+/* =========================================================
+   INIT
+========================================================= */
+renderCoachPrompts();
+coachSay('bot','I am your Mastery Coach. I read your progress and point you at the single best next move. Ask me anything, or tap a prompt below.');
+if(!S.profile.onboarded){OB={step:0,data:{}};showOnboard();}
+else{renderAll();}
+
+})();
+</script>
+
+<!-- ============ IFRAME HEIGHT-SENDER (Kajabi / GitHub Pages embed) ============ -->
+<script>
+(function(){
+  var FRAME_ID='mastery-os';
+  function sendHeight(){
+    var h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);
+    try{window.parent.postMessage({id:FRAME_ID,frameId:FRAME_ID,type:'resize',height:h},'*');}catch(e){}
+  }
+  window.addEventListener('load',sendHeight);
+  window.addEventListener('resize',sendHeight);
+  if('ResizeObserver' in window){try{new ResizeObserver(sendHeight).observe(document.body);}catch(e){}}
+  document.addEventListener('click',function(){setTimeout(sendHeight,350);});
+  setTimeout(sendHeight,500);
+})();
+</script>
+</body>
+</html>
