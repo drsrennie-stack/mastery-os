@@ -769,6 +769,22 @@ var SCHEDULE=(window.BIO004_SCHEDULE)||{
   ]
 };
 function scheduleCurrentWeek(){var cw=SCHEDULE.weeks[0];SCHEDULE.weeks.forEach(function(w){if(dayDiff(w.start,TODAY)<=0)cw=w;});return cw;}
+var WD=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+/* Next dated milestone from the real schedule (TBL and lab exams fall on Mondays together). */
+function nextKeyEvent(){
+  var byDate={};
+  function add(date,label){if(!date)return;(byDate[date]=byDate[date]||[]).push(label);}
+  SCHEDULE.weeks.forEach(function(w){
+    if(w.tbl)add(w.tbl,'the Week '+w.n+' TBL');
+    if(w.labExam)add(w.labExam.date,w.labExam.name);
+    if(w.lectureMidterm)add(w.lectureMidterm.date,w.lectureMidterm.name);
+    if(w.cumulative){add(w.cumulative.lab,'the cumulative finals');}
+  });
+  var dates=Object.keys(byDate).filter(function(d){return dayDiff(d,TODAY)>=0;}).sort();
+  if(!dates.length)return null;
+  var dt=dates[0],labels=byDate[dt].join(' and ');
+  return {date:dt,dayName:WD[dparse(dt).getDay()],label:labels,days:dayDiff(dt,TODAY),exam:/exam|final|midterm/i.test(labels)};
+}
 function scheduleExams(){var out=[];SCHEDULE.weeks.forEach(function(w){if(w.labExam)out.push({name:w.labExam.name,date:w.labExam.date});if(w.lectureMidterm)out.push({name:w.lectureMidterm.name,date:w.lectureMidterm.date});if(w.cumulative){out.push({name:'Cumulative Lab Final',date:w.cumulative.lab});out.push({name:'Cumulative Lecture Final',date:w.cumulative.lecture});}});return out;}
 function nextExam(){var up=scheduleExams().filter(function(e){return dayDiff(e.date,TODAY)>=0;}).sort(function(a,b){return dayDiff(a.date,b.date);});return up[0]||{name:'End of term',date:SCHEDULE.end};}
 function slugify(s,n){return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'-w'+n;}
@@ -794,6 +810,25 @@ function buildFromSchedule(){
   return {units:units,course:{label:SCHEDULE.course,exam:nextExam().date,examName:nextExam().name,lecture:(cw.lecture||[]).slice(),lab:(cw.lab||cw.lecture||[]).slice(),highyield:SCHEDULE.highyield||''}};
 }
 function applySchedule(force){var b=buildFromSchedule();S.course=b.course;if(force||!(S.__schedV>=2)){S.units=b.units;S.__schedV=2;}save();}
+/* Read spaced-recall results written by the recall engine (shared same-origin store). */
+var RECALL_KEY='bio004-progress';
+function ingestRecall(){
+  var raw;try{raw=localStorage.getItem(RECALL_KEY);}catch(e){raw=null;}
+  if(!raw)return false;
+  var data;try{data=JSON.parse(raw);}catch(e){return false;}
+  var changed=false;
+  allComps().forEach(function(x){
+    var e=data[x.c.id];if(!e)return;var c=x.c;
+    if(e.reviewedAt)c.last=e.reviewedAt;
+    if(e.nextRecall)c.next=e.nextRecall;
+    var m=null;
+    if(typeof e.strength==='number')m=Math.round(Math.max(0,Math.min(1,e.strength))*100);
+    else if(e.attempts>0&&typeof e.correct==='number')m=Math.round(e.correct/e.attempts*100);
+    if(m!=null){c.mastery=m;c.conf=m>=75?'high':m>=50?'med':'low';}
+    changed=true;
+  });
+  return changed;
+}
 
 /* evidence method metadata */
 var EVIDENCE=[
@@ -927,13 +962,17 @@ function buildDailyPlan(){
   var cw=scheduleCurrentWeek();
   var order={core:0,high:1,support:2};
   var newComps=[];S.units.forEach(function(u){if(u.week===cw.n)u.comps.forEach(function(c){newComps.push(c);});});
-  newComps.sort(function(a,b){return (order[a.yield]==null?1:order[a.yield])-(order[b.yield]==null?1:order[b.yield]);});
+  newComps=newComps.filter(function(c){return !(c.mastery>=85&&c.conf==='high');}); /* proven ones drop out to spaced review */
+  newComps.sort(function(a,b){var ya=(order[a.yield]==null?1:order[a.yield]),yb=(order[b.yield]==null?1:order[b.yield]);return ya!==yb?ya-yb:a.mastery-b.mastery;}); /* yield tier first, then the student's weakest within it */
   var reviews=[];allComps().forEach(function(x){if(x.c.last&&x.u.week<cw.n&&isDue(x.c.next))reviews.push(x.c);});
   reviews.sort(function(a,b){return dayDiff(a.next,b.next);});
-  var items=[],used=0,reviewCap=Math.round(budget*0.4),rUsed=0,trimmed=0;
+  var nc=nextKeyEvent();
+  var reviewFrac=0.35;
+  if(nc&&nc.exam&&nc.days<=3)reviewFrac=0.55; else if(nc&&nc.days>=5)reviewFrac=0.3;
+  var items=[],used=0,reviewCap=Math.round(budget*reviewFrac),rUsed=0,trimmed=0;
   reviews.forEach(function(c){var m=12;if(rUsed+m<=reviewCap){items.push({type:'review',c:c,mins:m});rUsed+=m;used+=m;}else trimmed++;});
   newComps.forEach(function(c){var m=c.est||30;if(used+m<=budget){items.push({type:'new',c:c,mins:m});used+=m;}else trimmed++;});
-  return {items:items,budget:budget,used:used,trimmed:trimmed,week:cw};
+  return {items:items,budget:budget,used:used,trimmed:trimmed,week:cw,nc:nc};
 }
 function renderDailyBuild(){
   var el=$('#dailyBuild');if(!el)return;
@@ -944,8 +983,12 @@ function renderDailyBuild(){
     return '<div class="build-row'+(isDone?' done':'')+'"><button class="chk" data-daydone="'+c.id+'" aria-pressed="'+(isDone?'true':'false')+'" aria-label="Mark '+esc(c.name)+' done">'+(isDone?I.checkW:'')+'</button><div class="bn">'+esc(c.name)+tag+'</div><span class="bm">'+it.mins+' min</span><button class="btn" data-prove="'+c.id+'">Do it</button></div>';
   }).join('');
   var pct=p.budget?Math.round(doneMins/p.budget*100):0;
+  var nc=p.nc;
+  var eyebrow='Today’s build';
+  var fwd=nc?('Keeps you moving forward toward '+esc(nc.label)+' on '+esc(nc.dayName)+'. '):'';
+  var note=fwd+'Ordered to your gaps: highest-yield work for Week '+p.week.n+' first, your weakest within that, and competencies you have proven drop out to spaced review. Includes pre-exposure to new material plus due reviews from earlier weeks.'+(nc&&nc.exam&&nc.days<=3?' Weighted toward review with the exam coming up.':'');
   var trim=p.trimmed?'<p class="build-trim">'+p.trimmed+' more competenc'+(p.trimmed===1?'y':'ies')+' did not fit today’s '+fmtHM(p.budget)+'. Add a study day or more hours to reach them, or they roll to tomorrow.</p>':'';
-  el.innerHTML='<div class="card build-card"><div class="build-head"><div><p class="eyebrow">Today’s build</p><h3>'+fmtHM(doneMins)+' of '+fmtHM(p.budget)+' done</h3></div><button class="btn primary" data-session="today">Start the session</button></div><div class="build-bar" role="img" aria-label="'+pct+' percent of today complete"><span style="width:'+pct+'%"></span></div><p style="font-size:12px;color:var(--ink-faint);margin:0 0 10px">Packed highest-yield first for Week '+p.week.n+', with due reviews from earlier weeks layered in.</p>'+(rows||'<p style="color:var(--ink-faint);padding:8px 0">Nothing scheduled. Enjoy the breather.</p>')+trim+'</div>';
+  el.innerHTML='<div class="card build-card"><div class="build-head"><div><p class="eyebrow">'+eyebrow+'</p><h3>'+fmtHM(doneMins)+' of '+fmtHM(p.budget)+' done</h3></div><button class="btn primary" data-session="today">Start the session</button></div><div class="build-bar" role="img" aria-label="'+pct+' percent of today complete"><span style="width:'+pct+'%"></span></div><p style="font-size:12px;color:var(--ink-faint);margin:0 0 10px">'+note+'</p>'+(rows||'<p style="color:var(--ink-faint);padding:8px 0">Nothing scheduled. Enjoy the breather.</p>')+trim+'</div>';
 }
 
 /* =========================================================
@@ -1841,6 +1884,10 @@ document.addEventListener('keydown',function(e){
   }
 });
 
+/* live sync from the spaced-recall engine (other tab writes the shared store) */
+window.addEventListener('storage',function(e){if(e.key===RECALL_KEY){if(ingestRecall())renderAll();}});
+window.addEventListener('focus',function(){if(ingestRecall())renderAll();});
+
 /* section nav active state */
 var secLinks=$$('.secnav a');
 var sections=secLinks.map(function(a){return $(a.getAttribute('href'));});
@@ -1858,6 +1905,7 @@ if('IntersectionObserver' in window){
 ========================================================= */
 if(!Array.isArray(S.grades))S.grades=[];
 applySchedule(false);
+ingestRecall();
 renderCoachPrompts();
 coachSay('bot','Blub blub. I am Hootie the Knowfish, your Mastery Coach. I read your progress and point you at the single best next move. Ask me anything, or tap a prompt below.');
 if(!S.profile.onboarded){OB={step:0,data:{}};showOnboard();}
