@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mastery OS</title>
 <meta name="description" content="A personal learning operating system: diagnose weaknesses, repair gaps, build durable memory, and prove mastery.">
+<!-- Installable app (Add to Home Screen) -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1530">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mastery OS">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -21,7 +30,7 @@
   --lift:0 14px 34px -16px rgba(11,21,48,0.30);
   --disp:'Plus Jakarta Sans',system-ui,sans-serif;
   --serif:'Plus Jakarta Sans',system-ui,sans-serif;
-  --mono:'DM Sans',system-ui,sans-serif;
+  --mono:'Plus Jakarta Sans',system-ui,sans-serif;
   --r-sm:6px; --r:10px; --r-lg:16px;
   --ease:cubic-bezier(.22,.61,.36,1);
 }
@@ -396,6 +405,61 @@ section.block:first-of-type{border-top:none}
 .reference-box ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink-soft);line-height:1.6}
 
 .g-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.pm-step{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--offwhite);border:1px solid var(--line-soft);border-radius:var(--r);padding:10px 13px;font-size:13.5px;font-weight:600;color:var(--navy);cursor:pointer}
+.pm-step .pm-box{width:20px;height:20px;flex:none;border:2px solid var(--line);border-radius:5px;display:grid;place-items:center;font-size:13px;font-weight:800;color:#fff}
+.pm-step[aria-pressed="true"]{background:#e2efe8;border-color:var(--ok)}
+.pm-step[aria-pressed="true"] .pm-box{background:var(--ok);border-color:var(--ok)}
+.pm-step[aria-pressed="true"] .pm-box::after{content:'✓'}
+.pm-step[aria-pressed="true"] .lbl{text-decoration:line-through;opacity:.7}
+/* floating pomodoro (dark, solid) */
+.pomo-float{position:fixed;right:20px;bottom:20px;width:322px;max-width:calc(100vw - 32px);background:#0B1530;background:linear-gradient(158deg,#17284a 0%,#0B1530 55%,#060A18 100%);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-lg);box-shadow:0 22px 48px -16px rgba(0,0,0,.62);color:var(--cream);z-index:75;overflow:hidden}
+.pomo-float[hidden]{display:none}
+.pf-head{display:flex;align-items:center;gap:8px;padding:9px 12px;background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.10);cursor:grab;user-select:none;touch-action:none}
+.pf-head:active{cursor:grabbing}
+.pf-grip{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-light);margin-right:auto}
+.pf-btn{width:26px;height:26px;border-radius:6px;border:1px solid rgba(255,255,255,.22);background:transparent;color:#fff;display:grid;place-items:center;font-size:15px;line-height:1;flex:none;cursor:pointer}
+.pf-btn:hover{background:rgba(255,255,255,.14)}
+/* round clock face */
+.pf-ring{position:relative;width:158px;height:158px;margin:16px auto 4px;cursor:grab;touch-action:none}
+.pf-ring:active{cursor:grabbing}
+.pf-ring-svg{width:100%;height:100%;transform:rotate(-90deg);display:block}
+.pf-ring-track{fill:none;stroke:rgba(255,255,255,.12);stroke-width:9}
+.pf-ring-arc{fill:none;stroke:url(#pfGrad);stroke-width:9;stroke-linecap:round;stroke-dasharray:326.726;stroke-dashoffset:0;transition:stroke-dashoffset .5s linear}
+.pf-ring.warn .pf-ring-arc{stroke:var(--rust)}
+.pf-ring-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;pointer-events:none}
+.pf-clock{font-family:var(--disp);font-weight:800;font-size:33px;letter-spacing:.01em;color:#fff;font-variant-numeric:tabular-nums;line-height:1}
+.pf-ring-lbl{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-light)}
+.pf-body{padding:6px 14px 12px}
+.pf-comp{font-weight:800;font-size:16px;color:#fff;margin-bottom:8px}
+.pf-body p{color:var(--cream);opacity:.85}
+.pf-actions{display:flex;gap:8px;flex-wrap:wrap}
+.pomo-float .pm-step{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:var(--cream)}
+.pomo-float .pm-step .pm-box{border-color:rgba(255,255,255,.35)}
+.pomo-float .pm-step[aria-pressed="true"]{background:rgba(63,122,91,.30);border-color:var(--ok)}
+.pomo-float .pm-step[aria-pressed="true"] .pm-box{background:var(--ok);border-color:var(--ok)}
+.pomo-float .pm-step[aria-pressed="true"] .lbl{color:#fff;opacity:.75}
+.pf-body .btn{font-size:12.5px;padding:7px 11px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.22);color:#fff}
+.pf-body .btn:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.4);box-shadow:none}
+.pf-body .btn.primary,.pf-body .btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.pf-sound{border-top:1px solid rgba(255,255,255,.10);padding:10px 12px;display:grid;gap:8px}
+.pf-slabel{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,241,232,.55)}
+.pf-sbtns{display:flex;gap:6px;flex-wrap:wrap}
+.pf-s{font-size:12px;font-weight:700;color:var(--cream);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:5px 11px;cursor:pointer}
+.pf-s[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.pf-link{display:flex;gap:6px}
+.pf-link input,#pfSaved{flex:1;min-width:0;font-family:inherit;font-size:12px;padding:6px 8px;border:1.5px solid rgba(255,255,255,.18);border-radius:8px;background:rgba(255,255,255,.06);color:#fff}
+.pf-link input::placeholder{color:rgba(245,241,232,.45)}
+.pf-link .btn{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.22);color:#fff}
+#pfSaved option{color:#0B1530}
+.pf-sound input[type=range]{width:100%;accent-color:var(--gold)}
+.pomo-float.mini{width:150px;border-radius:50%;overflow:visible}
+.pomo-float.mini .pf-head{position:absolute;top:-8px;right:-8px;left:auto;padding:0;background:transparent;border:0;z-index:3}
+.pomo-float.mini .pf-grip{display:none}
+.pomo-float.mini #pfCloseBtn{display:none}
+.pomo-float.mini #pfMin{width:30px;height:30px;border-radius:50%;background:var(--navy);border:1.5px solid rgba(255,255,255,.35);box-shadow:0 4px 10px rgba(0,0,0,.4)}
+.pomo-float.mini .pf-ring{width:130px;height:130px;margin:10px}
+.pomo-float.mini .pf-clock{font-size:28px}
+.pomo-float.mini .pf-body,.pomo-float.mini .pf-sound{display:none}
 
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
@@ -478,6 +542,7 @@ section.block:first-of-type{border-top:none}
       <div class="sec-head">
         <div><p class="eyebrow">Section 3</p><h2 id="h-map">Competency Map</h2><p class="lead">Not chapters. Measurable competencies you can prove, one at a time.</p></div>
       </div>
+      <p style="background:var(--cream);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-bottom:18px">These competencies are the majority of what the course covers, and working through them honestly and consistently is very likely to be effective. No tool can promise a grade, though. Your result also depends on how much time you put in, how honest you are in your own self-assessment, exam-day factors like anxiety, and other things beyond this app. Use it alongside class, the structure list, and the syllabus.</p>
       <div id="mapWrap"><!-- JS --></div>
     </div>
   </section>
@@ -586,7 +651,9 @@ section.block:first-of-type{border-top:none}
     <div class="sheet-body">
       <div class="note">Upload once. Mastery OS generates the daily plans, spaced-recall schedule, competency tracking, weakness dashboard, and recommendations automatically. Students never build the course structure.</div>
       <div class="note" id="instrSchedInfo" style="background:var(--navy);color:var(--cream);border-color:var(--navy)"></div>
-      <button class="btn gold block" id="instrReload" style="margin-bottom:18px">Reload plan from schedule</button>
+      <div class="field"><label>Term start and end</label><div style="display:flex;gap:8px"><input id="cfgStart" type="date" aria-label="Term start"><input id="cfgEnd" type="date" aria-label="Term end"></div><p class="hint">Set the semester dates. The course length (8, 16, or any) comes from the schedule you import.</p></div>
+      <div class="field"><label for="cfgPaste">Import schedule</label><textarea id="cfgPaste" rows="4" placeholder="Paste your schedule.js contents or JSON, or choose a file below."></textarea><input id="cfgFile" type="file" accept=".js,.json,.txt,.html" style="margin-top:8px"><div style="margin-top:8px"><button class="btn gold" id="cfgImport">Import schedule</button></div><p class="hint" id="cfgImportInfo">It reads the weeks and exam dates automatically.</p></div>
+      <button class="btn block" id="instrReload" style="margin-bottom:18px">Reload plan from current schedule</button>
       <div class="field"><label for="cfgCourse">Course label</label><input id="cfgCourse" type="text"></div>
       <div class="field"><label for="cfgExam">Next practical / exam date</label><input id="cfgExam" type="date"><p class="hint">Drives the exam countdown and how aggressively recall is scheduled.</p></div>
       <div class="field"><label for="cfgLecture">Today's lecture competencies</label><input id="cfgLecture" type="text"><p class="hint">Comma-separated. Normally pulled from the uploaded lecture sequence.</p></div>
@@ -611,11 +678,45 @@ section.block:first-of-type{border-top:none}
   </div>
 </div>
 
+<!-- ============ FLOATING POMODORO ============ -->
+<div id="pomoFloat" class="pomo-float" hidden aria-label="Pomodoro timer">
+  <div class="pf-head" id="pfHead">
+    <span class="pf-grip">Hootie's timer</span>
+    <button class="pf-btn" id="pfMin" aria-label="Minimize timer" title="Minimize">&#8211;</button>
+    <button class="pf-btn" id="pfCloseBtn" aria-label="Close timer" title="Close">&#10005;</button>
+  </div>
+  <div class="pf-ring" id="pfRing">
+    <svg class="pf-ring-svg" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+      <defs><linearGradient id="pfGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B8924A"/><stop offset="1" stop-color="#C2734D"/></linearGradient></defs>
+      <circle class="pf-ring-track" cx="60" cy="60" r="52"/>
+      <circle class="pf-ring-arc" id="pfArc" cx="60" cy="60" r="52"/>
+    </svg>
+    <div class="pf-ring-c"><span class="pf-clock" id="pfClock">25:00</span><span class="pf-ring-lbl" id="pfTitle">Focus</span></div>
+  </div>
+  <div class="pf-body" id="pfBody"></div>
+  <div class="pf-sound">
+    <span class="pf-slabel">Focus sound</span>
+    <div class="pf-sbtns">
+      <button class="pf-s" data-psound="off" aria-pressed="true">Off</button>
+      <button class="pf-s" data-psound="lofi">Lo-fi</button>
+      <button class="pf-s" data-psound="classical">Classical</button>
+      <button class="pf-s" data-psound="jazz">Jazz</button>
+      <button class="pf-s" data-psound="green">Green noise</button>
+    </div>
+    <div class="pf-link"><input id="pfLink" type="text" placeholder="Paste a YouTube link" autocomplete="off"><button class="btn" id="pfLinkGo" style="font-size:12px;padding:6px 12px">Play</button></div>
+    <div class="pf-link"><select id="pfSaved" aria-label="Saved links"><option value="">Saved links</option></select><button class="btn" id="pfForget" style="font-size:12px;padding:6px 10px">Forget</button></div>
+    <label class="visually-hidden" for="pfVol">Volume</label>
+    <input id="pfVol" type="range" min="0" max="100" value="55">
+    <div id="pfYT" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden" aria-hidden="true"></div>
+  </div>
+</div>
+
 <div id="toast" role="status" aria-live="polite"></div>
 
 <!-- Live data sources. In production these sit alongside the page; if absent, the app falls back to schedule-derived topics. -->
 <script src="competencies.js"></script>
 <script src="resources.js"></script>
+<script src="rubrics.js"></script>
 <script>
 "use strict";
 (function(){
@@ -629,7 +730,13 @@ var store={
   del:function(k){try{localStorage.removeItem(k);}catch(e){}delete mem[k];}
 };
 var KEY='mastery-os-redesign';
-var TODAY='2026-07-01'; /* prototype "today" */
+/* TODAY is the real current date so the app tracks any term automatically.
+   Override for testing or demos with ?today=YYYY-MM-DD in the URL. */
+var TODAY=(function(){
+  try{var m=location.search.match(/[?&]today=(\d{4}-\d{2}-\d{2})/);if(m)return m[1];}catch(e){}
+  var d=new Date();function p(n){return (n<10?'0':'')+n;}
+  return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());
+})();
 
 /* =========================================================
    ICONS
@@ -754,7 +861,7 @@ var SEED={
    no TBL Week 4, Week 4 lecture midterm Mon Jul 13, Week 8
    cumulative lecture final + cumulative lab final Thu Aug 6.
 ========================================================= */
-var SCHEDULE=(window.BIO004_SCHEDULE)||{
+var SCHEDULE=store.get('mos-schedule')||(window.BIO004_SCHEDULE)||{
   course:'BIO 004 Human Anatomy',term:'Summer 2026',start:'2026-06-15',end:'2026-08-06',
   highyield:'Tissue types, heart blood flow, brachial plexus, skin layers, cranial nerves',
   weeks:[
@@ -810,6 +917,34 @@ function buildFromSchedule(){
   return {units:units,course:{label:SCHEDULE.course,exam:nextExam().date,examName:nextExam().name,lecture:(cw.lecture||[]).slice(),lab:(cw.lab||cw.lecture||[]).slice(),highyield:SCHEDULE.highyield||''}};
 }
 function applySchedule(force){var b=buildFromSchedule();S.course=b.course;if(force||!(S.__schedV>=2)){S.units=b.units;S.__schedV=2;}save();}
+/* ---- Schedule import (instructor setup): accept schedule.js, JSON, or course-schedule HTML ---- */
+function normWeek(w){var o={n:w.n||w.number,start:w.start||w.startDate,end:w.end||w.endDate,title:w.title||w.weekTitle||('Week '+(w.n||w.number)),lecture:w.lecture||[],lab:w.lab||null,labExam:w.labExam||null,tbl:w.tbl||null};if(w.lectureMidterm)o.lectureMidterm=w.lectureMidterm;if(w.cumulative)o.cumulative=w.cumulative;return o;}
+function mapImportedWeek(w){return {n:w.number,start:w.startDate,end:w.endDate,title:w.weekTitle,lecture:w.weekTitle?[w.weekTitle]:[],lab:(w.labChecklist&&w.labChecklist.topics)||null,labExam:null,tbl:null};}
+function parseScheduleText(text){
+  text=String(text||'').trim();if(!text)throw new Error('Nothing to import. Paste a schedule or choose a file.');
+  var sched=null;
+  if(/_SCHEDULE\s*=/.test(text)){var box={};try{(new Function('window',text)).call(box,box);}catch(e){throw new Error('Could not run the schedule file: '+e.message);}for(var k in box){if(/SCHEDULE/i.test(k)&&box[k]&&box[k].weeks){sched=box[k];break;}}}
+  if(!sched){try{var j=JSON.parse(text);if(j&&j.weeks)sched=j;else if(Array.isArray(j))sched={weeks:j};}catch(e){}}
+  if(!sched){var m=text.match(/weeks\s*=\s*(\[[\s\S]*?\])\s*;/);if(m){var arr;try{arr=(new Function('return ('+m[1]+')'))();}catch(e){throw new Error('Could not parse the weeks list: '+e.message);}sched={weeks:arr.map(mapImportedWeek)};}}
+  if(!sched||!sched.weeks||!sched.weeks.length)throw new Error('No weeks found. Use a schedule.js, JSON, or your course-schedule HTML.');
+  sched.weeks=sched.weeks.map(normWeek);
+  sched.course=sched.course||(S.course&&S.course.label)||'Course';sched.term=sched.term||'';
+  sched.start=sched.start||sched.weeks[0].start;sched.end=sched.end||(sched.weeks[sched.weeks.length-1].end||sched.weeks[sched.weeks.length-1].start);
+  return sched;
+}
+function importSchedule(){
+  var info=$('#cfgImportInfo');
+  try{
+    var sched=parseScheduleText($('#cfgPaste').value);
+    var st=$('#cfgStart').value,en=$('#cfgEnd').value;
+    if(st)sched.start=st;if(en)sched.end=en;
+    SCHEDULE=sched;store.set('mos-schedule',SCHEDULE);
+    applySchedule(true);ingestRecall();renderAll();
+    var ex=scheduleExams();
+    info.innerHTML='Loaded <b>'+SCHEDULE.weeks.length+' weeks</b>. Exams detected: '+(ex.length?ex.map(function(e){return esc(e.name)+' ('+fmtShort(e.date)+')';}).join(', '):'none yet, add exam dates to your schedule')+'.';
+    toast('Schedule imported. Plan rebuilt.');
+  }catch(e){if(info)info.innerHTML='<span style="color:var(--bad)">'+esc(e.message)+'</span>';}
+}
 /* Read spaced-recall results written by the recall engine (shared same-origin store). */
 var RECALL_KEY='bio004-progress';
 function ingestRecall(){
@@ -948,11 +1083,19 @@ function renderPlan(){
   '<div class="plan-cta">'+
     '<button class="btn gold big" data-session="today">'+I.bolt+'Start Today\'s Session</button>'+
     '<button class="btn ghost big" data-session="repair" style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">Repair weaknesses only</button>'+
+    '<button class="btn ghost big" data-midcram style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">Mid-Module Gap Check</button>'+
     '<button class="btn ghost big" data-cram style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">3-Day Exam Cram</button>'+
-  '</div>';
+  '</div>'+
+  cramMeter();
   $('#planCard').innerHTML=html;
 }
 function plItem(icon,title,body){return '<div class="pl-item"><span class="ic">'+icon+'</span><div><h3>'+title+'</h3><p>'+body+'</p></div></div>';}
+function cramMeter(){
+  var used=Math.min(2,cramCount(moduleKey()));var dots='';
+  for(var i=0;i<2;i++){dots+='<span aria-hidden="true" style="width:9px;height:9px;border-radius:50%;display:inline-block;background:'+(i<used?'var(--gold)':'rgba(255,255,255,.22)')+'"></span>';}
+  var msg=used>=2?used+' of 2 crams used this module. For more, use the Sunday Weakness Dashboard.':used+' of 2 crams used this module';
+  return '<div style="display:flex;align-items:center;gap:9px;margin-top:12px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--gold-light)"><span style="display:inline-flex;gap:5px;align-items:center">'+dots+'</span><span>'+msg+'</span></div>';
+}
 
 /* ---- Today's build: pack the daily budget, highest-yield first + due reviews ---- */
 function fmtHM(m){m=Math.round(m);var h=Math.floor(m/60),mm=m%60;return ((h?h+'h ':'')+(mm?mm+'m':(h?'':'0m'))).trim();}
@@ -1125,8 +1268,8 @@ function coachRespond(id,rawText){
       reply='Start your full cycle. Today\'s lecture is <b>'+nm(lec)+'</b> and lab is <b>'+nm(lab)+'</b>. You also have <b>'+due.length+'</b> recall items due and <b>'+w.length+'</b> weak spots. The single highest-value move is one guided session that hits all of it.';
       actions=[{label:'Start Today\'s Session',kind:'gold',attr:'data-session="today"'}];break;
     case 'twenty':
-      reply='Twenty minutes is enough for a focused repair. I would spend it on your two weakest: <b>'+(w[0]?esc(w[0].c.name):'')+'</b> and <b>'+(w[1]?esc(w[1].c.name):'')+'</b>. Retrieve, then draw from memory. No rereading.';
-      actions=[{label:'Run 20-min micro-session',kind:'gold',attr:'data-session="micro"'}];break;
+      reply='Twenty minutes is enough for a focused repair. I would spend it on your two weakest: <b>'+(w[0]?esc(w[0].c.name):'')+'</b> and <b>'+(w[1]?esc(w[1].c.name):'')+'</b>. Retrieve, then draw from memory. No rereading. Even simpler: go into your weakness cards and clear a few.';
+      actions=[{label:'Run 20-min micro-session',kind:'gold',attr:'data-session="micro"'},{label:'Work weakness cards',attr:'data-toolblank="spaced-recall.html"'}];break;
     case 'prep-lab':
       reply='Lab today is <b>'+nm(lab)+'</b>. Lab is identification under pressure, so practice naming on blank figures and specimens, not reading. Cadaver and histology are your lowest dimensions right now.';
       actions=[{label:'Open Anatomy Canvas',kind:'',attr:'data-tool="anatomy-canvas.html"'},{label:'Run lab prep',kind:'primary',attr:'data-session="lab"'}];break;
@@ -1335,7 +1478,9 @@ function openInstructor(){
   $('#cfgLab').value=S.course.lab.join(', ');
   $('#cfgHighyield').value=S.course.highyield;
   var cw=scheduleCurrentWeek(),ne=nextExam();
-  $('#instrSchedInfo').innerHTML='<b>Schedule loaded.</b> '+esc(SCHEDULE.course)+', '+esc(SCHEDULE.term)+'. Today is Week '+cw.n+', '+esc(cw.title)+'. Next up: '+esc(ne.name)+' on '+fmtShort(ne.date)+'.';
+  $('#instrSchedInfo').innerHTML='<b>Schedule loaded.</b> '+esc(SCHEDULE.course)+', '+esc(SCHEDULE.term)+', '+SCHEDULE.weeks.length+' weeks. Today is Week '+cw.n+', '+esc(cw.title)+'. Next up: '+esc(ne.name)+' on '+fmtShort(ne.date)+'.';
+  $('#cfgStart').value=/^\d{4}-\d{2}-\d{2}$/.test(SCHEDULE.start||'')?SCHEDULE.start:'';
+  $('#cfgEnd').value=/^\d{4}-\d{2}-\d{2}$/.test(SCHEDULE.end||'')?SCHEDULE.end:'';
   var ov=$('#instrOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');
   lastFocus=document.activeElement;$('#instrClose').focus();
 }
@@ -1480,6 +1625,7 @@ function openGame(mode){
   else if(mode==='draw')drawGuess();
   else if(mode==='mindmap')mindMap();
   else if(mode==='braindump')brainDump();
+  else if(mode==='drawknow')drawKnow();
 }
 function closeGame(){clearG();var ov=$('#gameOverlay');ov.classList.remove('open');ov.setAttribute('aria-hidden','true');if(lastFocus)lastFocus.focus();}
 
@@ -1627,11 +1773,13 @@ function pomo(){var p=S.profile.pomodoro||{};return {focus:p.focus||25,brk:p.brk
 function fmtClock(s){s=Math.round(s);var m=Math.floor(s/60),ss=s%60;return m+':'+(ss<10?'0':'')+ss;}
 function pomoStep(t){return '<li style="background:var(--offwhite);border:1px solid var(--line-soft);border-radius:var(--r);padding:10px 13px;font-size:13.5px">'+esc(t)+'</li>';}
 function resFor(comp){var R=window.BIO004_RESOURCES;return (R&&comp&&R[comp.id])?R[comp.id]:null;}
+function rubricFor(comp){var R=window.BIO004_RUBRICS;return (R&&comp&&R[comp.id])?R[comp.id]:null;}
 function resourceBtns(comp){
   var r=resFor(comp),out='';
   if(r){
     if(r.loom)out+='<button class="btn" data-toolblank="'+r.loom+'">Watch concept video</button>';
     if(r.labSprint)out+='<button class="btn" data-toolblank="'+r.labSprint+'">Lab sprint</button>';
+    if(r.loops)out+='<button class="btn" data-toolblank="'+r.loops+'">Lab ID loops</button>';
     if(r.recall)out+='<button class="btn" data-toolblank="'+r.recall+'">Spaced recall</button>';
     if(r.notes)out+='<button class="btn" data-toolblank="'+r.notes+'">Notes</button>';
     if(out)return out;
@@ -1652,37 +1800,107 @@ function openSessionChooser(kind){
   $('#pmStart').onclick=function(){S.profile.pomodoro={focus:+$('#pmFocus').value,brk:+$('#pmBreak').value};save();openPomodoro(kind);};
   $('#pmFocused').onclick=function(){closeGame();openSession(kind);};
 }
+/* ---- Focus sound (background audio behind the floating timer) ---- */
+/* YouTube video ids for the music options. VERIFY or REPLACE with your own long tracks. */
+var YT_TRACKS={ lofi:'jfKfPfyJRdk', classical:'jgpJVI3tDbY', jazz:'Dx5qFachd3A' };
+var AUDIO={cur:'off',yt:null,ytReady:false,ctx:null,noise:null,vol:55};
+function ensureYT(cb){
+  if(AUDIO.ytReady&&AUDIO.yt){cb();return;}
+  if(!window.YT){var t=document.createElement('script');t.src='https://www.youtube.com/iframe_api';document.head.appendChild(t);}
+  window.onYouTubeIframeAPIReady=function(){try{AUDIO.yt=new YT.Player('pfYT',{height:'1',width:'1',playerVars:{autoplay:1,controls:0,disablekb:1,rel:0,playsinline:1},events:{onReady:function(){AUDIO.ytReady=true;cb();}}});}catch(e){}};
+  var tries=0,iv=setInterval(function(){tries++;if(window.YT&&window.YT.Player&&!AUDIO.yt){clearInterval(iv);window.onYouTubeIframeAPIReady();}else if(AUDIO.ytReady||tries>40){clearInterval(iv);}},150);
+}
+function startNoise(){
+  try{var Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return;if(!AUDIO.ctx)AUDIO.ctx=new Ctx();if(AUDIO.ctx.resume)AUDIO.ctx.resume();
+    var ctx=AUDIO.ctx,sr=ctx.sampleRate,buf=ctx.createBuffer(1,Math.floor(sr*2),sr),d=buf.getChannelData(0);
+    for(var i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+    var src=ctx.createBufferSource();src.buffer=buf;src.loop=true;
+    var bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=500;bp.Q.value=0.6;
+    var g=ctx.createGain();g.gain.value=(AUDIO.vol/100)*0.5;
+    src.connect(bp);bp.connect(g);g.connect(ctx.destination);src.start();
+    AUDIO.noise={src:src,gain:g};
+  }catch(e){}
+}
+function stopNoise(){if(AUDIO.noise){try{AUDIO.noise.src.stop();}catch(e){}AUDIO.noise=null;}}
+function audioStopAll(){stopNoise();if(AUDIO.yt&&AUDIO.yt.stopVideo){try{AUDIO.yt.stopVideo();}catch(e){}}}
+function audioSet(kind){
+  audioStopAll();AUDIO.cur=kind;
+  $$('#pomoFloat .pf-s').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-psound')===kind?'true':'false');});
+  if(kind==='off')return;
+  if(kind==='green'){startNoise();return;}
+  var id=ytId(YT_TRACKS[kind]);if(!id)return;
+  ensureYT(function(){try{AUDIO.yt.loadVideoById(id);AUDIO.yt.setVolume(AUDIO.vol);AUDIO.yt.playVideo();}catch(e){}});
+}
+function audioVol(v){AUDIO.vol=v;if(AUDIO.noise&&AUDIO.noise.gain)AUDIO.noise.gain.gain.value=(v/100)*0.5;if(AUDIO.yt&&AUDIO.yt.setVolume){try{AUDIO.yt.setVolume(v);}catch(e){}}}
+function ytId(s){s=String(s||'');var m=s.match(/[?&]v=([\w-]{11})/)||s.match(/youtu\.be\/([\w-]{11})/)||s.match(/\/embed\/([\w-]{11})/)||s.match(/^([\w-]{11})$/);return m?m[1]:'';}
+function ytList(s){var m=String(s||'').match(/[?&]list=([\w-]+)/);return m?m[1]:'';}
+function audioCustom(url){
+  var list=ytList(url),id=ytId(url);if(!list&&!id){toast('Paste a YouTube video or playlist link.');return;}
+  saveTrack(url);
+  audioStopAll();AUDIO.cur='custom';
+  $$('#pomoFloat .pf-s').forEach(function(b){b.setAttribute('aria-pressed','false');});
+  ensureYT(function(){try{if(list)AUDIO.yt.loadPlaylist({list:list,listType:'playlist'});else AUDIO.yt.loadVideoById(id);AUDIO.yt.setVolume(AUDIO.vol);AUDIO.yt.playVideo();toast('Playing your track.');}catch(e){}});
+}
+function tracks(){if(!Array.isArray(S.profile.tracks))S.profile.tracks=[];return S.profile.tracks;}
+function saveTrack(url){url=String(url||'').trim();var id=ytId(url),list=ytList(url);if(!id&&!list)return;var t=tracks();if(t.some(function(x){return x.url===url;})){renderSavedTracks();return;}t.unshift({url:url,label:list?('Playlist '+list.slice(0,6)):id});if(t.length>10)t.length=10;save();renderSavedTracks();}
+function renderSavedTracks(){var sel=$('#pfSaved');if(!sel)return;var t=tracks();sel.innerHTML='<option value="">'+(t.length?'Saved links':'No saved links yet')+'</option>'+t.map(function(x){return '<option value="'+esc(x.url)+'">'+esc(x.label)+'</option>';}).join('');}
+
+/* ---- Floating Pomodoro (hovers, draggable, minimizable) ---- */
+var PF=null;
 function openPomodoro(kind,picksArg){
-  clearG();var ov=$('#gameOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');
+  if($('#gameOverlay').classList.contains('open'))closeGame();
   var pm=pomo();
   var picks=(picksArg&&picksArg.length)?picksArg.slice():weaknesses().slice(0,kind==='repair'?5:4).map(function(x){return x.c;});
   if(!picks.length)picks=allComps().slice(0,3).map(function(x){return x.c;});
-  gSet('Pomodoro Session',pm.focus+' min focus, '+pm.brk+' min break');
-  var i=0;
-  function focus(){
-    if(i>=picks.length)return done();
-    var c=picks[i];var total=pm.focus*60;var start=Date.now();
-    gBody('<div class="g-qmeta"><span>Focus block '+(i+1)+' of '+picks.length+'</span><span id="pmClock">'+fmtClock(total)+'</span></div><div class="g-timer" id="pmBar"><span style="width:100%"></span></div><p class="g-q">'+esc(c.name)+'</p><ul class="items" style="list-style:none;padding:0;margin:0 0 14px;display:grid;gap:8px">'+pomoStep('Retrieve it cold, no notes')+pomoStep('Repair the gap: notes, redraw, relearn the missing piece')+pomoStep('Apply it to a case or an image')+pomoStep('Explain it aloud, or teach it')+'</ul><div class="g-actions">'+resourceBtns(c)+'</div><div class="g-actions"><button class="btn primary" id="pmDone">Done, take my break</button></div>');
-    var iv=gI(setInterval(function(){var left=Math.max(0,total-(Date.now()-start)/1000);var cl=$('#pmClock');if(cl)cl.textContent=fmtClock(left);var bar=$('#pmBar');if(bar){bar.firstChild.style.width=(left/total*100)+'%';if(left<total*0.2)bar.classList.add('warn');}if(left<=0){clearInterval(iv);finishBlock(c);}},500));
-    $('#pmDone').onclick=function(){clearInterval(iv);finishBlock(c);};
-  }
-  function finishBlock(c){bumpComp(c,5);bumpSkill('Retrieval',1);save();brk();}
-  function brk(){
-    if(i>=picks.length-1)return done();
-    var total=pm.brk*60;var start=Date.now();var next=picks[i+1];
-    gBody('<div class="g-center"><div class="g-emoji">☕</div><h3>Break</h3><p>Stand up, look away from the screen, breathe. Next up: <b>'+esc(next.name)+'</b>.</p><div id="pmBreakClock" style="font-size:42px;font-weight:800;color:var(--navy);margin:6px 0 18px">'+fmtClock(total)+'</div><div class="g-actions"><button class="btn gold" id="pmSkip">Skip break, start next</button></div></div>');
-    var iv=gI(setInterval(function(){var left=Math.max(0,total-(Date.now()-start)/1000);var cl=$('#pmBreakClock');if(cl)cl.textContent=fmtClock(left);if(left<=0){clearInterval(iv);i++;focus();}},500));
-    $('#pmSkip').onclick=function(){clearInterval(iv);i++;focus();};
-  }
-  function done(){clearG();renderAll();gBody('<div class="g-center"><div class="g-emoji">🎉</div><h3>Pomodoro session complete</h3><p>You worked '+picks.length+' competenc'+(picks.length===1?'y':'ies')+' in focus blocks, with breaks between. Mastery and recall dates updated.</p><div class="g-actions"><button class="btn primary" data-gameclose>Done</button></div></div>');toast('Pomodoro session complete.');}
-  focus();
+  if(PF&&PF.timer)clearInterval(PF.timer);
+  PF={picks:picks,i:0,mode:'focus',focus:pm.focus*60,brk:pm.brk*60,remaining:pm.focus*60,paused:false,timer:null};
+  var el=$('#pomoFloat');el.hidden=false;el.classList.remove('mini');
+  pfRender();
+  PF.timer=setInterval(pfTick,250);
 }
+function pfTick(){
+  if(!PF||PF.paused)return;
+  PF.remaining-=0.25;var total=PF.mode==='focus'?PF.focus:PF.brk;
+  if(PF.remaining<=0){if(PF.mode==='focus')pfFinishFocus();else pfNext();return;}
+  var cl=$('#pfClock');if(cl)cl.textContent=fmtClock(PF.remaining);
+  pfArcSet(PF.remaining/total,PF.remaining<total*0.2);
+}
+function pfArcSet(frac,warn){var a=$('#pfArc');if(a){var C=326.726;a.style.strokeDashoffset=(C*(1-Math.max(0,Math.min(1,frac)))).toFixed(2);}var r=$('#pfRing');if(r)r.classList.toggle('warn',!!warn);}
+function pfRender(){
+  if(!PF)return;var c=PF.picks[PF.i];
+  $('#pfClock').textContent=fmtClock(PF.remaining);
+  pfArcSet(1,false);
+  if(PF.mode==='focus'){
+    $('#pfTitle').textContent='Focus '+(PF.i+1)+' / '+PF.picks.length;
+    var steps=['Retrieve it cold, no notes','Repair the gap'];if(rubricFor(c))steps.push('Draw it, or a mini mind-map');steps.push('Apply it to a case');steps.push('Explain it aloud, or teach it');
+    $('#pfBody').innerHTML='<div class="pf-comp">'+esc(c.name)+'</div><ul class="items" style="list-style:none;padding:0;margin:0 0 12px;display:grid;gap:6px">'+steps.map(function(s,idx){return '<li><button type="button" class="pm-step" data-pmi="'+idx+'" aria-pressed="false"><span class="pm-box" aria-hidden="true"></span><span class="lbl">'+esc(s)+'</span></button></li>';}).join('')+'</ul><div class="pf-actions">'+resourceBtns(c)+'</div><div class="pf-actions" style="margin-top:8px"><button class="btn primary" id="pfDone">Done, break</button><button class="btn" id="pfPause">Pause</button></div>';
+    $$('#pfBody .pm-step').forEach(function(b){b.onclick=function(){b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');};});
+    $('#pfDone').onclick=pfFinishFocus;$('#pfPause').onclick=pfTogglePause;
+  }else{
+    $('#pfTitle').textContent='Break';var next=PF.picks[PF.i+1];
+    $('#pfBody').innerHTML='<div class="pf-comp">Break, breathe</div><p style="font-size:13px;color:var(--ink-soft);margin-bottom:10px">Look away from the screen.'+(next?' Next: <b>'+esc(next.name)+'</b>.':'')+'</p><div class="pf-actions"><button class="btn gold" id="pfSkip">Skip break</button><button class="btn" id="pfPause">Pause</button></div>';
+    $('#pfSkip').onclick=pfNext;$('#pfPause').onclick=pfTogglePause;
+  }
+}
+function pfTogglePause(){if(!PF)return;PF.paused=!PF.paused;var b=$('#pfPause');if(b)b.textContent=PF.paused?'Resume':'Pause';}
+function pfFinishFocus(){var c=PF.picks[PF.i];bumpComp(c,5);bumpSkill('Retrieval',1);save();renderAll();if(PF.i>=PF.picks.length-1)return pfDone();PF.mode='break';PF.remaining=PF.brk;PF.paused=false;pfRender();}
+function pfNext(){PF.i++;if(PF.i>=PF.picks.length)return pfDone();PF.mode='focus';PF.remaining=PF.focus;PF.paused=false;pfRender();}
+function pfDone(){if(PF&&PF.timer)clearInterval(PF.timer);$('#pomoFloat').hidden=true;audioStopAll();AUDIO.cur='off';$$('#pomoFloat .pf-s').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-psound')==='off'?'true':'false');});renderAll();toast('Pomodoro session complete.');PF=null;}
+function pfCloseWidget(){if(PF&&PF.timer)clearInterval(PF.timer);$('#pomoFloat').hidden=true;audioStopAll();PF=null;}
 
 /* ---- 3-Day Exam Cram ---- */
 var CRAM=null;
+function parseCovers(str){var m=String(str||'').match(/(\d+)(?:\s*(?:to|-|–|through)\s*(\d+))?/i);if(!m)return null;var a=+m[1],b=m[2]?+m[2]:a,out=[];for(var k=a;k<=b;k++)out.push(k);return out.length?out:null;}
 function examCoverageWeeks(exam){
+  /* Prefer the schedule's own "covers" text so this adapts to any term length. */
+  var covers=null;
+  SCHEDULE.weeks.forEach(function(w){
+    if(w.labExam&&w.labExam.name===exam.name)covers=covers||w.labExam.covers||('Week '+w.n);
+    if(w.lectureMidterm&&w.lectureMidterm.name===exam.name)covers=covers||w.lectureMidterm.covers;
+  });
+  if(/cumulative/i.test(exam.name)&&!covers)covers='Weeks 1 to '+SCHEDULE.weeks.length;
+  var parsed=parseCovers(covers);if(parsed)return parsed;
   for(var i=0;i<SCHEDULE.weeks.length;i++){var w=SCHEDULE.weeks[i];if(w.labExam&&w.labExam.name===exam.name)return [w.n];}
-  if(/midterm/i.test(exam.name))return [1,2,3,4];
   if(/cumulative/i.test(exam.name))return SCHEDULE.weeks.map(function(w){return w.n;});
   return [scheduleCurrentWeek().n];
 }
@@ -1691,20 +1909,22 @@ function trackOf(comp){var f=comp.facets||[];var lab=f.some(function(x){return [
 function openCram(){
   clearG();var ov=$('#gameOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');lastFocus=document.activeElement;$('#gameClose').focus();
   var exam=nextExam();var dleft=dayDiff(exam.date,TODAY);
+  var key=moduleKey();var continuing=(CRAM&&CRAM.key===key&&CRAM.counted&&CRAM.mode==='exam');
+  if(cramCount(key)>=2&&!continuing){return cramCappedScreen();}
   var comps=compsForWeeks(examCoverageWeeks(exam));
   if(!comps.length){gBody('<div class="g-center"><div class="g-emoji">📅</div><h3>No exam mapped yet</h3><p>Load your schedule first and the cram plan will target your next exam.</p><div class="g-actions"><button class="btn primary" data-gameclose>Close</button></div></div>');return;}
-  CRAM={exam:exam,comps:comps,gap:{}};
+  CRAM={exam:exam,comps:comps,gap:{},mode:'exam',key:key,counted:continuing};
   gSet('3-Day Exam Cram',exam.name+' in '+(dleft>=0?dleft:0)+' day'+(dleft===1?'':'s'));
   gBody('<div class="g-center"><div class="g-emoji">🎯</div><h3>Three days to '+esc(exam.name)+'</h3><p>Start with a quick Gap Finder across the lab and lecture material this exam covers. It takes a few minutes and sets the course of your three days, biggest gaps first. Or skip it and use your saved progress. Either way this is intense review, not a grade guarantee.</p><div class="g-actions"><button class="btn gold big" data-gapstart>Run the Gap Finder</button><button class="btn big" data-cramskip>Skip, use saved progress</button></div></div>');
 }
 function startGapFinder(subset){
   var comps=(subset&&subset.length)?subset:CRAM.comps;var i=0;if(!subset)CRAM.gap={};
   (function step(){
-    if(i>=comps.length)return subset?finishRecheck():buildCramPlan(true);
+    if(i>=comps.length)return subset?finishRecheck():(CRAM.mode==='mid'?buildMidPlan():buildCramPlan(true));
     var c=comps[i];var track=trackOf(c);
     gSet('Gap Finder','Cold check, no notes');
     gBody('<div class="g-qmeta"><span>'+(i+1)+' of '+comps.length+'</span><span class="proto-badge">'+track+'</span></div><div class="g-timer"><span style="width:'+(i/comps.length*100)+'%"></span></div><p class="g-q">'+esc(c.name)+'</p><p style="color:var(--ink-soft);margin-bottom:18px">Without notes, can you do this? <b>'+esc(c.can||c.name)+'</b></p><div class="g-actions"><button class="btn" id="g0">Got it</button><button class="btn gold" id="g1">Shaky</button><button class="btn rust" id="g2">No idea</button></div>');
-    [0,1,2].forEach(function(v){var b=$('#g'+v);if(b)b.onclick=function(){CRAM.gap[c.id]=v;i++;step();};});
+    [0,1,2].forEach(function(v){var b=$('#g'+v);if(b)b.onclick=function(){CRAM.gap[c.id]=v;if(CRAM.mode==='mid')gradeComp(c,v);i++;step();};});
   })();
 }
 function gapSummary(){var no=0,sh=0,byTrack={Lab:0,Lecture:0,Both:0};CRAM.comps.forEach(function(c){var g=CRAM.gap[c.id];if(g===2){no++;byTrack[trackOf(c)]++;}else if(g===1){sh++;byTrack[trackOf(c)]++;}});return {no:no,sh:sh,byTrack:byTrack};}
@@ -1730,6 +1950,51 @@ function renderCramPlan(fromGap){
     '<div class="g-actions"><button class="btn" data-gameclose>Close</button></div>');
 }
 function cramDay3(){gBody('<div class="g-center"><div class="g-emoji">🏁</div><h3>Day 3: Simulate</h3><p>Rapid active review of everything, then test under pressure, then re-check the gaps you flagged.</p><div class="g-actions"><button class="btn primary" data-cramallpomo>Rapid retrieval</button><button class="btn" data-game="quiz">Practice test</button><button class="btn" data-game="race">Lab race</button></div><div class="g-actions"><button class="btn rust" data-cramretest>Re-check my gaps</button><button class="btn" data-toolblank="spaced-recall.html">Spaced recall</button><button class="btn" data-gameclose>Close</button></div></div>');}
+
+/* ---- Mid-Module Gap Check (shares the 2-per-module cram cap) ---- */
+function moduleKey(){return nextExam().name;}
+function cramCount(k){S.cramLog=S.cramLog||{};return S.cramLog[k]||0;}
+function cramUsed(k){S.cramLog=S.cramLog||{};S.cramLog[k]=(S.cramLog[k]||0)+1;save();renderPlan();}
+function gradeComp(c,rating){
+  c.last=TODAY;
+  if(rating===0){c.mastery=Math.max(c.mastery,72);if(c.conf!=='high')c.conf='high';c.next=addDays(TODAY,6);}
+  else if(rating===1){c.mastery=Math.min(Math.max(c.mastery,42),58);c.conf='low';c.next=addDays(TODAY,2);}
+  else{c.mastery=Math.min(c.mastery,34);c.conf='low';c.next=addDays(TODAY,1);}
+}
+function cramCappedScreen(){
+  gSet('Cram limit reached','2 of 2 used this module');
+  gBody('<div class="g-center"><div class="g-emoji">🛑</div><h3>You have used both crams for this module</h3><p>A third cram gives you less back each round, and it crowds out the steady practice that actually moves a grade. The strongest move now is little and often.</p><p style="margin-top:8px">Every <b>Sunday night</b>, open your <b>Weakness Dashboard</b> and clear what is flagged. Gaps never get the chance to pile up, and that beats another cram.</p><div class="g-actions"><button class="btn gold big" data-weakjump>Open Weakness Dashboard</button><button class="btn" data-gameclose>Close</button></div></div>');
+}
+function openMidCram(){
+  clearG();var ov=$('#gameOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');lastFocus=document.activeElement;$('#gameClose').focus();
+  var key=moduleKey();var continuing=(CRAM&&CRAM.mode==='mid'&&CRAM.key===key&&CRAM.counted);
+  if(cramCount(key)>=2&&!continuing){return cramCappedScreen();}
+  var exam=nextExam();var comps=compsForWeeks(examCoverageWeeks(exam));
+  if(!comps.length){gBody('<div class="g-center"><div class="g-emoji">📅</div><h3>No module mapped yet</h3><p>Load your schedule and the gap check will target your current module.</p><div class="g-actions"><button class="btn primary" data-gameclose>Close</button></div></div>');return;}
+  CRAM={exam:exam,comps:comps,gap:{},mode:'mid',key:key,counted:continuing};
+  var used=cramCount(key);
+  gSet('Mid-Module Gap Check',comps.length+' competencies · '+esc(exam.name)+' module');
+  gBody('<div class="g-center"><div class="g-emoji">🧭</div><h3>Find your gaps halfway, not at the last minute</h3><p>A quick competency sweep across everything in this module, '+comps.length+' items, lecture and lab. Rate each one cold. At the end it refocuses your plan and highlights the gaps on your Weakness Dashboard, so you can fix them now instead of waiting for the three-day cram.</p><p style="margin-top:8px;font-size:13px;color:var(--ink-soft)">Cram is powerful but capped at <b>2 per module</b> ('+used+' of 2 used). If you like checking in more often, that is a great instinct, do it through your <b>Sunday night Weakness Dashboard</b> instead of another cram. Little and often wins. This is honest review, not a grade guarantee.</p><div class="g-actions"><button class="btn gold big" data-midstart>Start the gap check</button><button class="btn big" data-weakjump>Use Weakness Dashboard instead</button></div></div>');
+}
+function buildMidPlan(){
+  save();renderAll();
+  var s=gapSummary();
+  CRAM.all=CRAM.comps.slice();
+  CRAM.day1=CRAM.comps.filter(function(c){return CRAM.gap[c.id]===2;});
+  CRAM.day2=CRAM.comps.filter(function(c){return CRAM.gap[c.id]===1;});
+  CRAM.gapItems=CRAM.comps.filter(function(c){return CRAM.gap[c.id]>=1;});
+  gSet('Mid-Module Gap Check','Refocus · '+(s.no+s.sh)+' gap'+((s.no+s.sh)===1?'':'s')+' found');
+  function nm(arr){return arr.length?arr.slice(0,8).map(function(c){return esc(c.name);}).join(', ')+(arr.length>8?', and more':''):'nothing flagged here';}
+  var head='<div class="weak-head" style="margin-bottom:14px"><div><div class="wc">'+(s.no+s.sh)+'</div><div class="wl">gaps found</div></div><p style="flex:1;min-width:180px">'+s.no+' no idea, '+s.sh+' shaky. Lab '+s.byTrack.Lab+', Lecture '+s.byTrack.Lecture+', Both '+s.byTrack.Both+'. These are now flagged on your Weakness Dashboard.</p></div>'+
+  '<div class="card" style="padding:13px 16px;margin-bottom:14px;border-left:3px solid var(--gold)"><p style="font-size:13px;color:var(--ink-soft);margin:0">Closing these through active recall is one of the highest-yield things you can do, retrieval practice and spaced review are among the most reliable ways to raise a score. But the number itself is not the point: what helps is how well these overlap with what the exam tests, and how honest you are in the cold check. No specific grade is promised.</p></div>';
+  if(s.no+s.sh===0){gBody(head+'<div class="g-center"><div class="g-emoji">✅</div><h3>No gaps this round</h3><p>Solid. Keep it steady and re-check on Sunday through the Weakness Dashboard rather than burning your other cram.</p><div class="g-actions"><button class="btn gold" data-weakjump>Open Weakness Dashboard</button><button class="btn" data-gameclose>Close</button></div></div>');return;}
+  function card(tag,title,body,btn){return '<div class="card" style="padding:16px 18px;margin-bottom:12px"><div style="font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--terra-dark)">'+tag+'</div><h3 style="font-size:16px;margin:4px 0 6px">'+title+'</h3><p style="font-size:13px;color:var(--ink-soft);margin-bottom:10px">'+body+'</p>'+btn+'</div>';}
+  gBody(head+'<p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px">Refocus now, while there is still time to fix it. Active formats only: retrieve, draw, label, apply.</p>'+
+    card('Repair first','No-idea items',nm(CRAM.day1)+'. Retrieve cold, then redraw or relabel from memory.','<button class="btn rust" data-cramday="1">Work these now</button>')+
+    card('Solidify','Shaky items',nm(CRAM.day2)+'. Retrieve, then apply each to a case or an image.','<button class="btn gold" data-cramday="2">Work these next</button>')+
+    card('Then keep it steady','Sunday habit','These gaps are flagged on your Weakness Dashboard. Clear them through the week so you are not cramming again.','<button class="btn" data-weakjump>Open Weakness Dashboard</button>')+
+    '<div class="g-actions"><button class="btn" data-gameclose>Close</button></div>');
+}
 function recheckGaps(){var items=(CRAM&&CRAM.gapItems&&CRAM.gapItems.length)?CRAM.gapItems:(CRAM&&CRAM.comps)||[];startGapFinder(items);}
 
 /* ---- My Grades (optional, device-only) ---- */
@@ -1754,20 +2019,47 @@ function renderGrades(){
   $('#grCoach').onclick=function(){closeGame();var el=$('#s-coach');if(el)el.scrollIntoView({behavior:'smooth'});coachSay('you','How are my grades trending?');coachRespond('grades','');};
 }
 
+function drawKnow(){
+  gSet('Draw it to Know it','Given, not Googled');
+  var w=weaknesses();var c=(w[0]&&w[0].c)||allComps()[0].c;CUR_EX=c;
+  var rub=rubricFor(c)||[];var shown=0;
+  function render(){
+    var revealed=rub.slice(0,shown);
+    var b='<div class="g-qmeta"><span>Draw or mind-map from memory</span><span>'+esc(c.name)+'</span></div>';
+    b+='<p class="g-q">On paper, draw <b>'+esc(c.name)+'</b> from memory, or build a mini mind-map of it. No notes. Put it in the centre and branch out every part and connection you can.</p>';
+    if(rub.length){
+      b+='<div class="reference-box"><h4>Self-check, should include ('+revealed.length+' of '+rub.length+')</h4><ul>'+(revealed.length?revealed.map(function(x){return '<li>'+esc(x)+'</li>';}).join(''):'<li style="list-style:none;color:var(--ink-faint)">Hidden. Draw or map it first, then reveal to grade yourself.</li>')+'</ul></div>';
+      b+='<div class="g-actions">'+(shown<rub.length?'<button class="btn" id="dkHint">Reveal one</button><button class="btn" id="dkAll">Show full checklist</button>':'<span style="color:var(--ok);font-weight:700;align-self:center">Full checklist shown, grade yourself.</span>')+'</div>';
+    }else{
+      b+='<p style="color:var(--ink-soft)">Check your work against your notes, the atlas, and the structure list.</p>';
+    }
+    b+='<div class="g-actions"><span style="align-self:center;font-weight:700;margin-right:4px">How complete were you?</span><button class="btn" data-mmscore="2">Patchy</button><button class="btn" data-mmscore="4">Solid</button><button class="btn gold" data-mmscore="6">Thorough</button></div>';
+    gBody(b);
+    var h=$('#dkHint');if(h)h.onclick=function(){shown=Math.min(rub.length,shown+1);render();};
+    var a=$('#dkAll');if(a)a.onclick=function(){shown=rub.length;render();};
+  }
+  render();
+}
 var EXERCISES=[
-  {k:'mindmap',name:'Mind-Map then Recall',icon:I.draw,tag:'Notes to memory',desc:'Map a section from your notes, then rebuild it from memory. The gap is your repair list.'},
+  {k:'drawknow',name:'Draw it to Know it',icon:I.draw,tag:'Given not Googled',desc:'Draw a structure or build a mini mind-map from memory, then reveal a self-check list to grade your own coverage.'},
+  {k:'mindmap',name:'Mind-Map then Recall',icon:I.draw,tag:'Notes to memory',desc:'Map a section from your notes, then rebuild the mind-map from memory. The gap is your repair list.'},
   {k:'braindump',name:'Blank-Page Brain Dump',icon:I.recall,tag:'Free recall',desc:'Write everything you know about a competency cold, then check what you missed.'}
 ];
 function renderExercises(){var el=$('#exGrid');if(!el)return;el.innerHTML=EXERCISES.map(function(e){return '<div class="card hover exercise-card"><span class="ei">'+e.icon+'</span><span class="tagline">'+esc(e.tag)+'</span><h3>'+esc(e.name)+'</h3><p>'+esc(e.desc)+'</p><button class="btn primary" data-exercise="'+e.k+'">Start exercise</button></div>';}).join('');}
 
 var MODES=[
+  {k:'studywith',cls:'tbl',emoji:'📅',tag:'Live · peer-hosted',name:'Study With Me',players:'Real sessions',desc:'Find and join a peer-hosted study session on the live hosting schedule.',link:'https://www.medmasterscollaborative.com/student-hosting-schedule',cta:'Find a session'},
   {k:'quiz',cls:'quiz',emoji:'🎯',tag:'Live · 2 to 40 players',name:'Live Quiz',players:'Kahoot-style race',desc:'Fast multiple-choice showdown on your question bank. Speed and accuracy both score, with a live leaderboard between questions.'},
   {k:'tbl',cls:'tbl',emoji:'👥',tag:'Teams',name:'Practice TBL',players:'iRAT, tRAT, appeals',desc:'Answer alone, then as a team with scratch-to-reveal scoring, then appeal. Confidence-based and 4S ready.'},
   {k:'race',cls:'race',emoji:'🏁',tag:'Head to head',name:'Lab Races',players:'Timed sprint',desc:'Identify structures against the clock and a rival. First to the finish wins. Built for practical prep.'},
   {k:'escape',cls:'escape',emoji:'🚪',tag:'Co-op',name:'Escape Room',players:'Team puzzle',desc:'A locked clinical case. Solve each anatomy puzzle to open the next lock and escape before time runs out.'},
   {k:'draw',cls:'draw',emoji:'✏️',tag:'Bonus',name:'Draw and Guess',players:'Given not Googled',desc:'Draw a structure from memory on the clock, then check it against the key. Drawing as the integrity test.'}
 ];
-function renderTogether(){var el=$('#togetherGrid');if(!el)return;el.innerHTML=MODES.map(function(m){return '<div class="mode-card"><div class="mode-top '+m.cls+'"><span class="mtag">'+esc(m.tag)+'</span><h3>'+m.emoji+' '+esc(m.name)+'</h3><div class="players">'+esc(m.players)+'</div></div><div class="mode-body"><p>'+esc(m.desc)+'</p><span class="proto-badge">Playable prototype</span><button class="btn primary" data-game="'+m.k+'">Play now</button></div></div>';}).join('');}
+function renderTogether(){var el=$('#togetherGrid');if(!el)return;el.innerHTML=MODES.map(function(m){
+  var badge=m.link?'<span class="proto-badge" style="color:var(--ok);background:#e2efe8;border-color:#cfe3d7">Live session</span>':'<span class="proto-badge">Playable prototype</span>';
+  var btn=m.link?'<button class="btn primary" data-toolblank="'+esc(m.link)+'">'+esc(m.cta||'Open')+'</button>':'<button class="btn primary" data-game="'+m.k+'">Play now</button>';
+  return '<div class="mode-card"><div class="mode-top '+m.cls+'"><span class="mtag">'+esc(m.tag)+'</span><h3>'+m.emoji+' '+esc(m.name)+'</h3><div class="players">'+esc(m.players)+'</div></div><div class="mode-body"><p>'+esc(m.desc)+'</p>'+badge+btn+'</div></div>';
+}).join('');}
 
 /* =========================================================
    RENDER ALL
@@ -1782,14 +2074,17 @@ function renderAll(){
 ========================================================= */
 var lastFocus=null;
 document.addEventListener('click',function(e){
-  var t=e.target.closest('[data-session],[data-prove],[data-tool],[data-toolblank],[data-selfev],[data-logev],[data-logafter],[data-stage],[data-unit],[data-prompt],[data-scroll],[data-sclose],[data-game],[data-exercise],[data-gameclose],[data-drawscore],[data-mmscore],[data-opengrades],[data-gradedel],[data-cram],[data-cramday],[data-cramallpomo],[data-gapstart],[data-cramskip],[data-cramretest],[data-daydone]');
+  var t=e.target.closest('[data-session],[data-prove],[data-tool],[data-toolblank],[data-selfev],[data-logev],[data-logafter],[data-stage],[data-unit],[data-prompt],[data-scroll],[data-sclose],[data-game],[data-exercise],[data-gameclose],[data-drawscore],[data-mmscore],[data-opengrades],[data-gradedel],[data-cram],[data-midcram],[data-midstart],[data-weakjump],[data-cramday],[data-cramallpomo],[data-gapstart],[data-cramskip],[data-cramretest],[data-daydone]');
   if(!t)return;
   if(t.hasAttribute('data-game')){openGame(t.getAttribute('data-game'));return;}
   if(t.hasAttribute('data-exercise')){openGame(t.getAttribute('data-exercise'));return;}
   if(t.hasAttribute('data-toolblank')){window.open(t.getAttribute('data-toolblank'),'_blank','noopener');return;}
   if(t.hasAttribute('data-cram')){openCram();return;}
-  if(t.hasAttribute('data-gapstart')){startGapFinder();return;}
-  if(t.hasAttribute('data-cramskip')){buildCramPlan(false);return;}
+  if(t.hasAttribute('data-midcram')){openMidCram();return;}
+  if(t.hasAttribute('data-midstart')){if(CRAM&&!CRAM.counted){cramUsed(CRAM.key);CRAM.counted=true;}startGapFinder();return;}
+  if(t.hasAttribute('data-weakjump')){closeGame();var wl=$('#s-weak');if(wl)wl.scrollIntoView({behavior:'smooth',block:'start'});return;}
+  if(t.hasAttribute('data-gapstart')){if(CRAM&&!CRAM.counted){cramUsed(CRAM.key);CRAM.counted=true;}startGapFinder();return;}
+  if(t.hasAttribute('data-cramskip')){if(CRAM&&!CRAM.counted){cramUsed(CRAM.key);CRAM.counted=true;}buildCramPlan(false);return;}
   if(t.hasAttribute('data-cramretest')){recheckGaps();return;}
   if(t.hasAttribute('data-cramday')){var dd=t.getAttribute('data-cramday');if(dd==='1')openPomodoro('cram',CRAM&&CRAM.day1);else if(dd==='2')openPomodoro('cram',CRAM&&CRAM.day2);else cramDay3();return;}
   if(t.hasAttribute('data-cramallpomo')){openPomodoro('cram',(CRAM&&CRAM.all||[]).slice(0,6));return;}
@@ -1831,11 +2126,33 @@ $('#instrClose').addEventListener('click',closeInstructor);
 $('#instrCancel').addEventListener('click',closeInstructor);
 $('#instrSave').addEventListener('click',saveInstructor);
 $('#instrReload').addEventListener('click',function(){applySchedule(true);renderAll();closeInstructor();toast('Plan rebuilt from the schedule.');});
+$('#cfgImport').addEventListener('click',importSchedule);
+$('#cfgFile').addEventListener('change',function(e){var f=e.target.files&&e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){$('#cfgPaste').value=r.result;};r.readAsText(f);});
+$('#cfgStart').addEventListener('change',function(){if(this.value){SCHEDULE.start=this.value;store.set('mos-schedule',SCHEDULE);}});
+$('#cfgEnd').addEventListener('change',function(){if(this.value){SCHEDULE.end=this.value;store.set('mos-schedule',SCHEDULE);}});
 $('#instrOverlay').addEventListener('click',function(e){if(e.target===this)closeInstructor();});
 
 /* game controls */
 $('#gameClose').addEventListener('click',closeGame);
 $('#gameOverlay').addEventListener('click',function(e){if(e.target===this)closeGame();});
+/* floating pomodoro controls */
+(function(){
+  var f=$('#pomoFloat'),h=$('#pfHead');if(!f)return;
+  $('#pfMin').addEventListener('click',function(){f.classList.toggle('mini');this.innerHTML=f.classList.contains('mini')?'&#9633;':'&#8211;';});
+  $('#pfCloseBtn').addEventListener('click',pfCloseWidget);
+  $('#pfVol').addEventListener('input',function(){audioVol(+this.value);});
+  f.addEventListener('click',function(e){var b=e.target.closest('.pf-s');if(b)audioSet(b.getAttribute('data-psound'));});
+  $('#pfLinkGo').addEventListener('click',function(){audioCustom($('#pfLink').value);});
+  $('#pfLink').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();audioCustom(this.value);}});
+  $('#pfSaved').addEventListener('change',function(){if(this.value)audioCustom(this.value);});
+  $('#pfForget').addEventListener('click',function(){var v=$('#pfSaved').value;if(v){S.profile.tracks=tracks().filter(function(x){return x.url!==v;});save();renderSavedTracks();}});
+  renderSavedTracks();
+  var dragging=false,ox=0,oy=0;
+  function startDrag(e){if(e.target.closest('.pf-btn'))return;dragging=true;var r=f.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top;f.style.right='auto';f.style.bottom='auto';f.style.left=r.left+'px';f.style.top=r.top+'px';try{e.currentTarget.setPointerCapture(e.pointerId);}catch(err){}}
+  function moveDrag(e){if(!dragging)return;var x=Math.max(4,Math.min(window.innerWidth-44,e.clientX-ox));var y=Math.max(4,Math.min(window.innerHeight-40,e.clientY-oy));f.style.left=x+'px';f.style.top=y+'px';}
+  function endDrag(){dragging=false;}
+  [h,$('#pfRing')].forEach(function(el){if(!el)return;el.addEventListener('pointerdown',startDrag);el.addEventListener('pointermove',moveDrag);el.addEventListener('pointerup',endDrag);});
+})();
 
 /* reset */
 $('#openReset').addEventListener('click',function(){
