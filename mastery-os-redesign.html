@@ -331,6 +331,10 @@ section.block:first-of-type{border-top:none}
 .mode-body p{font-size:13px;color:var(--ink-soft);line-height:1.5;flex:1}
 .mode-body .btn{align-self:flex-start}
 .proto-badge{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--terra-dark);background:var(--cream);border:1px solid var(--line);padding:3px 8px;border-radius:999px}
+.mode-card.is-soon{position:relative}
+.mode-card.is-soon .mode-body{opacity:.9}
+.mode-card.is-soon .mode-top{filter:saturate(.65)}
+.mode-soon{position:absolute;top:10px;right:10px;z-index:3;font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);background:var(--gold);padding:4px 11px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
 
 /* ---------- game overlay ---------- */
 .game-sheet{max-width:720px}
@@ -569,7 +573,8 @@ section.block:first-of-type{border-top:none}
       </div>
       <div class="flow" id="flowWrap"><!-- JS --></div>
       <h3 style="margin:30px 0 4px;font-size:17px">Signature exercises</h3>
-      <p style="font-size:14px;color:var(--ink-soft);margin:0 0 16px">Two deep-practice moves you can run on any competency. Given, not Googled.</p>
+      <p style="font-size:14px;color:var(--ink-soft);margin:0 0 12px">Two deep-practice moves you can run on any competency. Given, not Googled.</p>
+      <div class="tip-note" style="display:flex;gap:10px;align-items:flex-start;background:var(--cream);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:var(--r);padding:11px 14px;margin:0 0 16px;font-size:13.5px;color:var(--navy)"><span aria-hidden="true">📓</span><span>Keep one dedicated notebook for these written exercises: your drawings, mind-maps, and brain dumps. Date each page and label it with the competency. It becomes your own recall log to review before exams, and the act of writing by hand is part of what makes it stick.</span></div>
       <div class="grid g3" id="exGrid"><!-- JS --></div>
     </div>
   </section>
@@ -783,24 +788,24 @@ var SEED={
     highyield:'Tissue types, heart blood flow, brachial plexus, skin layers'
   },
   dims:[
-    {k:'lecture',name:'Lecture Mastery',val:72},
-    {k:'lab',name:'Lab Mastery',val:58},
-    {k:'cadaver',name:'Cadaver Mastery',val:44},
-    {k:'histo',name:'Histology Mastery',val:61},
-    {k:'clinical',name:'Clinical Application',val:53},
-    {k:'imaging',name:'Imaging',val:47},
-    {k:'draw',name:'Draw-to-Know-It',val:66},
-    {k:'recall',name:'Spaced Recall',val:70}
+    {k:'lecture',name:'Lecture Mastery',val:0},
+    {k:'lab',name:'Lab Mastery',val:0},
+    {k:'cadaver',name:'Cadaver Mastery',val:0},
+    {k:'histo',name:'Histology Mastery',val:0},
+    {k:'clinical',name:'Clinical Application',val:0},
+    {k:'imaging',name:'Imaging',val:0},
+    {k:'draw',name:'Draw-to-Know-It',val:0},
+    {k:'recall',name:'Spaced Recall',val:0}
   ],
   skills:[
-    {name:'Planning',sub:'Setting a plan before you study',val:80},
-    {name:'Retrieval',sub:'Pulling from memory, not rereading',val:68},
-    {name:'Gap Identification',sub:'Naming what you do not know',val:55},
-    {name:'Repair Skills',sub:'Closing a gap once you find it',val:60},
-    {name:'Spaced Recall Consistency',sub:'Returning on schedule',val:74},
-    {name:'Reflection',sub:'Learning from each session',val:48},
-    {name:'Transfer',sub:'Using it in a new context',val:52},
-    {name:'Teaching Ability',sub:'Explaining it to someone else',val:40}
+    {name:'Planning',sub:'Setting a plan before you study',val:0},
+    {name:'Retrieval',sub:'Pulling from memory, not rereading',val:0},
+    {name:'Gap Identification',sub:'Naming what you do not know',val:0},
+    {name:'Repair Skills',sub:'Closing a gap once you find it',val:0},
+    {name:'Spaced Recall Consistency',sub:'Returning on schedule',val:0},
+    {name:'Reflection',sub:'Learning from each session',val:0},
+    {name:'Transfer',sub:'Using it in a new context',val:0},
+    {name:'Teaching Ability',sub:'Explaining it to someone else',val:0}
   ],
   units:[
     {id:'u-integ',name:'Integumentary System',week:1,comps:[
@@ -898,7 +903,7 @@ function nextKeyEvent(){
 function scheduleExams(){var out=[];SCHEDULE.weeks.forEach(function(w){if(w.labExam)out.push({name:w.labExam.name,date:w.labExam.date});if(w.lectureMidterm)out.push({name:w.lectureMidterm.name,date:w.lectureMidterm.date});if(w.cumulative){out.push({name:'Cumulative Lab Final',date:w.cumulative.lab});out.push({name:'Cumulative Lecture Final',date:w.cumulative.lecture});}});return out;}
 function nextExam(){var up=scheduleExams().filter(function(e){return dayDiff(e.date,TODAY)>=0;}).sort(function(a,b){return dayDiff(a.date,b.date);});return up[0]||{name:'End of term',date:SCHEDULE.end};}
 function slugify(s,n){return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'-w'+n;}
-function sampleState(rel){var m,last,next;if(rel<0){m=60+Math.floor(Math.random()*24);last=addDays(TODAY,-(2+Math.floor(Math.random()*8)));next=addDays(TODAY,-Math.floor(Math.random()*3));}else if(rel===0){m=40+Math.floor(Math.random()*20);last=addDays(TODAY,-Math.floor(Math.random()*3));next=addDays(TODAY,Math.floor(Math.random()*3));}else{m=12+Math.floor(Math.random()*20);last='';next=null;}return {m:m,last:last,next:next};}
+function sampleState(rel){return {m:0,last:'',next:null};}
 function buildFromSchedule(){
   var cw=scheduleCurrentWeek();
   var CD=window.BIO004_COMPETENCIES;
@@ -995,8 +1000,11 @@ var STAGES=[
 /* =========================================================
    STATE
 ========================================================= */
-var S=store.get(KEY)||clone(SEED);
+var DATA_V=3;
 function clone(o){return JSON.parse(JSON.stringify(o));}
+var S=store.get(KEY)||clone(SEED);
+if(S.__dataV!==DATA_V){S=clone(SEED);}
+S.__dataV=DATA_V;
 function save(){store.set(KEY,S);}
 var $=function(s,r){return (r||document).querySelector(s);};
 var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
@@ -1088,6 +1096,10 @@ function renderPlan(){
     '<button class="btn ghost big" data-session="repair" style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">Repair weaknesses only</button>'+
     '<button class="btn ghost big" data-midcram style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">Mid-Module Gap Check</button>'+
     '<button class="btn ghost big" data-cram style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">3-Day Exam Cram</button>'+
+  '</div>'+
+  '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">'+
+    '<button class="btn" data-pomosetup style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">⏱ Pomodoro setup</button>'+
+    '<button class="btn" data-baseline style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">🧠 Find my focus baseline</button>'+
   '</div>'+
   cramMeter();
   $('#planCard').innerHTML=html;
@@ -1763,12 +1775,40 @@ function mindMap(){
   function render(){var s=steps[step];var b='<div class="g-center"><div class="g-emoji">'+s.emoji+'</div><h3>'+esc(s.h)+'</h3><p>'+esc(s.p)+'</p>';if(step<2)b+='<div class="g-actions"><button class="btn gold" id="mmNext">'+esc(s.cta)+'</button></div>';else b+='<div class="g-actions"><button class="btn" data-mmscore="2">Under half</button><button class="btn" data-mmscore="4">Most of it</button><button class="btn gold" data-mmscore="6">Almost all</button></div>';b+='</div>';gBody(b);if(step<2){var n=$('#mmNext');if(n)n.onclick=function(){step++;render();};}}
   render();
 }
+function exerciseComp(){
+  var wk=scheduleCurrentWeek().n;
+  var pool=allComps().filter(function(x){return x.u&&x.u.week===wk;});
+  if(!pool.length)pool=allComps();
+  var withRub=pool.filter(function(x){return rubricFor(x.c);});
+  return (withRub[0]||pool[0]).c;
+}
 function brainDump(){
   gSet('Blank-Page Brain Dump','Signature exercise');
-  var w=weaknesses();var c=(w[0]&&w[0].c)||allComps()[0].c;CUR_EX=c;
-  gBody('<div class="g-qmeta"><span>Everything you know about</span><span>'+esc(c.name)+'</span></div><p class="g-q">Write everything you can recall about '+esc(c.name)+'. No notes. Keep going until you run dry.</p><textarea id="bdBox" style="width:100%;min-height:170px;font-family:inherit;font-size:15px;padding:13px;border:1.5px solid var(--line);border-radius:var(--r);background:var(--offwhite)" placeholder="Start writing..."></textarea><div class="g-actions"><button class="btn gold" id="bdDone">I am done, now check my notes</button></div>');
+  var c=exerciseComp();CUR_EX=c;
+  gBody('<div class="g-qmeta"><span>Everything you know about</span><span>'+esc(c.name)+'</span></div><p class="g-q">Write everything you can recall about '+esc(c.name)+'. No notes. Keep going until you run dry.</p><textarea id="bdBox" style="width:100%;min-height:170px;font-family:inherit;font-size:15px;padding:13px;border:1.5px solid var(--line);border-radius:var(--r);background:var(--offwhite)" placeholder="Start writing..."></textarea><div class="g-actions"><button class="btn gold" id="bdDone">I am done, check myself</button></div>');
   var box=$('#bdBox');if(box)box.focus();
-  $('#bdDone').onclick=function(){var n=($('#bdBox').value.trim().match(/\S+/g)||[]).length;gBody('<div class="g-center"><div class="g-emoji">📝</div><h3>You recalled about '+n+' words</h3><p>Now open your notes and highlight everything you missed. Those are your repair targets for '+esc(c.name)+'. How complete was your dump?</p><div class="g-actions"><button class="btn" data-mmscore="2">Patchy</button><button class="btn" data-mmscore="4">Solid</button><button class="btn gold" data-mmscore="6">Thorough</button></div></div>');};
+  $('#bdDone').onclick=function(){bdCheck(c,($('#bdBox').value.trim().match(/\S+/g)||[]).length);};
+}
+function bdCheck(c,words){
+  var rub=rubricFor(c)||[];
+  if(!rub.length){
+    gBody('<div class="g-center"><div class="g-emoji">📝</div><h3>You recalled about '+words+' words</h3><p>Open your notes and highlight everything you missed. Those are your repair targets for '+esc(c.name)+'. How complete was your dump?</p><div class="g-actions"><button class="btn" data-mmscore="2">Patchy</button><button class="btn" data-mmscore="4">Solid</button><button class="btn gold" data-mmscore="6">Thorough</button></div></div>');
+    return;
+  }
+  var checked={};
+  var b='<div class="g-qmeta"><span>Check off what you recalled</span><span>'+esc(c.name)+'</span></div>';
+  b+='<p class="g-q" style="font-size:15px">Tick every item you actually wrote down. Be honest, this is your score.</p>';
+  b+='<ul style="list-style:none;padding:0;margin:0 0 14px;display:grid;gap:8px">'+rub.map(function(x,i){return '<li><button type="button" class="pm-step" data-bdi="'+i+'" aria-pressed="false"><span class="pm-box" aria-hidden="true"></span><span class="lbl">'+esc(x)+'</span></button></li>';}).join('')+'</ul>';
+  b+='<div class="g-actions"><span style="align-self:center;font-weight:800" id="bdCount">0 of '+rub.length+'</span><button class="btn gold" id="bdScore">Score me</button></div>';
+  gBody(b);
+  $$('#gameBody .pm-step').forEach(function(btn){btn.onclick=function(){var i=+btn.getAttribute('data-bdi');checked[i]=!checked[i];btn.setAttribute('aria-pressed',checked[i]?'true':'false');var g=0;for(var k in checked)if(checked[k])g++;var cs=$('#bdCount');if(cs)cs.textContent=g+' of '+rub.length;};});
+  $('#bdScore').onclick=function(){var g=0;for(var k in checked)if(checked[k])g++;bdResult(c,rub.length,g);};
+}
+function bdResult(c,total,got){
+  var pct=total?Math.round(got/total*100):0;var bump=Math.max(1,Math.round((got/(total||1))*6));bumpComp(c,bump);bumpSkill('Retrieval',2);bumpSkill('Gap Identification',1);save();renderAll();
+  var emoji=pct>=80?'✅':pct>=50?'📈':'🔁';var msg=pct>=80?'Strong recall.':pct>=50?'Solid, with gaps to close.':'Thin, worth another pass.';
+  gBody('<div class="g-center"><div class="g-emoji">'+emoji+'</div><h3>'+pct+'%, '+got+' of '+total+'</h3><p>'+msg+' The items you left unticked are your repair targets for '+esc(c.name)+'. Mastery updated.</p><div class="g-actions"><button class="btn gold" id="bdAgain">Practice again</button><button class="btn" data-gameclose>Done</button></div></div>');
+  $('#bdAgain').onclick=function(){brainDump();};
 }
 
 /* ---- Pomodoro session (chooser + focus/break cycle) ---- */
@@ -1791,7 +1831,9 @@ function resourceBtns(comp){
 }
 var FOCUS_VALS=[15,20,25,30,35,40,45,50,55,60,75,90];
 function pbField(label,id,vals,cur,labelFn){
-  var opts=vals.map(function(v){return '<option value="'+v+'"'+(v==cur?' selected':'')+'>'+(labelFn?labelFn(v):v)+'</option>';}).join('');
+  var list=vals.slice();var c=(cur===''||cur==null)?null:+cur;
+  if(c!=null&&!isNaN(c)&&list.indexOf(c)<0){list.push(c);list.sort(function(a,b){return a-b;});}
+  var opts=list.map(function(v){return '<option value="'+v+'"'+(v==cur?' selected':'')+'>'+(labelFn?labelFn(v):v)+'</option>';}).join('');
   return '<label style="font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);display:block">'+label+'<select id="'+id+'" style="display:block;width:100%;margin-top:5px;font-family:inherit;font-size:14px;padding:8px;border-radius:8px;border:1.5px solid var(--line);background:var(--offwhite)">'+opts+'</select></label>';
 }
 function pbRead(){return {focus:+$('#pbFocus').value,shortBrk:+$('#pbShort').value,longBrk:+$('#pbLong').value,blocks:+$('#pbBlocks').value,longEvery:+$('#pbEvery').value};}
@@ -1819,7 +1861,7 @@ function openSessionChooser(kind){
     '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:11px;margin-bottom:12px">'+
       pbField('Focus blocks','pbBlocks',[1,2,3,4,5,6,8],pm.blocks)+
       pbField('Focus min','pbFocus',FOCUS_VALS,pm.focus)+
-      pbField('Short break','pbShort',[3,5,8,10,15],pm.shortBrk)+
+      pbField('Short break','pbShort',[3,5,8,10,15,20],pm.shortBrk)+
       pbField('Long break','pbLong',[0,15,20,30,45],pm.longBrk,function(v){return v===0?'none':v;})+
       pbField('Long break after','pbEvery',[0,2,3,4],pm.longEvery,function(v){return v===0?'never':('every '+v);})+
     '</div>'+
@@ -1972,14 +2014,40 @@ function compsForWeeks(weeks){var out=[];S.units.forEach(function(u){if(weeks.in
 function trackOf(comp){var f=comp.facets||[];var lab=f.some(function(x){return ['cadaver','histology','label','imaging'].indexOf(x)>-1;});var lec=f.some(function(x){return ['lecture','clinical','draw'].indexOf(x)>-1;});return (lab&&!lec)?'Lab':(lec&&!lab)?'Lecture':'Both';}
 function openCram(){
   clearG();var ov=$('#gameOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');lastFocus=document.activeElement;$('#gameClose').focus();
-  var exam=nextExam();var dleft=dayDiff(exam.date,TODAY);
-  var key=moduleKey();var continuing=(CRAM&&CRAM.key===key&&CRAM.counted&&CRAM.mode==='exam');
+  var exam=nextExam();var pre=examCoverageWeeks(exam);var weeks=SCHEDULE.weeks;
+  gSet('Exam Cram','Choose what to cover');
+  var rows=weeks.map(function(w){var on=pre.indexOf(w.n)>-1;return '<li><button type="button" class="pm-step wk-pick" data-wk="'+w.n+'" aria-pressed="'+(on?'true':'false')+'"><span class="pm-box" aria-hidden="true"></span><span class="lbl"><b>Week '+w.n+'</b> &middot; '+esc(w.title)+'</span></button></li>';}).join('');
+  gBody('<div class="g-qmeta"><span>Gap Finder + Cram</span><span>Next: '+esc(exam.name)+', '+Math.max(0,dayDiff(exam.date,TODAY))+' days</span></div>'+
+    '<p class="g-q" style="font-size:16px">Which material are you cramming?</p>'+
+    '<div class="g-actions" style="margin-bottom:12px"><button class="btn" data-crampreset="exam">This exam</button><button class="btn" data-crampreset="midterm">Midterm, Weeks 1 to 4</button><button class="btn" data-crampreset="all">Everything</button></div>'+
+    '<ul id="wkPick" style="list-style:none;padding:0;margin:0 0 14px;display:grid;gap:7px">'+rows+'</ul>'+
+    '<div class="g-actions"><button class="btn gold big" id="cramGo">Run Gap Finder</button><button class="btn big" id="cramSkipSaved">Skip, use saved progress</button></div>');
+  function selWeeks(){return $$('#wkPick .wk-pick[aria-pressed="true"]').map(function(b){return +b.getAttribute('data-wk');});}
+  $$('#wkPick .wk-pick').forEach(function(b){b.onclick=function(){b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');};});
+  $$('[data-crampreset]').forEach(function(b){b.onclick=function(){var kind=b.getAttribute('data-crampreset');var set;if(kind==='exam')set=pre;else if(kind==='midterm')set=[1,2,3,4];else set=weeks.map(function(w){return w.n;});$$('#wkPick .wk-pick').forEach(function(x){x.setAttribute('aria-pressed',set.indexOf(+x.getAttribute('data-wk'))>-1?'true':'false');});};});
+  $('#cramGo').onclick=function(){startCram(selWeeks(),true);};
+  $('#cramSkipSaved').onclick=function(){startCram(selWeeks(),false);};
+}
+function cramLabelFor(weeks){
+  var pre=examCoverageWeeks(nextExam());
+  if(weeks.length===4&&[1,2,3,4].every(function(n){return weeks.indexOf(n)>-1;}))return 'Midterm, Weeks 1 to 4';
+  if(weeks.length===SCHEDULE.weeks.length)return 'Whole course';
+  if(weeks.length===pre.length&&pre.every(function(n){return weeks.indexOf(n)>-1;}))return nextExam().name;
+  return 'Weeks '+weeks.join(', ');
+}
+function startCram(weeks,run){
+  if(!weeks||!weeks.length){toast('Pick at least one week.');return;}
+  weeks=weeks.slice().sort(function(a,b){return a-b;});
+  var pre=examCoverageWeeks(nextExam());
+  var isExam=(weeks.length===pre.length&&pre.every(function(n){return weeks.indexOf(n)>-1;}));
+  var key=isExam?moduleKey():('cram:'+weeks.join('-'));
+  var continuing=(CRAM&&CRAM.key===key&&CRAM.counted&&CRAM.mode==='exam');
   if(cramCount(key)>=2&&!continuing){return cramCappedScreen();}
-  var comps=compsForWeeks(examCoverageWeeks(exam));
-  if(!comps.length){gBody('<div class="g-center"><div class="g-emoji">📅</div><h3>No exam mapped yet</h3><p>Load your schedule first and the cram plan will target your next exam.</p><div class="g-actions"><button class="btn primary" data-gameclose>Close</button></div></div>');return;}
-  CRAM={exam:exam,comps:comps,gap:{},mode:'exam',key:key,counted:continuing};
-  gSet('3-Day Exam Cram',exam.name+' in '+(dleft>=0?dleft:0)+' day'+(dleft===1?'':'s'));
-  gBody('<div class="g-center"><div class="g-emoji">🎯</div><h3>Three days to '+esc(exam.name)+'</h3><p>Start with a quick Gap Finder across the lab and lecture material this exam covers. It takes a few minutes and sets the course of your three days, biggest gaps first. Or skip it and use your saved progress. Either way this is intense review, not a grade guarantee.</p><div class="g-actions"><button class="btn gold big" data-gapstart>Run the Gap Finder</button><button class="btn big" data-cramskip>Skip, use saved progress</button></div></div>');
+  var comps=compsForWeeks(weeks);
+  if(!comps.length){toast('No competencies in those weeks yet.');return;}
+  CRAM={exam:nextExam(),comps:comps,gap:{},mode:'exam',key:key,counted:continuing,label:cramLabelFor(weeks),weeks:weeks};
+  if(!CRAM.counted){cramUsed(key);CRAM.counted=true;}
+  if(run)startGapFinder();else buildCramPlan(false);
 }
 function startGapFinder(subset){
   var comps=(subset&&subset.length)?subset:CRAM.comps;var i=0;if(!subset)CRAM.gap={};
@@ -2001,8 +2069,8 @@ function buildCramPlan(fromGap){
   renderCramPlan(fromGap);
 }
 function renderCramPlan(fromGap){
-  var exam=CRAM.exam;var dleft=dayDiff(exam.date,TODAY);
-  gSet('3-Day Exam Cram',exam.name+' in '+(dleft>=0?dleft:0)+' day'+(dleft===1?'':'s'));
+  var exam=CRAM.exam;
+  gSet('Exam Cram',CRAM.label||exam.name);
   function nm(arr){return arr.length?arr.map(function(c){return esc(c.name);}).join(', '):'nothing flagged, do a full sweep';}
   function card(tag,title,body,btn){return '<div class="card" style="padding:16px 18px;margin-bottom:12px"><div style="font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--terra-dark)">'+tag+'</div><h3 style="font-size:16px;margin:4px 0 6px">'+title+'</h3><p style="font-size:13px;color:var(--ink-soft);margin-bottom:10px">'+body+'</p>'+btn+'</div>';}
   var summary='';
@@ -2013,7 +2081,7 @@ function renderCramPlan(fromGap){
     card('Day 3 · Simulate','Everything, under pressure','Rapid retrieval of all of it, then a practice test and a lab race, then re-check the gaps you flagged.','<button class="btn primary" data-cramday="3">Start Day 3</button>')+
     '<div class="g-actions"><button class="btn" data-gameclose>Close</button></div>');
 }
-function cramDay3(){gBody('<div class="g-center"><div class="g-emoji">🏁</div><h3>Day 3: Simulate</h3><p>Rapid active review of everything, then test under pressure, then re-check the gaps you flagged.</p><div class="g-actions"><button class="btn primary" data-cramallpomo>Rapid retrieval</button><button class="btn" data-game="quiz">Practice test</button><button class="btn" data-game="race">Lab race</button></div><div class="g-actions"><button class="btn rust" data-cramretest>Re-check my gaps</button><button class="btn" data-toolblank="spaced-recall.html">Spaced recall</button><button class="btn" data-gameclose>Close</button></div></div>');}
+function cramDay3(){gBody('<div class="g-center"><div class="g-emoji">🏁</div><h3>Day 3: Simulate</h3><p>Rapid active review of everything, then test under pressure, then re-check the gaps you flagged.</p><div class="g-actions"><button class="btn primary" data-cramallpomo>Rapid retrieval</button><button class="btn" disabled aria-disabled="true" style="opacity:.55;cursor:not-allowed">Practice games (coming soon)</button></div><div class="g-actions"><button class="btn rust" data-cramretest>Re-check my gaps</button><button class="btn" data-toolblank="spaced-recall.html">Spaced recall</button><button class="btn" data-gameclose>Close</button></div></div>');}
 
 /* ---- Mid-Module Gap Check (shares the 2-per-module cram cap) ---- */
 function moduleKey(){return nextExam().name;}
@@ -2085,12 +2153,13 @@ function renderGrades(){
 
 function drawKnow(){
   gSet('Draw it to Know it','Given, not Googled');
-  var w=weaknesses();var c=(w[0]&&w[0].c)||allComps()[0].c;CUR_EX=c;
+  var c=exerciseComp();CUR_EX=c;
   var rub=rubricFor(c)||[];var shown=0;
   function render(){
     var revealed=rub.slice(0,shown);
     var b='<div class="g-qmeta"><span>Draw or mind-map from memory</span><span>'+esc(c.name)+'</span></div>';
-    b+='<p class="g-q">On paper, draw <b>'+esc(c.name)+'</b> from memory, or build a mini mind-map of it. No notes. Put it in the centre and branch out every part and connection you can.</p>';
+    b+='<p class="g-q">On paper or the drawing canvas, draw <b>'+esc(c.name)+'</b> from memory, or build a mini mind-map of it. No notes. Put it in the centre and branch out every part and connection you can.</p>';
+    b+='<div class="g-actions" style="margin-bottom:12px"><button class="btn" data-toolblank="mastery-canvas.html?title='+encodeURIComponent(c.name)+'">Draw on canvas (iPad friendly)</button></div>';
     if(rub.length){
       b+='<div class="reference-box"><h4>Self-check, should include ('+revealed.length+' of '+rub.length+')</h4><ul>'+(revealed.length?revealed.map(function(x){return '<li>'+esc(x)+'</li>';}).join(''):'<li style="list-style:none;color:var(--ink-faint)">Hidden. Draw or map it first, then reveal to grade yourself.</li>')+'</ul></div>';
       b+='<div class="g-actions">'+(shown<rub.length?'<button class="btn" id="dkHint">Reveal one</button><button class="btn" id="dkAll">Show full checklist</button>':'<span style="color:var(--ok);font-weight:700;align-self:center">Full checklist shown, grade yourself.</span>')+'</div>';
@@ -2120,9 +2189,12 @@ var MODES=[
   {k:'draw',cls:'draw',emoji:'✏️',tag:'Bonus',name:'Draw and Guess',players:'Given not Googled',desc:'Draw a structure from memory on the clock, then check it against the key. Drawing as the integrity test.'}
 ];
 function renderTogether(){var el=$('#togetherGrid');if(!el)return;el.innerHTML=MODES.map(function(m){
-  var badge=m.link?'<span class="proto-badge" style="color:var(--ok);background:#e2efe8;border-color:#cfe3d7">Live session</span>':'<span class="proto-badge">Playable prototype</span>';
-  var btn=m.link?'<button class="btn primary" data-toolblank="'+esc(m.link)+'">'+esc(m.cta||'Open')+'</button>':'<button class="btn primary" data-game="'+m.k+'">Play now</button>';
-  return '<div class="mode-card"><div class="mode-top '+m.cls+'"><span class="mtag">'+esc(m.tag)+'</span><h3>'+m.emoji+' '+esc(m.name)+'</h3><div class="players">'+esc(m.players)+'</div></div><div class="mode-body"><p>'+esc(m.desc)+'</p>'+badge+btn+'</div></div>';
+  if(m.link){
+    var badge='<span class="proto-badge" style="color:var(--ok);background:#e2efe8;border-color:#cfe3d7">Live session</span>';
+    var btn='<button class="btn primary" data-toolblank="'+esc(m.link)+'">'+esc(m.cta||'Open')+'</button>';
+    return '<div class="mode-card"><div class="mode-top '+m.cls+'"><span class="mtag">'+esc(m.tag)+'</span><h3>'+m.emoji+' '+esc(m.name)+'</h3><div class="players">'+esc(m.players)+'</div></div><div class="mode-body"><p>'+esc(m.desc)+'</p>'+badge+btn+'</div></div>';
+  }
+  return '<div class="mode-card is-soon"><span class="mode-soon">Coming soon</span><div class="mode-top '+m.cls+'"><span class="mtag">'+esc(m.tag)+'</span><h3>'+m.emoji+' '+esc(m.name)+'</h3><div class="players">'+esc(m.players)+'</div></div><div class="mode-body"><p>'+esc(m.desc)+'</p><span class="proto-badge">In development</span><button class="btn" disabled aria-disabled="true" style="opacity:.55;cursor:not-allowed">Coming soon</button></div></div>';
 }).join('');}
 
 /* =========================================================
@@ -2138,13 +2210,15 @@ function renderAll(){
 ========================================================= */
 var lastFocus=null;
 document.addEventListener('click',function(e){
-  var t=e.target.closest('[data-session],[data-prove],[data-tool],[data-toolblank],[data-selfev],[data-logev],[data-logafter],[data-stage],[data-unit],[data-prompt],[data-scroll],[data-sclose],[data-game],[data-exercise],[data-gameclose],[data-drawscore],[data-mmscore],[data-opengrades],[data-gradedel],[data-cram],[data-midcram],[data-midstart],[data-weakjump],[data-cramday],[data-cramallpomo],[data-gapstart],[data-cramskip],[data-cramretest],[data-daydone]');
+  var t=e.target.closest('[data-session],[data-prove],[data-tool],[data-toolblank],[data-selfev],[data-logev],[data-logafter],[data-stage],[data-unit],[data-prompt],[data-scroll],[data-sclose],[data-game],[data-exercise],[data-gameclose],[data-drawscore],[data-mmscore],[data-opengrades],[data-gradedel],[data-cram],[data-midcram],[data-midstart],[data-weakjump],[data-pomosetup],[data-baseline],[data-cramday],[data-cramallpomo],[data-gapstart],[data-cramskip],[data-cramretest],[data-daydone]');
   if(!t)return;
   if(t.hasAttribute('data-game')){openGame(t.getAttribute('data-game'));return;}
   if(t.hasAttribute('data-exercise')){openGame(t.getAttribute('data-exercise'));return;}
   if(t.hasAttribute('data-toolblank')){window.open(t.getAttribute('data-toolblank'),'_blank','noopener');return;}
   if(t.hasAttribute('data-cram')){openCram();return;}
   if(t.hasAttribute('data-midcram')){openMidCram();return;}
+  if(t.hasAttribute('data-pomosetup')){openSessionChooser('today');return;}
+  if(t.hasAttribute('data-baseline')){openBaseline('today');return;}
   if(t.hasAttribute('data-midstart')){if(CRAM&&!CRAM.counted){cramUsed(CRAM.key);CRAM.counted=true;}startGapFinder();return;}
   if(t.hasAttribute('data-weakjump')){closeGame();var wl=$('#s-weak');if(wl)wl.scrollIntoView({behavior:'smooth',block:'start'});return;}
   if(t.hasAttribute('data-gapstart')){if(CRAM&&!CRAM.counted){cramUsed(CRAM.key);CRAM.counted=true;}startGapFinder();return;}
