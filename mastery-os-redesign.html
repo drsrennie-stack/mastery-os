@@ -450,7 +450,10 @@ section.block:first-of-type{border-top:none}
 .pf-link input,#pfSaved{flex:1;min-width:0;font-family:inherit;font-size:12px;padding:6px 8px;border:1.5px solid rgba(255,255,255,.18);border-radius:8px;background:rgba(255,255,255,.06);color:#fff}
 .pf-link input::placeholder{color:rgba(245,241,232,.45)}
 .pf-link .btn{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.22);color:#fff}
-#pfSaved option{color:#0B1530}
+.pf-assign{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pf-asg{font-size:12px;padding:5px 10px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.22);color:#fff}
+.pf-s[data-set="1"]::after{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-left:6px;vertical-align:middle}
+.pf-s[data-set="1"][aria-pressed="true"]::after{background:var(--navy)}
 .pf-sound input[type=range]{width:100%;accent-color:var(--gold)}
 .pomo-float.mini{width:150px;border-radius:50%;overflow:visible}
 .pomo-float.mini .pf-head{position:absolute;top:-8px;right:-8px;left:auto;padding:0;background:transparent;border:0;z-index:3}
@@ -704,10 +707,10 @@ section.block:first-of-type{border-top:none}
       <button class="pf-s" data-psound="green">Green noise</button>
     </div>
     <div class="pf-link"><input id="pfLink" type="text" placeholder="Paste a YouTube link" autocomplete="off"><button class="btn" id="pfLinkGo" style="font-size:12px;padding:6px 12px">Play</button></div>
-    <div class="pf-link"><select id="pfSaved" aria-label="Saved links"><option value="">Saved links</option></select><button class="btn" id="pfForget" style="font-size:12px;padding:6px 10px">Forget</button></div>
+    <div class="pf-assign"><span class="pf-slabel" style="align-self:center;margin:0">Save link as</span><button class="btn pf-asg" data-slot="lofi">Lo-fi</button><button class="btn pf-asg" data-slot="classical">Classical</button><button class="btn pf-asg" data-slot="jazz">Jazz</button></div>
     <label class="visually-hidden" for="pfVol">Volume</label>
     <input id="pfVol" type="range" min="0" max="100" value="55">
-    <div id="pfYT" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden" aria-hidden="true"></div>
+    <div id="pfYT" style="position:fixed;left:-9999px;bottom:0;width:220px;height:150px;opacity:.01;pointer-events:none" aria-hidden="true"></div>
   </div>
 </div>
 
@@ -1769,7 +1772,7 @@ function brainDump(){
 }
 
 /* ---- Pomodoro session (chooser + focus/break cycle) ---- */
-function pomo(){var p=S.profile.pomodoro||{};return {focus:p.focus||25,brk:p.brk||5};}
+function pomo(){var p=S.profile.pomodoro||{};return {focus:p.focus||25,shortBrk:p.shortBrk||p.brk||5,longBrk:(p.longBrk!=null?p.longBrk:15),blocks:p.blocks||4,longEvery:(p.longEvery!=null?p.longEvery:4)};}
 function fmtClock(s){s=Math.round(s);var m=Math.floor(s/60),ss=s%60;return m+':'+(ss<10?'0':'')+ss;}
 function pomoStep(t){return '<li style="background:var(--offwhite);border:1px solid var(--line-soft);border-radius:var(--r);padding:10px 13px;font-size:13.5px">'+esc(t)+'</li>';}
 function resFor(comp){var R=window.BIO004_RESOURCES;return (R&&comp&&R[comp.id])?R[comp.id]:null;}
@@ -1786,28 +1789,85 @@ function resourceBtns(comp){
   }
   return '<button class="btn" data-toolblank="reps.html">Retrieve in Reps</button><button class="btn" data-toolblank="freestyle.html">Draw from memory</button><button class="btn" data-toolblank="spaced-recall.html">Spaced recall</button>';
 }
+var FOCUS_VALS=[15,20,25,30,35,40,45,50,55,60,75,90];
+function pbField(label,id,vals,cur,labelFn){
+  var opts=vals.map(function(v){return '<option value="'+v+'"'+(v==cur?' selected':'')+'>'+(labelFn?labelFn(v):v)+'</option>';}).join('');
+  return '<label style="font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);display:block">'+label+'<select id="'+id+'" style="display:block;width:100%;margin-top:5px;font-family:inherit;font-size:14px;padding:8px;border-radius:8px;border:1.5px solid var(--line);background:var(--offwhite)">'+opts+'</select></label>';
+}
+function pbRead(){return {focus:+$('#pbFocus').value,shortBrk:+$('#pbShort').value,longBrk:+$('#pbLong').value,blocks:+$('#pbBlocks').value,longEvery:+$('#pbEvery').value};}
+function pbSummaryText(c){
+  var total=0;
+  for(var b=0;b<c.blocks;b++){total+=c.focus;if(b<c.blocks-1){var isLong=c.longEvery>0&&c.longBrk>0&&((b+1)%c.longEvery===0);total+=isLong?c.longBrk:c.shortBrk;}}
+  var longPart=(c.longEvery>0&&c.longBrk>0)?(', plus a '+c.longBrk+' min long break every '+c.longEvery):'';
+  return c.blocks+' focus block'+(c.blocks===1?'':'s')+' of '+c.focus+' min, '+c.shortBrk+' min breaks between'+longPart+'. About '+total+' min total.';
+}
+function pbSetVal(id,v){var el=$('#'+id);if(el){el.value=String(v);}}
+function pbApplyPreset(k){
+  var m={classic:{blocks:4,focus:25,shortBrk:5,longBrk:15,longEvery:4},long:{blocks:3,focus:50,shortBrk:10,longBrk:30,longEvery:3},deep:{blocks:2,focus:90,shortBrk:20,longBrk:0,longEvery:0}};
+  if(k==='baseline'&&S.profile.baseline){var mm=S.profile.baseline.mins;m.baseline={blocks:3,focus:mm,shortBrk:mm>=50?10:5,longBrk:mm>=50?20:15,longEvery:3};}
+  var c=m[k];if(!c)return;pbSetVal('pbBlocks',c.blocks);pbSetVal('pbFocus',c.focus);pbSetVal('pbShort',c.shortBrk);pbSetVal('pbLong',c.longBrk);pbSetVal('pbEvery',c.longEvery);
+}
 function openSessionChooser(kind){
   clearG();var ov=$('#gameOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');lastFocus=document.activeElement;$('#gameClose').focus();
-  gSet(kind==='repair'?'Repair Session':"Today's Session",'Choose how to run it');
-  var pm=pomo();
-  function opts(vals,cur){return vals.map(function(v){return '<option'+(v===cur?' selected':'')+'>'+v+'</option>';}).join('');}
-  gBody('<div class="g-center"><div class="g-emoji">⏱️</div><h3>How do you want to work?</h3><p>A Pomodoro run keeps you focused: work one competency per focus block, then take a short break, then the next. Or do a straight focused run with no timer.</p>'+
-    '<div style="display:flex;gap:14px;justify-content:center;margin:4px 0 18px;flex-wrap:wrap">'+
-      '<label style="font-weight:700;font-size:13px">Focus <select id="pmFocus" style="font-family:inherit;padding:6px 8px;border-radius:8px;border:1.5px solid var(--line)">'+opts([20,25,50],pm.focus)+'</select> min</label>'+
-      '<label style="font-weight:700;font-size:13px">Break <select id="pmBreak" style="font-family:inherit;padding:6px 8px;border-radius:8px;border:1.5px solid var(--line)">'+opts([5,10],pm.brk)+'</select> min</label>'+
+  gSet(kind==='repair'?'Repair Session':"Today's Session",'Set up your focus session');
+  var pm=pomo();var bl=S.profile.baseline;
+  function chip(k,label){return '<button type="button" data-preset="'+k+'" class="proto-badge" style="cursor:pointer;font-size:12px;padding:7px 13px;background:var(--cream);border:1px solid var(--line);color:var(--navy)">'+label+'</button>';}
+  gBody('<p style="color:var(--ink-soft);font-size:14px;margin-bottom:14px">Work one competency per focus block, then a break. Pick a preset, build your own, or find your natural focus length first. Some people focus best at 25 minutes, some at 90. There is no single right number.</p>'+
+    '<div style="font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:8px">Quick presets</div>'+
+    '<div id="pbPresets" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px">'+chip('classic','Classic 25 / 5')+chip('long','Long 50 / 10')+chip('deep','Deep 90 / 20')+(bl?chip('baseline','My baseline '+bl.mins+'m'):'')+'</div>'+
+    '<div style="font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:8px">Or build your own</div>'+
+    '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:11px;margin-bottom:12px">'+
+      pbField('Focus blocks','pbBlocks',[1,2,3,4,5,6,8],pm.blocks)+
+      pbField('Focus min','pbFocus',FOCUS_VALS,pm.focus)+
+      pbField('Short break','pbShort',[3,5,8,10,15],pm.shortBrk)+
+      pbField('Long break','pbLong',[0,15,20,30,45],pm.longBrk,function(v){return v===0?'none':v;})+
+      pbField('Long break after','pbEvery',[0,2,3,4],pm.longEvery,function(v){return v===0?'never':('every '+v);})+
     '</div>'+
-    '<div class="g-actions"><button class="btn gold big" id="pmStart">Start Pomodoro</button><button class="btn big" id="pmFocused">Focused run, no timer</button></div></div>');
-  $('#pmStart').onclick=function(){S.profile.pomodoro={focus:+$('#pmFocus').value,brk:+$('#pmBreak').value};save();openPomodoro(kind);};
+    '<div id="pbSummary" style="background:var(--cream);border:1px solid var(--line-soft);border-radius:var(--r);padding:11px 14px;font-size:13px;color:var(--navy);margin-bottom:16px"></div>'+
+    '<div class="g-actions"><button class="btn gold big" id="pbStart">Start session</button><button class="btn big" id="pbBaseline">Find my focus baseline</button></div>'+
+    '<div class="g-actions"><button class="btn" id="pmFocused">Focused run, no timer</button></div>');
+  function refresh(){$('#pbSummary').textContent=pbSummaryText(pbRead());}
+  ['pbBlocks','pbFocus','pbShort','pbLong','pbEvery'].forEach(function(id){var el=$('#'+id);if(el)el.onchange=refresh;});
+  refresh();
+  $$('#pbPresets [data-preset]').forEach(function(b){b.onclick=function(){pbApplyPreset(b.getAttribute('data-preset'));refresh();};});
+  $('#pbStart').onclick=function(){var c=pbRead();S.profile.pomodoro=c;save();openPomodoro(kind);};
+  $('#pbBaseline').onclick=function(){openBaseline(kind);};
   $('#pmFocused').onclick=function(){closeGame();openSession(kind);};
 }
+/* ---- Focus baseline finder ---- */
+var BL=null;
+function openBaseline(kind){
+  clearG();var ov=$('#gameOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');
+  gSet('Focus baseline','Find your natural focus length');
+  gBody('<div class="g-center"><div class="g-emoji">🧠</div><h3>Find your real focus length</h3><p>Start studying something for real, right now. The moment you notice your attention drift, fidget, or reach for your phone, tap the button. Your first drift is your natural focus length. Do not force it, just be honest.</p><div style="font-family:var(--mono);font-weight:800;font-size:46px;color:var(--navy);margin:8px 0" id="blClock">0:00</div><div id="blMarks" style="font-size:13px;color:var(--ink-soft);min-height:20px;margin-bottom:12px"></div><div class="g-actions"><button class="btn rust big" id="blMark">I am losing focus</button><button class="btn big" id="blSave">Save my baseline</button></div><div class="g-actions"><button class="btn" id="blCancel">Back to setup</button></div></div>');
+  if(BL&&BL.timer)clearInterval(BL.timer);
+  BL={elapsed:0,marks:[],kind:kind,timer:setInterval(blTick,1000)};
+  $('#blMark').onclick=function(){BL.marks.push(BL.elapsed);$('#blMarks').innerHTML='Drift marks: '+BL.marks.map(function(s){return fmtClock(s);}).join(', ')+'. Your first drift sets your length.';};
+  $('#blSave').onclick=blFinish;
+  $('#blCancel').onclick=function(){if(BL&&BL.timer)clearInterval(BL.timer);BL=null;openSessionChooser(kind);};
+}
+function blTick(){if(!BL)return;BL.elapsed++;var el=$('#blClock');if(el)el.textContent=fmtClock(BL.elapsed);}
+function blFinish(){
+  if(!BL)return;var kind=BL.kind;if(BL.timer)clearInterval(BL.timer);
+  var secs=BL.marks.length?BL.marks[0]:BL.elapsed;BL=null;
+  var mins=Math.max(15,Math.min(90,Math.round((secs/60)/5)*5));if(!mins)mins=15;
+  S.profile.baseline={mins:mins,date:TODAY};save();
+  var brk=mins>=50?10:5;
+  gSet('Focus baseline','Your natural focus length');
+  gBody('<div class="g-center"><div class="g-emoji">🎯</div><h3>About '+mins+' minutes</h3><p>That is roughly how long you held focus before your first drift. A good Pomodoro for you is about <b>'+mins+' min focus with a '+brk+' min break</b>. You can always adjust. Re-run this anytime, focus length changes with sleep, stress, and practice.</p><div class="g-actions"><button class="btn gold big" id="blUse">Use this length</button><button class="btn big" id="blRetry">Try again</button><button class="btn" id="blBack">Back to setup</button></div></div>');
+  $('#blUse').onclick=function(){var pm=pomo();S.profile.pomodoro={focus:mins,shortBrk:brk,longBrk:pm.longBrk||(mins>=50?20:15),blocks:pm.blocks||3,longEvery:pm.longEvery||3};save();openSessionChooser(kind);};
+  $('#blRetry').onclick=function(){openBaseline(kind);};
+  $('#blBack').onclick=function(){openSessionChooser(kind);};
+}
 /* ---- Focus sound (background audio behind the floating timer) ---- */
-/* YouTube video ids for the music options. VERIFY or REPLACE with your own long tracks. */
-var YT_TRACKS={ lofi:'jfKfPfyJRdk', classical:'jgpJVI3tDbY', jazz:'Dx5qFachd3A' };
+/* Lo-fi, Classical, Jazz are user-assigned slots: paste a link, Save link as, then the button plays it. */
+var SLOT_LABEL={lofi:'Lo-fi',classical:'Classical',jazz:'Jazz'};
 var AUDIO={cur:'off',yt:null,ytReady:false,ctx:null,noise:null,vol:55};
+function soundSlots(){if(!S.profile.soundSlots)S.profile.soundSlots={lofi:'',classical:'',jazz:''};return S.profile.soundSlots;}
 function ensureYT(cb){
   if(AUDIO.ytReady&&AUDIO.yt){cb();return;}
   if(!window.YT){var t=document.createElement('script');t.src='https://www.youtube.com/iframe_api';document.head.appendChild(t);}
-  window.onYouTubeIframeAPIReady=function(){try{AUDIO.yt=new YT.Player('pfYT',{height:'1',width:'1',playerVars:{autoplay:1,controls:0,disablekb:1,rel:0,playsinline:1},events:{onReady:function(){AUDIO.ytReady=true;cb();}}});}catch(e){}};
+  window.onYouTubeIframeAPIReady=function(){try{AUDIO.yt=new YT.Player('pfYT',{height:'150',width:'220',playerVars:{autoplay:1,controls:0,disablekb:1,rel:0,playsinline:1},events:{onReady:function(){AUDIO.ytReady=true;cb();}}});}catch(e){}};
   var tries=0,iv=setInterval(function(){tries++;if(window.YT&&window.YT.Player&&!AUDIO.yt){clearInterval(iv);window.onYouTubeIframeAPIReady();}else if(AUDIO.ytReady||tries>40){clearInterval(iv);}},150);
 }
 function startNoise(){
@@ -1823,27 +1883,26 @@ function startNoise(){
 }
 function stopNoise(){if(AUDIO.noise){try{AUDIO.noise.src.stop();}catch(e){}AUDIO.noise=null;}}
 function audioStopAll(){stopNoise();if(AUDIO.yt&&AUDIO.yt.stopVideo){try{AUDIO.yt.stopVideo();}catch(e){}}}
+function setSoundPressed(kind){$$('#pomoFloat .pf-s').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-psound')===kind?'true':'false');});}
+function refreshSlotChips(){var s=soundSlots();['lofi','classical','jazz'].forEach(function(k){var b=$('#pomoFloat .pf-s[data-psound="'+k+'"]');if(b)b.setAttribute('data-set',s[k]?'1':'0');});}
+function playUrl(url){var list=ytList(url),id=ytId(url);if(!list&&!id)return;ensureYT(function(){try{if(list)AUDIO.yt.loadPlaylist({list:list,listType:'playlist'});else AUDIO.yt.loadVideoById(id);AUDIO.yt.setVolume(AUDIO.vol);AUDIO.yt.playVideo();}catch(e){}});}
 function audioSet(kind){
-  audioStopAll();AUDIO.cur=kind;
-  $$('#pomoFloat .pf-s').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-psound')===kind?'true':'false');});
+  audioStopAll();AUDIO.cur=kind;setSoundPressed(kind);
   if(kind==='off')return;
   if(kind==='green'){startNoise();return;}
-  var id=ytId(YT_TRACKS[kind]);if(!id)return;
-  ensureYT(function(){try{AUDIO.yt.loadVideoById(id);AUDIO.yt.setVolume(AUDIO.vol);AUDIO.yt.playVideo();}catch(e){}});
+  var url=soundSlots()[kind];
+  if(!url){toast('Paste a link, then Save link as '+(SLOT_LABEL[kind]||kind)+'.');AUDIO.cur='off';setSoundPressed('off');return;}
+  playUrl(url);
 }
+function assignSlot(kind){var url=String(($('#pfLink')||{}).value||'').trim();if(!ytId(url)&&!ytList(url)){toast('Paste a YouTube link first, then Save link as '+(SLOT_LABEL[kind]||kind)+'.');return;}soundSlots()[kind]=url;save();refreshSlotChips();toast('Saved as '+(SLOT_LABEL[kind]||kind)+'.');audioSet(kind);}
 function audioVol(v){AUDIO.vol=v;if(AUDIO.noise&&AUDIO.noise.gain)AUDIO.noise.gain.gain.value=(v/100)*0.5;if(AUDIO.yt&&AUDIO.yt.setVolume){try{AUDIO.yt.setVolume(v);}catch(e){}}}
 function ytId(s){s=String(s||'');var m=s.match(/[?&]v=([\w-]{11})/)||s.match(/youtu\.be\/([\w-]{11})/)||s.match(/\/embed\/([\w-]{11})/)||s.match(/^([\w-]{11})$/);return m?m[1]:'';}
 function ytList(s){var m=String(s||'').match(/[?&]list=([\w-]+)/);return m?m[1]:'';}
 function audioCustom(url){
-  var list=ytList(url),id=ytId(url);if(!list&&!id){toast('Paste a YouTube video or playlist link.');return;}
-  saveTrack(url);
-  audioStopAll();AUDIO.cur='custom';
-  $$('#pomoFloat .pf-s').forEach(function(b){b.setAttribute('aria-pressed','false');});
-  ensureYT(function(){try{if(list)AUDIO.yt.loadPlaylist({list:list,listType:'playlist'});else AUDIO.yt.loadVideoById(id);AUDIO.yt.setVolume(AUDIO.vol);AUDIO.yt.playVideo();toast('Playing your track.');}catch(e){}});
+  url=String(url||'').trim();var list=ytList(url),id=ytId(url);if(!list&&!id){toast('Paste a YouTube video or playlist link.');return;}
+  audioStopAll();AUDIO.cur='custom';setSoundPressed(null);
+  playUrl(url);toast('Playing your link. Save it as Lo-fi, Classical, or Jazz to keep it.');
 }
-function tracks(){if(!Array.isArray(S.profile.tracks))S.profile.tracks=[];return S.profile.tracks;}
-function saveTrack(url){url=String(url||'').trim();var id=ytId(url),list=ytList(url);if(!id&&!list)return;var t=tracks();if(t.some(function(x){return x.url===url;})){renderSavedTracks();return;}t.unshift({url:url,label:list?('Playlist '+list.slice(0,6)):id});if(t.length>10)t.length=10;save();renderSavedTracks();}
-function renderSavedTracks(){var sel=$('#pfSaved');if(!sel)return;var t=tracks();sel.innerHTML='<option value="">'+(t.length?'Saved links':'No saved links yet')+'</option>'+t.map(function(x){return '<option value="'+esc(x.url)+'">'+esc(x.label)+'</option>';}).join('');}
 
 /* ---- Floating Pomodoro (hovers, draggable, minimizable) ---- */
 var PF=null;
@@ -1853,38 +1912,43 @@ function openPomodoro(kind,picksArg){
   var picks=(picksArg&&picksArg.length)?picksArg.slice():weaknesses().slice(0,kind==='repair'?5:4).map(function(x){return x.c;});
   if(!picks.length)picks=allComps().slice(0,3).map(function(x){return x.c;});
   if(PF&&PF.timer)clearInterval(PF.timer);
-  PF={picks:picks,i:0,mode:'focus',focus:pm.focus*60,brk:pm.brk*60,remaining:pm.focus*60,paused:false,timer:null};
+  var blocks=(kind==='cram')?picks.length:(pm.blocks||picks.length||1);if(blocks<1)blocks=1;
+  PF={picks:picks,blocks:blocks,i:0,mode:'focus',focus:pm.focus*60,shortBrk:pm.shortBrk*60,longBrk:(pm.longBrk||0)*60,longEvery:pm.longEvery||0,breakKind:null,remaining:pm.focus*60,paused:false,timer:null};
   var el=$('#pomoFloat');el.hidden=false;el.classList.remove('mini');
+  refreshSlotChips();setSoundPressed(AUDIO.cur||'off');
   pfRender();
   PF.timer=setInterval(pfTick,250);
 }
+function pfBreakTotal(){return PF.breakKind==='long'?PF.longBrk:PF.shortBrk;}
 function pfTick(){
   if(!PF||PF.paused)return;
-  PF.remaining-=0.25;var total=PF.mode==='focus'?PF.focus:PF.brk;
+  PF.remaining-=0.25;var total=PF.mode==='focus'?PF.focus:pfBreakTotal();
   if(PF.remaining<=0){if(PF.mode==='focus')pfFinishFocus();else pfNext();return;}
   var cl=$('#pfClock');if(cl)cl.textContent=fmtClock(PF.remaining);
   pfArcSet(PF.remaining/total,PF.remaining<total*0.2);
 }
 function pfArcSet(frac,warn){var a=$('#pfArc');if(a){var C=326.726;a.style.strokeDashoffset=(C*(1-Math.max(0,Math.min(1,frac)))).toFixed(2);}var r=$('#pfRing');if(r)r.classList.toggle('warn',!!warn);}
 function pfRender(){
-  if(!PF)return;var c=PF.picks[PF.i];
+  if(!PF)return;var c=PF.picks[PF.i%PF.picks.length];
   $('#pfClock').textContent=fmtClock(PF.remaining);
   pfArcSet(1,false);
   if(PF.mode==='focus'){
-    $('#pfTitle').textContent='Focus '+(PF.i+1)+' / '+PF.picks.length;
+    $('#pfTitle').textContent='Focus '+(PF.i+1)+' / '+PF.blocks;
     var steps=['Retrieve it cold, no notes','Repair the gap'];if(rubricFor(c))steps.push('Draw it, or a mini mind-map');steps.push('Apply it to a case');steps.push('Explain it aloud, or teach it');
     $('#pfBody').innerHTML='<div class="pf-comp">'+esc(c.name)+'</div><ul class="items" style="list-style:none;padding:0;margin:0 0 12px;display:grid;gap:6px">'+steps.map(function(s,idx){return '<li><button type="button" class="pm-step" data-pmi="'+idx+'" aria-pressed="false"><span class="pm-box" aria-hidden="true"></span><span class="lbl">'+esc(s)+'</span></button></li>';}).join('')+'</ul><div class="pf-actions">'+resourceBtns(c)+'</div><div class="pf-actions" style="margin-top:8px"><button class="btn primary" id="pfDone">Done, break</button><button class="btn" id="pfPause">Pause</button></div>';
     $$('#pfBody .pm-step').forEach(function(b){b.onclick=function(){b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');};});
     $('#pfDone').onclick=pfFinishFocus;$('#pfPause').onclick=pfTogglePause;
   }else{
-    $('#pfTitle').textContent='Break';var next=PF.picks[PF.i+1];
-    $('#pfBody').innerHTML='<div class="pf-comp">Break, breathe</div><p style="font-size:13px;color:var(--ink-soft);margin-bottom:10px">Look away from the screen.'+(next?' Next: <b>'+esc(next.name)+'</b>.':'')+'</p><div class="pf-actions"><button class="btn gold" id="pfSkip">Skip break</button><button class="btn" id="pfPause">Pause</button></div>';
+    var isLong=PF.breakKind==='long';var mins=Math.round(pfBreakTotal()/60);
+    $('#pfTitle').textContent=isLong?'Long break':'Break';
+    var next=(PF.i+1<PF.blocks)?PF.picks[(PF.i+1)%PF.picks.length]:null;
+    $('#pfBody').innerHTML='<div class="pf-comp">'+(isLong?'Long break, '+mins+' min':'Break, breathe')+'</div><p style="font-size:13px;color:var(--ink-soft);margin-bottom:10px">'+(isLong?'Step away, move, get water. Longer rest keeps the next blocks sharp.':'Look away from the screen.')+(next?' Next: <b>'+esc(next.name)+'</b>.':' Last block done after this.')+'</p><div class="pf-actions"><button class="btn gold" id="pfSkip">Skip break</button><button class="btn" id="pfPause">Pause</button></div>';
     $('#pfSkip').onclick=pfNext;$('#pfPause').onclick=pfTogglePause;
   }
 }
 function pfTogglePause(){if(!PF)return;PF.paused=!PF.paused;var b=$('#pfPause');if(b)b.textContent=PF.paused?'Resume':'Pause';}
-function pfFinishFocus(){var c=PF.picks[PF.i];bumpComp(c,5);bumpSkill('Retrieval',1);save();renderAll();if(PF.i>=PF.picks.length-1)return pfDone();PF.mode='break';PF.remaining=PF.brk;PF.paused=false;pfRender();}
-function pfNext(){PF.i++;if(PF.i>=PF.picks.length)return pfDone();PF.mode='focus';PF.remaining=PF.focus;PF.paused=false;pfRender();}
+function pfFinishFocus(){var c=PF.picks[PF.i%PF.picks.length];bumpComp(c,5);bumpSkill('Retrieval',1);save();renderAll();if(PF.i>=PF.blocks-1)return pfDone();var isLong=PF.longEvery>0&&PF.longBrk>0&&((PF.i+1)%PF.longEvery===0);PF.breakKind=isLong?'long':'short';PF.mode='break';PF.remaining=pfBreakTotal();PF.paused=false;pfRender();}
+function pfNext(){PF.i++;if(PF.i>=PF.blocks)return pfDone();PF.mode='focus';PF.breakKind=null;PF.remaining=PF.focus;PF.paused=false;pfRender();}
 function pfDone(){if(PF&&PF.timer)clearInterval(PF.timer);$('#pomoFloat').hidden=true;audioStopAll();AUDIO.cur='off';$$('#pomoFloat .pf-s').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-psound')==='off'?'true':'false');});renderAll();toast('Pomodoro session complete.');PF=null;}
 function pfCloseWidget(){if(PF&&PF.timer)clearInterval(PF.timer);$('#pomoFloat').hidden=true;audioStopAll();PF=null;}
 
@@ -2138,19 +2202,18 @@ $('#gameOverlay').addEventListener('click',function(e){if(e.target===this)closeG
 /* floating pomodoro controls */
 (function(){
   var f=$('#pomoFloat'),h=$('#pfHead');if(!f)return;
-  $('#pfMin').addEventListener('click',function(){f.classList.toggle('mini');this.innerHTML=f.classList.contains('mini')?'&#9633;':'&#8211;';});
+  window.pfSetMini=function(on){f.classList.toggle('mini',!!on);var mb=$('#pfMin');if(mb){mb.innerHTML=on?'&#9633;':'&#8211;';mb.setAttribute('aria-label',on?'Open timer':'Fold timer');}};
+  $('#pfMin').addEventListener('click',function(){window.pfSetMini(!f.classList.contains('mini'));});
   $('#pfCloseBtn').addEventListener('click',pfCloseWidget);
   $('#pfVol').addEventListener('input',function(){audioVol(+this.value);});
-  f.addEventListener('click',function(e){var b=e.target.closest('.pf-s');if(b)audioSet(b.getAttribute('data-psound'));});
+  f.addEventListener('click',function(e){var s=e.target.closest('.pf-s');if(s){audioSet(s.getAttribute('data-psound'));return;}var a=e.target.closest('.pf-asg');if(a){assignSlot(a.getAttribute('data-slot'));return;}});
   $('#pfLinkGo').addEventListener('click',function(){audioCustom($('#pfLink').value);});
   $('#pfLink').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();audioCustom(this.value);}});
-  $('#pfSaved').addEventListener('change',function(){if(this.value)audioCustom(this.value);});
-  $('#pfForget').addEventListener('click',function(){var v=$('#pfSaved').value;if(v){S.profile.tracks=tracks().filter(function(x){return x.url!==v;});save();renderSavedTracks();}});
-  renderSavedTracks();
-  var dragging=false,ox=0,oy=0;
-  function startDrag(e){if(e.target.closest('.pf-btn'))return;dragging=true;var r=f.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top;f.style.right='auto';f.style.bottom='auto';f.style.left=r.left+'px';f.style.top=r.top+'px';try{e.currentTarget.setPointerCapture(e.pointerId);}catch(err){}}
-  function moveDrag(e){if(!dragging)return;var x=Math.max(4,Math.min(window.innerWidth-44,e.clientX-ox));var y=Math.max(4,Math.min(window.innerHeight-40,e.clientY-oy));f.style.left=x+'px';f.style.top=y+'px';}
-  function endDrag(){dragging=false;}
+  refreshSlotChips();
+  var dragging=false,ox=0,oy=0,sx=0,sy=0,moved=0,fromRing=false;
+  function startDrag(e){if(e.target.closest('.pf-btn'))return;dragging=true;moved=0;sx=e.clientX;sy=e.clientY;fromRing=!!e.target.closest('#pfRing');var r=f.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top;f.style.right='auto';f.style.bottom='auto';f.style.left=r.left+'px';f.style.top=r.top+'px';try{e.currentTarget.setPointerCapture(e.pointerId);}catch(err){}}
+  function moveDrag(e){if(!dragging)return;moved=Math.max(moved,Math.abs(e.clientX-sx)+Math.abs(e.clientY-sy));var x=Math.max(4,Math.min(window.innerWidth-44,e.clientX-ox));var y=Math.max(4,Math.min(window.innerHeight-40,e.clientY-oy));f.style.left=x+'px';f.style.top=y+'px';}
+  function endDrag(){if(!dragging)return;dragging=false;if(moved<6&&fromRing&&f.classList.contains('mini'))window.pfSetMini(false);}
   [h,$('#pfRing')].forEach(function(el){if(!el)return;el.addEventListener('pointerdown',startDrag);el.addEventListener('pointermove',moveDrag);el.addEventListener('pointerup',endDrag);});
 })();
 
