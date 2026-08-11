@@ -764,9 +764,13 @@ section.block:first-of-type{border-top:none}
     <div class="pf-assign"><span class="pf-slabel" style="align-self:center;margin:0">Save link as</span><button class="btn pf-asg" data-slot="lofi">Lo-fi</button><button class="btn pf-asg" data-slot="classical">Classical</button><button class="btn pf-asg" data-slot="jazz">Jazz</button></div>
     <label class="visually-hidden" for="pfVol">Volume</label>
     <input id="pfVol" type="range" min="0" max="100" value="55">
-    <div id="pfYT" style="position:fixed;left:-9999px;bottom:0;width:220px;height:150px;opacity:.01;pointer-events:none" aria-hidden="true"></div>
   </div>
 </div>
+
+<!-- The YouTube host lives at body level on purpose. It used to sit inside the
+     Pomodoro's focus-sound block, which gets display:none when the timer folds
+     to the puck, and an unrendered iframe has no playback. -->
+<div id="pfYT" style="position:fixed;left:-9999px;bottom:0;width:220px;height:150px;opacity:.01;pointer-events:none" aria-hidden="true"></div>
 
 <div id="toast" role="status" aria-live="polite"></div>
 
@@ -2009,13 +2013,55 @@ function blFinish(){
 /* ---- Focus sound (background audio behind the floating timer) ---- */
 /* Lo-fi, Classical, Jazz are user-assigned slots: paste a link, Save link as, then the button plays it. */
 var SLOT_LABEL={lofi:'Lo-fi',classical:'Classical',jazz:'Jazz'};
-var AUDIO={cur:'off',yt:null,ytReady:false,ctx:null,noise:null,vol:55};
+var AUDIO={cur:'off',yt:null,ytReady:false,ytLoading:false,pending:null,playing:false,blockT:null,ctx:null,noise:null,vol:55};
 function soundSlots(){if(!S.profile.soundSlots)S.profile.soundSlots={lofi:'',classical:'',jazz:''};return S.profile.soundSlots;}
+/* The player is built ONCE and kept warm. Building it on the first sound tap
+   pushed playVideo() a second or two past the click, and the browser blocks
+   audio that is not tied to a gesture, so the first tap silently did nothing.
+   Now the Pomodoro warms it on open and every tap plays straight away. */
+function ytMakePlayer(){
+  if(AUDIO.yt)return;
+  try{
+    AUDIO.yt=new YT.Player('pfYT',{
+      height:'150',width:'220',
+      playerVars:{controls:0,disablekb:1,rel:0,playsinline:1,enablejsapi:1,origin:location.origin},
+      events:{
+        onReady:function(){AUDIO.ytReady=true;AUDIO.ytLoading=false;var f=AUDIO.pending;AUDIO.pending=null;if(f)f();},
+        onError:function(e){ytError(e&&e.data);},
+        onStateChange:function(e){if(e&&e.data===1){AUDIO.playing=true;clearTimeout(AUDIO.blockT);}}
+      }
+    });
+  }catch(err){AUDIO.ytLoading=false;}
+}
+function ytError(code){
+  var msg=(code===101||code===150)?'That track will not play outside YouTube. The owner blocked embedding, so pick a different one.'
+         :(code===100)?'That video is private or gone. Try another link.'
+         :(code===2)?'That does not look like a YouTube video or playlist link.'
+         :'YouTube could not play that link.';
+  clearTimeout(AUDIO.blockT);
+  AUDIO.cur='off';setSoundPressed('off');toast(msg);
+}
 function ensureYT(cb){
-  if(AUDIO.ytReady&&AUDIO.yt){cb();return;}
-  if(!window.YT){var t=document.createElement('script');t.src='https://www.youtube.com/iframe_api';document.head.appendChild(t);}
-  window.onYouTubeIframeAPIReady=function(){try{AUDIO.yt=new YT.Player('pfYT',{height:'150',width:'220',playerVars:{autoplay:1,controls:0,disablekb:1,rel:0,playsinline:1},events:{onReady:function(){AUDIO.ytReady=true;cb();}}});}catch(e){}};
-  var tries=0,iv=setInterval(function(){tries++;if(window.YT&&window.YT.Player&&!AUDIO.yt){clearInterval(iv);window.onYouTubeIframeAPIReady();}else if(AUDIO.ytReady||tries>40){clearInterval(iv);}},150);
+  if(AUDIO.ytReady&&AUDIO.yt){if(cb)cb();return;}
+  if(cb)AUDIO.pending=cb;
+  if(AUDIO.ytLoading)return;
+  AUDIO.ytLoading=true;
+  if(window.YT&&window.YT.Player){ytMakePlayer();return;}
+  window.onYouTubeIframeAPIReady=ytMakePlayer;
+  if(!document.getElementById('ytApiTag')){
+    var t=document.createElement('script');t.id='ytApiTag';t.src='https://www.youtube.com/iframe_api';
+    t.onerror=function(){AUDIO.ytLoading=false;AUDIO.pending=null;AUDIO.cur='off';setSoundPressed('off');toast('Could not reach YouTube. Green noise works with no connection, if you want sound now.');};
+    document.head.appendChild(t);
+  }
+  var tries=0,iv=setInterval(function(){
+    tries++;
+    if(window.YT&&window.YT.Player){clearInterval(iv);ytMakePlayer();}
+    else if(tries>60){
+      clearInterval(iv);AUDIO.ytLoading=false;AUDIO.pending=null;
+      AUDIO.cur='off';setSoundPressed('off');
+      toast('Could not reach YouTube. Green noise works with no connection, if you want sound now.');
+    }
+  },150);
 }
 function startNoise(){
   try{var Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return;if(!AUDIO.ctx)AUDIO.ctx=new Ctx();if(AUDIO.ctx.resume)AUDIO.ctx.resume();
@@ -2029,10 +2075,26 @@ function startNoise(){
   }catch(e){}
 }
 function stopNoise(){if(AUDIO.noise){try{AUDIO.noise.src.stop();}catch(e){}AUDIO.noise=null;}}
-function audioStopAll(){stopNoise();if(AUDIO.yt&&AUDIO.yt.stopVideo){try{AUDIO.yt.stopVideo();}catch(e){}}}
+function audioStopAll(){clearTimeout(AUDIO.blockT);AUDIO.playing=false;stopNoise();if(AUDIO.yt&&AUDIO.yt.stopVideo){try{AUDIO.yt.stopVideo();}catch(e){}}}
 function setSoundPressed(kind){$$('#pomoFloat .pf-s').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-psound')===kind?'true':'false');});}
 function refreshSlotChips(){var s=soundSlots();['lofi','classical','jazz'].forEach(function(k){var b=$('#pomoFloat .pf-s[data-psound="'+k+'"]');if(b)b.setAttribute('data-set',s[k]?'1':'0');});}
-function playUrl(url){var list=ytList(url),id=ytId(url);if(!list&&!id)return;ensureYT(function(){try{if(list)AUDIO.yt.loadPlaylist({list:list,listType:'playlist'});else AUDIO.yt.loadVideoById(id);AUDIO.yt.setVolume(AUDIO.vol);AUDIO.yt.playVideo();}catch(e){}});}
+function playUrl(url){
+  var list=ytList(url),id=ytId(url);if(!list&&!id)return;
+  ensureYT(function(){
+    try{
+      if(list)AUDIO.yt.loadPlaylist({list:list,listType:'playlist'});
+      else AUDIO.yt.loadVideoById(id);
+      AUDIO.yt.setVolume(AUDIO.vol);AUDIO.yt.playVideo();
+      AUDIO.playing=false;clearTimeout(AUDIO.blockT);
+      /* If nothing is actually playing shortly after, say so instead of
+         leaving a pressed button and silence. */
+      AUDIO.blockT=setTimeout(function(){
+        if(!AUDIO.playing&&AUDIO.cur!=='off'&&AUDIO.cur!=='green')
+          toast('Your browser is holding the sound until you tap. Tap the sound button once more to start it.');
+      },2600);
+    }catch(e){}
+  });
+}
 function audioSet(kind){
   audioStopAll();AUDIO.cur=kind;setSoundPressed(kind);
   if(kind==='off')return;
@@ -2055,6 +2117,7 @@ function audioCustom(url){
 var PF=null;
 function openPomodoro(kind,picksArg){
   if($('#gameOverlay').classList.contains('open'))closeGame();
+  ensureYT(null); /* warm the player so the first sound tap is instant */
   var pm=pomo();
   var picks=(picksArg&&picksArg.length)?picksArg.slice():weaknesses().slice(0,kind==='repair'?5:4).map(function(x){return x.c;});
   if(!picks.length)picks=allComps().slice(0,3).map(function(x){return x.c;});
