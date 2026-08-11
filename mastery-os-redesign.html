@@ -240,6 +240,12 @@ section.block:first-of-type{border-top:none}
 .coach-input input:focus{border-color:var(--gold);outline:none;background:#fff}
 
 /* ---------- overlays (session, instructor, onboarding) ---------- */
+.sched-banner{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:space-between;margin:0 auto 4px;max-width:1180px;padding:14px 18px;background:var(--white);border:1.5px solid var(--gold);border-left:5px solid var(--gold);border-radius:var(--r);box-shadow:var(--shadow)}
+.sched-banner[hidden]{display:none}
+.sched-banner b{display:block;font-size:15px;color:var(--navy)}
+.sched-banner span{display:block;font-size:14px;color:var(--ink-soft);max-width:74ch;margin-top:3px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn[disabled]:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .overlay{position:fixed;inset:0;z-index:60;background:rgba(6,10,24,.55);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s}
 .overlay.open{opacity:1;pointer-events:auto}
 .sheet{background:var(--white);border-radius:var(--r-lg);max-width:640px;width:100%;max-height:90vh;overflow:auto;box-shadow:var(--lift);animation:pop .28s var(--ease)}
@@ -415,6 +421,9 @@ section.block:first-of-type{border-top:none}
 .pm-step[aria-pressed="true"] .pm-box{background:var(--ok);border-color:var(--ok)}
 .pm-step[aria-pressed="true"] .pm-box::after{content:'✓'}
 .pm-step[aria-pressed="true"] .lbl{text-decoration:line-through;opacity:.7}
+.wk-pick[aria-pressed="true"]{background:rgba(63,122,91,.12);border-color:var(--ok)}
+.wk-pick[aria-pressed="true"] .lbl{text-decoration:none;opacity:1;color:var(--navy)}
+.wk-pick .lbl b{font-weight:800}
 /* floating pomodoro (dark, solid) */
 .pomo-float{position:fixed;right:20px;bottom:20px;width:322px;max-width:calc(100vw - 32px);background:#0B1530;background:linear-gradient(158deg,#17284a 0%,#0B1530 55%,#060A18 100%);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-lg);box-shadow:0 22px 48px -16px rgba(0,0,0,.62);color:var(--cream);z-index:75;overflow:hidden}
 .pomo-float[hidden]{display:none}
@@ -511,6 +520,44 @@ section.block:first-of-type{border-top:none}
     </button>
   </div>
 </header>
+
+<!-- ============ NO SCHEDULE BANNER ============ -->
+<div id="schedBanner" class="sched-banner" role="status" hidden>
+  <div>
+    <b>No schedule is loaded.</b>
+    <span>Mastery OS needs your term dates and weeks before it can build a plan, count down to an exam, or space your recall. Nothing is hard coded, so it will not run on a stale term.</span>
+  </div>
+  <button class="btn gold" type="button" id="bannerLoad">Load a schedule</button>
+</div>
+
+<!-- ============ RESET CONFIRMATION ============ -->
+<div class="overlay" id="resetOverlay" role="dialog" aria-modal="true" aria-labelledby="resetTitle" aria-describedby="resetDesc" aria-hidden="true">
+  <div class="sheet" style="max-width:520px">
+    <div class="sheet-head">
+      <div style="flex:1"><span class="ssub">This cannot be undone</span><h2 id="resetTitle">Reset and start over?</h2></div>
+      <button class="icbtn" id="resetX" aria-label="Close without resetting"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <p id="resetDesc" style="margin:0 0 14px">This wipes Mastery OS on this device and takes you back to first-run setup. Use it if you are starting the course over in a new term.</p>
+      <p style="margin:0 0 8px;font-weight:700">It clears:</p>
+      <ul style="margin:0 0 16px;padding-left:20px;line-height:1.7">
+        <li>your setup, goal and profile</li>
+        <li>every competency mastery score and all logged evidence</li>
+        <li>your recall history and the spacing built from it</li>
+        <li>any schedule saved on this device</li>
+      </ul>
+      <p style="margin:0 0 18px;color:var(--ink-faint);font-size:14px">Only this browser on this device is affected. Nothing is sent anywhere, and nothing your instructor holds is changed.</p>
+      <label style="display:flex;gap:10px;align-items:flex-start;margin:0 0 18px;cursor:pointer">
+        <input type="checkbox" id="resetConfirmBox" style="margin-top:4px;width:18px;height:18px">
+        <span>Yes, I understand this erases my progress on this device.</span>
+      </label>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+        <button class="btn" type="button" id="resetCancel">Keep my data</button>
+        <button class="btn rust" type="button" id="resetGo" disabled>Reset everything</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ============ SECTION NAV ============ -->
 <nav class="secnav" aria-label="Sections">
@@ -722,6 +769,7 @@ section.block:first-of-type{border-top:none}
 <div id="toast" role="status" aria-live="polite"></div>
 
 <!-- Live data sources. In production these sit alongside the page; if absent, the app falls back to schedule-derived topics. -->
+<script src="schedule.js"></script>
 <script src="competencies.js"></script>
 <script src="resources.js"></script>
 <script src="rubrics.js"></script>
@@ -862,28 +910,38 @@ var SEED={
 };
 
 /* =========================================================
-   REAL COURSE SCHEDULE (BIO 004 Summer 2026)
-   Embedded for the self-contained prototype. In production this
-   can be loaded from schedule.js (window.BIO004_SCHEDULE).
-   Instructor adjustments applied: TBL on Mondays with lab exams,
-   no TBL Week 4, Week 4 lecture midterm Mon Jul 13, Week 8
-   cumulative lecture final + cumulative lab final Thu Aug 6.
+   COURSE SCHEDULE
+   The schedule is DATA. It is never hard coded in this file.
+   It loads, in order of trust:
+     1. a schedule the instructor imported and saved on this device,
+        but only if it is from the same term as the file,
+     2. schedule.js  (window.BIO004_SCHEDULE),
+     3. a blank placeholder that says nothing is loaded.
+   The Summer 2026 schedule that used to sit here was removed on
+   2026-08-11. A hard coded term silently expires and takes every
+   dated feature down with it, which is exactly what happened.
 ========================================================= */
-var SCHEDULE=store.get('mos-schedule')||(window.BIO004_SCHEDULE)||{
-  course:'BIO 004 Human Anatomy',term:'Summer 2026',start:'2026-06-15',end:'2026-08-06',
-  highyield:'Tissue types, heart blood flow, brachial plexus, skin layers, cranial nerves',
-  weeks:[
-    {n:1,start:'2026-06-15',title:'Foundations and Integumentary System',lecture:['Foundations','Integumentary'],lab:['Foundations','Tissues','Integumentary'],labExam:{name:'Lab Exam 1',date:'2026-06-22'},tbl:'2026-06-22'},
-    {n:2,start:'2026-06-22',title:'Skeletal, Axial and Appendicular Skeleton, and Joints',lecture:['Axial Skeleton','Appendicular Skeleton','Joints'],lab:['Bone Microanatomy','Axial Skeleton','Appendicular Skeleton','Joints'],labExam:{name:'Lab Exam 2',date:'2026-06-29'},tbl:'2026-06-29'},
-    {n:3,start:'2026-06-29',title:'Cardiovascular, Respiratory, and Regional BV/N 1',lecture:['Cardiovascular','Respiratory','Regional BV/N 1'],lab:['Cardiovascular','Respiratory','Regional BV/N 1'],labExam:{name:'Lab Exam 3',date:'2026-07-06'},tbl:'2026-07-06'},
-    {n:4,start:'2026-07-06',title:'Muscle Microanatomy, Upper Extremity and Thoracic Muscles, Lymphatic, and Blood',lecture:['Muscle Microanatomy','Upper Extremity and Thoracic Muscles','Lymphatic and Immune','Blood'],lab:['Muscle Microanatomy','Thoracic and Back Muscles','Upper Extremity Muscles','Lymphatic and Immune','Blood','Regional BV/N 2'],labExam:{name:'Lab Exam 4',date:'2026-07-13'},tbl:null,lectureMidterm:{name:'Lecture Midterm',date:'2026-07-13',covers:'Weeks 1 to 4'}},
-    {n:5,start:'2026-07-13',title:'Digestive System, Abdominal and Pelvic Regional Anatomy, and Regional BV/N 3',lecture:['Digestive System','Abdominal and Pelvic Anatomy','Regional BV/N 3'],lab:['Digestive System','Abdominal and Pelvic Wall','Lower Extremity Muscles','Regional BV/N 3'],labExam:{name:'Lab Exam 5',date:'2026-07-20'},tbl:'2026-07-20'},
-    {n:6,start:'2026-07-20',title:'Urinary, Reproductive, and Endocrine Systems',lecture:['Urinary','Reproductive','Endocrine'],lab:['Urinary','Reproductive','Endocrine'],labExam:{name:'Lab Exam 6',date:'2026-07-27'},tbl:'2026-07-27'},
-    {n:7,start:'2026-07-27',title:'Nervous, Head and Neck Muscles, CNS Brain, CSF, and Meninges',lecture:['Head and Neck Muscles','CNS Brain','Ventricles, CSF, Meninges'],lab:['CNS Brain','Ventricles, CSF, Meninges','Head and Neck Muscles'],labExam:{name:'Lab Exam 7',date:'2026-08-03'},tbl:'2026-08-03'},
-    {n:8,start:'2026-08-03',title:'Nervous, Spinal Cord, Peripheral and Cranial Nerves, Plexuses, and Integration',lecture:['Spinal Cord','Peripheral Nerves and Plexuses','Cranial Nerves','Autonomic Nervous System','Integration'],lab:null,labExam:null,tbl:null,cumulative:{lab:'2026-08-06',lecture:'2026-08-06'}}
-  ]
-};
-function scheduleCurrentWeek(){var cw=SCHEDULE.weeks[0];SCHEDULE.weeks.forEach(function(w){if(dayDiff(w.start,TODAY)<=0)cw=w;});return cw;}
+function isoDate(d){function p(n){return (n<10?'0':'')+n;}return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+function blankSchedule(){
+  var end=new Date(dparse(TODAY).getTime()+119*86400000);
+  return {
+    course:'No course loaded', term:'', start:TODAY, end:isoDate(end),
+    highyield:'', placeholder:true,
+    weeks:[{n:1,start:TODAY,title:'No schedule loaded yet',lecture:[],lab:null,labExam:null,tbl:null}]
+  };
+}
+var SCHEDULE=(function(){
+  var saved=store.get('mos-schedule');
+  var file=(typeof window!=='undefined'&&window.BIO004_SCHEDULE)?window.BIO004_SCHEDULE:null;
+  /* Term guard: a saved schedule from a previous term must never outrank
+     the file. That is what strands a returning student on old dates. */
+  if(saved&&file&&String(saved.term||'')!==String(file.term||'')){store.del('mos-schedule');saved=null;}
+  if(saved&&saved.weeks&&saved.weeks.length)return saved;
+  if(file&&file.weeks&&file.weeks.length)return file;
+  return blankSchedule();
+})();
+function scheduleLoaded(){return !(SCHEDULE&&SCHEDULE.placeholder);}
+function scheduleCurrentWeek(){if(!SCHEDULE||!SCHEDULE.weeks||!SCHEDULE.weeks.length)return blankSchedule().weeks[0];var cw=SCHEDULE.weeks[0];SCHEDULE.weeks.forEach(function(w){if(dayDiff(w.start,TODAY)<=0)cw=w;});return cw;}
 var WD=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 /* Next dated milestone from the real schedule (TBL and lab exams fall on Mondays together). */
 function nextKeyEvent(){
@@ -975,15 +1033,15 @@ function ingestRecall(){
 
 /* evidence method metadata */
 var EVIDENCE=[
-  {k:'retrieval',name:'Retrieval practice',icon:I.recall,desc:'Answer questions from memory across DOK levels.',cta:'Open Reps',href:'reps.html'},
-  {k:'draw',name:'Draw from memory',icon:I.draw,desc:'Reconstruct the structure with nothing in front of you.',cta:'Open Freestyle',href:'freestyle.html'},
-  {k:'label',name:'Label diagrams',icon:I.label,desc:'Place every marker on a blank figure.',cta:'Open Anatomy Canvas',href:'anatomy-canvas.html'},
-  {k:'cadaver',name:'Cadaver identification',icon:I.eye,desc:'Name the structure on the specimen, not the textbook.',cta:'Open Anatomy Canvas',href:'anatomy-canvas.html'},
-  {k:'histo',name:'Histology identification',icon:I.micro,desc:'Identify the tissue at the microscope level.',cta:'Open Anatomy Canvas',href:'anatomy-canvas.html'},
+  {k:'retrieval',name:'Retrieval practice',icon:I.recall,desc:'Answer questions from memory across DOK levels.',cta:'Open Spaced Recall',href:'spaced-recall.html'},
+  {k:'draw',name:'Draw from memory',icon:I.draw,desc:'Reconstruct the structure with nothing in front of you.',cta:'Open drawing canvas',href:'mastery-canvas.html'},
+  {k:'label',name:'Label diagrams',icon:I.label,desc:'Place every marker on a blank figure.',cta:'Open drawing canvas',href:'mastery-canvas.html'},
+  {k:'cadaver',name:'Cadaver identification',icon:I.eye,desc:'Name the structure on the specimen, not the textbook.',cta:'Mark it done',href:null},
+  {k:'histo',name:'Histology identification',icon:I.micro,desc:'Identify the tissue at the microscope level.',cta:'Mark it done',href:null},
   {k:'explain',name:'Explain aloud',icon:I.speak,desc:'Say it out loud in plain language, no notes.',cta:'Start explaining',href:null},
   {k:'teach',name:'Teach another learner',icon:I.teach,desc:'The real test: can someone else follow you?',cta:'Start teaching',href:null},
-  {k:'clinical',name:'Clinical case',icon:I.clinical,desc:'Apply the structure to a patient scenario.',cta:'Open Gauntlet',href:'gauntlet.html'},
-  {k:'questions',name:'Create practice questions',icon:I.build,desc:'Write items that would trip up a classmate.',cta:'Open Bank Builder',href:'canvas-bank-builder.html'}
+  {k:'clinical',name:'Clinical case',icon:I.clinical,desc:'Apply the structure to a patient scenario.',cta:'Mark it done',href:null},
+  {k:'questions',name:'Create practice questions',icon:I.build,desc:'Write items that would trip up a classmate.',cta:'Mark it done',href:null}
 ];
 var EVMAP={};EVIDENCE.forEach(function(e){EVMAP[e.k]=e;});
 
@@ -1096,6 +1154,8 @@ function renderPlan(){
     '<button class="btn ghost big" data-session="repair" style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">Repair weaknesses only</button>'+
     '<button class="btn ghost big" data-midcram style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">Mid-Module Gap Check</button>'+
     '<button class="btn ghost big" data-cram style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">3-Day Exam Cram</button>'+
+    '<button class="btn ghost big" data-gaptopic style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">Gap Finder (cards)</button>'+
+    '<button class="btn ghost big" data-topicreview style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">Review a topic</button>'+
   '</div>'+
   '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">'+
     '<button class="btn" data-pomosetup style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">⏱ Pomodoro setup</button>'+
@@ -1287,7 +1347,7 @@ function coachRespond(id,rawText){
       actions=[{label:'Run 20-min micro-session',kind:'gold',attr:'data-session="micro"'},{label:'Work weakness cards',attr:'data-toolblank="spaced-recall.html"'}];break;
     case 'prep-lab':
       reply='Lab today is <b>'+nm(lab)+'</b>. Lab is identification under pressure, so practice naming on blank figures and specimens, not reading. Cadaver and histology are your lowest dimensions right now.';
-      actions=[{label:'Open Anatomy Canvas',kind:'',attr:'data-tool="anatomy-canvas.html"'},{label:'Run lab prep',kind:'primary',attr:'data-session="lab"'}];break;
+      actions=[{label:'Open Anatomy Canvas',kind:'',attr:'data-tool="mastery-canvas.html"'},{label:'Run lab prep',kind:'primary',attr:'data-session="lab"'}];break;
     case 'test-weak':
       reply='You have <b>'+w.length+'</b> flagged competencies. I will build a session from only those, hardest first, starting with <b>'+(w[0]?esc(w[0].c.name):'')+'</b>.';
       actions=[{label:'Repair My Weaknesses',kind:'rust',attr:'data-session="repair"'}];break;
@@ -1329,7 +1389,7 @@ function coachFreeText(t){
 function coachFreeActions(t){
   t=t.toLowerCase();
   if(/weak|gap|struggl/.test(t))return [{label:'Repair My Weaknesses',kind:'rust',attr:'data-session="repair"'}];
-  if(/lab|cadaver/.test(t))return [{label:'Open Anatomy Canvas',kind:'',attr:'data-tool="anatomy-canvas.html"'}];
+  if(/lab|cadaver/.test(t))return [{label:'Open Anatomy Canvas',kind:'',attr:'data-tool="mastery-canvas.html"'}];
   return [{label:'Start Today\'s Session',kind:'gold',attr:'data-session="today"'}];
 }
 
@@ -1373,14 +1433,14 @@ function stageStep(st,ctx){
     actions=[{label:'See full weakness list',attr:'data-scroll="#s-weak" data-sclose'}];
   }else if(st.k==='repair'){
     picks.forEach(function(c){items.push('Reread and redraw <b>'+esc(c.name)+'</b>, then close the book');});
-    actions=[{label:'Draw from memory',attr:'data-tool="freestyle.html"'},{label:'Label a blank figure',attr:'data-tool="anatomy-canvas.html"'}];
+    actions=[{label:'Draw from memory',attr:'data-tool="mastery-canvas.html"'},{label:'Label a blank figure',attr:'data-tool="mastery-canvas.html"'}];
   }else if(st.k==='retrieve'){
     picks.forEach(function(c){items.push('Recall <b>'+esc(c.name)+'</b> cold, no notes');});
     if(ctx.due&&ctx.due.length)items.push(ctx.due.length+' scheduled recall items are due today');
-    actions=[{label:'Open Reps',kind:'primary',attr:'data-tool="reps.html"'},{label:'Spaced Recall',attr:'data-tool="spaced-recall.html"'}];
+    actions=[{label:'Open Reps',kind:'primary',attr:'data-tool="spaced-recall.html"'},{label:'Spaced Recall',attr:'data-tool="spaced-recall.html"'}];
   }else if(st.k==='apply'){
     picks.forEach(function(c){items.push('Use <b>'+esc(c.name)+'</b> in a case or on an image');});
-    actions=[{label:'Open Gauntlet',kind:'primary',attr:'data-tool="gauntlet.html"'}];
+    actions=[{label:'Open Gauntlet',kind:'primary',attr:'data-tool="spaced-recall.html"'}];
   }else if(st.k==='teach'){
     picks.forEach(function(c){items.push('Explain <b>'+esc(c.name)+'</b> out loud in plain language');});
     actions=[{label:'Mark taught',kind:'gold',attr:'data-logev="teach:'+(picks[0]?picks[0].id:'')+'"'}];
@@ -1461,17 +1521,38 @@ function logEvidence(k,compId){
 /* =========================================================
    PROVE-IT (competency evidence picker)
 ========================================================= */
+var PROVE_READY=['retrieval','draw','explain','teach'];
+var PROVE_HOW={
+  explain:'Say it out loud in plain language, no notes, as if teaching a friend. Where you get stuck is your gap.',
+  teach:'Explain it to another person until they can say it back. Their questions show you what you missed.'
+};
 function openProve(id){
-  var f=findComp(id);if(!f)return;var c=f.c;
-  SESS={title:'Prove: '+c.name,sub:'Choose your evidence',comps:[c],i:0,steps:[{stage:{n:'Evidence',t:'How will you prove '+c.name+'?',icon:I.target,p:'Mastery moves only after you demonstrate it. Pick a method.'},items:[],actions:EVIDENCE.filter(function(e){return ['retrieval','draw','label','cadaver','histo','explain','teach','clinical','questions'].indexOf(e.k)>-1;}).map(function(e){
-    return e.href?{label:e.name,attr:'data-tool="'+e.href+'" data-logafter="'+e.k+':'+c.id+'"'}:{label:e.name,kind:'primary',attr:'data-logev="'+e.k+':'+c.id+'"'};
-  }),reflect:false}]};
-  $('#sessTitle').textContent=SESS.title;$('#sessSub').textContent=SESS.sub;
-  renderSessStep();
-  var ov=$('#sessionOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');
-  lastFocus=document.activeElement;$('#sessClose').focus();
-  /* single step: Next becomes Done */
-  $('#sessNext').textContent='Done';
+  var f=findComp(id);if(!f)return;var c=f.c;CUR_EX=c;
+  clearG();var ov=$('#gameOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');lastFocus=document.activeElement;$('#gameClose').focus();
+  gSet('Prove: '+c.name,'Pick one way, then do it');
+  function methodBtn(e){
+    var ready=PROVE_READY.indexOf(e.k)>-1;
+    if(ready)return '<button class="btn prove-m" data-provem="'+e.k+'" style="text-align:left;display:block;width:100%;margin:0 0 8px;padding:12px 14px"><b>'+esc(e.name)+'</b><br><span style="font-size:12.5px;color:var(--ink-soft);font-weight:400">'+esc(e.desc)+'</span></button>';
+    return '<div class="prove-m soon" style="position:relative;text-align:left;width:100%;margin:0 0 8px;padding:12px 14px;border:1.5px solid var(--line);border-radius:var(--r);opacity:.6"><span class="proto-badge" style="position:absolute;top:10px;right:10px">Coming soon</span><b>'+esc(e.name)+'</b><br><span style="font-size:12.5px;color:var(--ink-soft);font-weight:400">'+esc(e.desc)+'</span></div>';
+  }
+  gBody('<div style="text-align:left"><p style="color:var(--ink-soft);margin:0 0 14px">Pick the one way you want to prove <b>'+esc(c.name)+'</b>, whatever way you are most comfortable. Do it, and your mastery moves. Spaced recall keeps it locked in over time.</p>'+
+    EVIDENCE.map(methodBtn).join('')+
+    '<div class="g-actions"><button class="btn" data-gameclose>Close</button></div></div>');
+  $$('#gameBody [data-provem]').forEach(function(b){b.onclick=function(){proveDo(c,b.getAttribute('data-provem'));};});
+}
+function proveDo(c,k){
+  var e=EVMAP[k];if(!e)return;
+  if(e.href){
+    var url=e.href;
+    if(k==='draw'||k==='label')url+='?title='+encodeURIComponent(c.name);
+    else if(e.href.indexOf('spaced-recall')>-1)url+='#comp='+encodeURIComponent(c.id);
+    window.open(url,'_blank','noopener');
+    logEvidence(k,c.id);closeGame();
+    return;
+  }
+  gBody('<div class="g-center"><div class="g-emoji">🎯</div><h3>'+esc(e.name)+'</h3><p>'+esc(PROVE_HOW[k]||e.desc)+'</p><p style="font-size:13px;color:var(--ink-soft)">When you are done, mark it and your mastery moves. Then run spaced recall to keep it.</p><div class="g-actions"><button class="btn gold" id="proveDone">I did it, mark done</button><button class="btn" data-toolblank="spaced-recall.html#comp='+encodeURIComponent(c.id)+'">Spaced recall</button><button class="btn" id="proveBack">Back</button></div></div>');
+  $('#proveDone').onclick=function(){logEvidence(k,c.id);closeGame();};
+  $('#proveBack').onclick=function(){openProve(c.id);};
 }
 
 /* =========================================================
@@ -1827,7 +1908,7 @@ function resourceBtns(comp){
     if(r.notes)out+='<button class="btn" data-toolblank="'+r.notes+'">Notes</button>';
     if(out)return out;
   }
-  return '<button class="btn" data-toolblank="reps.html">Retrieve in Reps</button><button class="btn" data-toolblank="freestyle.html">Draw from memory</button><button class="btn" data-toolblank="spaced-recall.html">Spaced recall</button>';
+  return '<button class="btn" data-toolblank="spaced-recall.html">Retrieve in recall</button><button class="btn" data-toolblank="mastery-canvas.html">Draw from memory</button><button class="btn" data-toolblank="spaced-recall.html">Spaced recall</button>';
 }
 var FOCUS_VALS=[15,20,25,30,35,40,45,50,55,60,75,90];
 function pbField(label,id,vals,cur,labelFn){
@@ -2012,6 +2093,29 @@ function examCoverageWeeks(exam){
 }
 function compsForWeeks(weeks){var out=[];S.units.forEach(function(u){if(weeks.indexOf(u.week)>-1)u.comps.forEach(function(c){out.push(c);});});return out;}
 function trackOf(comp){var f=comp.facets||[];var lab=f.some(function(x){return ['cadaver','histology','label','imaging'].indexOf(x)>-1;});var lec=f.some(function(x){return ['lecture','clinical','draw'].indexOf(x)>-1;});return (lab&&!lec)?'Lab':(lec&&!lab)?'Lecture':'Both';}
+function openGapByTopic(){
+  clearG();var ov=$('#gameOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');lastFocus=document.activeElement;$('#gameClose').focus();
+  var exam=nextExam();var cover=examCoverageWeeks(exam);var all=allComps();
+  var byWeek={};all.forEach(function(x){var w=x.c.week||x.u.week||0;(byWeek[w]=byWeek[w]||[]).push(x.c);});
+  var weeks=Object.keys(byWeek).map(Number).sort(function(a,b){return a-b;});
+  gSet('Gap Check by Topic','Check the topics your exam covers');
+  function chk(c,on,w){return '<label style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;cursor:pointer;font-size:13.5px"><input type="checkbox" class="topic-chk" data-cid="'+esc(c.id)+'" data-wk="'+w+'"'+(on?' checked':'')+' style="margin-top:3px"><span>'+esc(c.name)+'</span></label>';}
+  var groups=weeks.map(function(w){var on=cover.indexOf(w)>-1;var items=byWeek[w].map(function(c){return chk(c,on,w);}).join('');return '<details'+(on?' open':'')+' style="border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0"><summary style="font-weight:700;cursor:pointer">Week '+w+' <span style="color:var(--ink-soft);font-weight:400">('+byWeek[w].length+')</span></summary><div style="margin:6px 0 2px"><button type="button" class="btn" data-weekall="'+w+'" style="padding:5px 11px;font-size:12.5px;margin:0 6px 6px 0">Select all in Week '+w+'</button><button type="button" class="btn" data-weekclear="'+w+'" style="padding:5px 11px;font-size:12.5px;background:#fff;color:#0B1530;margin:0 0 6px">Clear week</button></div>'+items+'</details>';}).join('');
+  gBody('<p style="font-size:13px;color:var(--ink-soft);margin:0 0 10px">Pick the topics on your exam, then run the gap finder. This is by topic, not by week, so it works no matter how your term is laid out.</p>'+
+    '<div class="g-actions" style="margin-bottom:8px"><button class="btn" id="tgMid">Midterm (Weeks 1 to 4)</button><button class="btn" id="tgAll">Select all</button><button class="btn" id="tgNone">Clear</button></div>'+
+    groups+
+    '<p class="g-q" id="tgCount" aria-live="polite" style="font-size:13px;margin:10px 0">0 topics selected</p>'+
+    '<div class="g-actions"><button class="btn gold big" id="tgRun">Run Gap Finder</button><button class="btn" data-gameclose>Cancel</button></div>');
+  function upd(){var n=$$('.topic-chk:checked').length;var el=$('#tgCount');if(el)el.textContent=n+' topic'+(n===1?'':'s')+' selected';}
+  $$('.topic-chk').forEach(function(cb){cb.onchange=upd;});
+  $('#tgMid').onclick=function(){$$('.topic-chk').forEach(function(cb){var wk=+cb.getAttribute('data-wk');cb.checked=[1,2,3,4].indexOf(wk)>-1;});upd();};
+  $('#tgAll').onclick=function(){$$('.topic-chk').forEach(function(cb){cb.checked=true;});upd();};
+  $('#tgNone').onclick=function(){$$('.topic-chk').forEach(function(cb){cb.checked=false;});upd();};
+  $$('[data-weekall]').forEach(function(b){b.onclick=function(){var w=b.getAttribute('data-weekall');$$('.topic-chk[data-wk="'+w+'"]').forEach(function(cb){cb.checked=true;});upd();};});
+  $$('[data-weekclear]').forEach(function(b){b.onclick=function(){var w=b.getAttribute('data-weekclear');$$('.topic-chk[data-wk="'+w+'"]').forEach(function(cb){cb.checked=false;});upd();};});
+  $('#tgRun').onclick=function(){var ids=$$('.topic-chk:checked').map(function(cb){return cb.getAttribute('data-cid');});if(!ids.length){toast('Pick at least one topic.');return;}var chosen=[];all.forEach(function(x){if(ids.indexOf(x.c.id)>-1)chosen.push(x.c);});CRAM={exam:exam,comps:chosen,gap:{},mode:'exam',key:'topic:'+Date.now(),counted:true,label:'Selected topics ('+chosen.length+')',weeks:[]};startGapFinder();};
+  upd();
+}
 function openCram(){
   clearG();var ov=$('#gameOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');lastFocus=document.activeElement;$('#gameClose').focus();
   var exam=nextExam();var pre=examCoverageWeeks(exam);var weeks=SCHEDULE.weeks;
@@ -2019,7 +2123,8 @@ function openCram(){
   var rows=weeks.map(function(w){var on=pre.indexOf(w.n)>-1;return '<li><button type="button" class="pm-step wk-pick" data-wk="'+w.n+'" aria-pressed="'+(on?'true':'false')+'"><span class="pm-box" aria-hidden="true"></span><span class="lbl"><b>Week '+w.n+'</b> &middot; '+esc(w.title)+'</span></button></li>';}).join('');
   gBody('<div class="g-qmeta"><span>Gap Finder + Cram</span><span>Next: '+esc(exam.name)+', '+Math.max(0,dayDiff(exam.date,TODAY))+' days</span></div>'+
     '<p class="g-q" style="font-size:16px">Which material are you cramming?</p>'+
-    '<div class="g-actions" style="margin-bottom:12px"><button class="btn" data-crampreset="exam">This exam</button><button class="btn" data-crampreset="midterm">Midterm, Weeks 1 to 4</button><button class="btn" data-crampreset="all">Everything</button></div>'+
+    '<div class="g-actions" style="margin-bottom:10px"><button class="btn" data-crampreset="exam">This exam</button><button class="btn" data-crampreset="midterm">Midterm, Weeks 1 to 4</button><button class="btn" data-crampreset="all">Everything</button></div>'+
+    '<p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 10px">A checked, highlighted week is <b>included</b> in this cram. Tap a week to add or remove it.</p>'+
     '<ul id="wkPick" style="list-style:none;padding:0;margin:0 0 14px;display:grid;gap:7px">'+rows+'</ul>'+
     '<div class="g-actions"><button class="btn gold big" id="cramGo">Run Gap Finder</button><button class="btn big" id="cramSkipSaved">Skip, use saved progress</button></div>');
   function selWeeks(){return $$('#wkPick .wk-pick[aria-pressed="true"]').map(function(b){return +b.getAttribute('data-wk');});}
@@ -2065,23 +2170,25 @@ function buildCramPlan(fromGap){
   var comps=CRAM.comps.slice();var day1,day2,t;
   if(fromGap){day1=comps.filter(function(c){return CRAM.gap[c.id]===2;});day2=comps.filter(function(c){return CRAM.gap[c.id]===1;});if(!day1.length&&!day2.length){comps.sort(function(a,b){return a.mastery-b.mastery;});t=Math.ceil(comps.length/3);day1=comps.slice(0,t);day2=comps.slice(t,2*t);}}
   else{comps.sort(function(a,b){return a.mastery-b.mastery;});t=Math.ceil(comps.length/3);day1=comps.slice(0,t);day2=comps.slice(t,2*t);}
-  CRAM.day1=day1;CRAM.day2=day2;CRAM.all=comps;CRAM.gapItems=comps.filter(function(c){return CRAM.gap&&CRAM.gap[c.id]>=1;});
+  CRAM.day1=day1;CRAM.day2=day2;CRAM.all=comps;CRAM.gapItems=comps.filter(function(c){return CRAM.gap&&CRAM.gap[c.id]>=1;});CRAM.fromGap=fromGap;
   renderCramPlan(fromGap);
 }
 function renderCramPlan(fromGap){
   var exam=CRAM.exam;
   gSet('Exam Cram',CRAM.label||exam.name);
+  if(!CRAM.nDays)CRAM.nDays=Math.max(2,Math.min(7,(dayDiff(CRAM.exam.date,TODAY)||3)));var N=CRAM.nDays;
+  var dayPick='<div class="card" style="padding:12px 14px;margin-bottom:12px"><div style="font-size:13px;color:var(--ink-soft);margin-bottom:6px">How many days do you have to prepare?</div><div>'+[2,3,4,5,6,7].map(function(d){return '<button type="button" class="btn'+(d===N?' gold':'')+'" data-setdays="'+d+'" style="padding:6px 11px;font-size:13px;margin:2px">'+d+'</button>';}).join('')+'</div><p style="font-size:12.5px;color:var(--ink-soft);margin:8px 0 0">You have <b>'+N+' days</b>. Spend the early days on repair (no-idea gaps), the middle days on apply (shaky ones), and the last day on a full simulate under exam pressure.</p></div>';
   function nm(arr){return arr.length?arr.map(function(c){return esc(c.name);}).join(', '):'nothing flagged, do a full sweep';}
   function card(tag,title,body,btn){return '<div class="card" style="padding:16px 18px;margin-bottom:12px"><div style="font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--terra-dark)">'+tag+'</div><h3 style="font-size:16px;margin:4px 0 6px">'+title+'</h3><p style="font-size:13px;color:var(--ink-soft);margin-bottom:10px">'+body+'</p>'+btn+'</div>';}
   var summary='';
   if(fromGap){var s=gapSummary();summary='<div class="weak-head" style="margin-bottom:14px"><div><div class="wc">'+(s.no+s.sh)+'</div><div class="wl">gaps found</div></div><p style="flex:1;min-width:180px">'+s.no+' no idea, '+s.sh+' shaky. Lab '+s.byTrack.Lab+', Lecture '+s.byTrack.Lecture+', Both '+s.byTrack.Both+'. Your three days are built around these.</p></div>';}
-  gBody(summary+'<p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px">Active formats only: retrieve, draw, label, apply, simulate. Intense review, not a grade guarantee.</p>'+
+  gBody(summary+dayPick+'<p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px">Active formats only: retrieve, draw, label, apply, simulate. Intense review, not a grade guarantee.</p>'+
     card('Day 1 · Repair','Biggest gaps first',nm(CRAM.day1)+'. Retrieve cold, then redraw or relabel from memory.','<button class="btn rust" data-cramday="1">Start Day 1</button>')+
     card('Day 2 · Apply','Shaky ones, solidify',nm(CRAM.day2)+'. Retrieve, then apply each to a case or an image.','<button class="btn gold" data-cramday="2">Start Day 2</button>')+
     card('Day 3 · Simulate','Everything, under pressure','Rapid retrieval of all of it, then a practice test and a lab race, then re-check the gaps you flagged.','<button class="btn primary" data-cramday="3">Start Day 3</button>')+
     '<div class="g-actions"><button class="btn" data-gameclose>Close</button></div>');
 }
-function cramDay3(){gBody('<div class="g-center"><div class="g-emoji">🏁</div><h3>Day 3: Simulate</h3><p>Rapid active review of everything, then test under pressure, then re-check the gaps you flagged.</p><div class="g-actions"><button class="btn primary" data-cramallpomo>Rapid retrieval</button><button class="btn" disabled aria-disabled="true" style="opacity:.55;cursor:not-allowed">Practice games (coming soon)</button></div><div class="g-actions"><button class="btn rust" data-cramretest>Re-check my gaps</button><button class="btn" data-toolblank="spaced-recall.html">Spaced recall</button><button class="btn" data-gameclose>Close</button></div></div>');}
+function cramDay3(){gBody('<div class="g-center"><div class="g-emoji">🏁</div><h3>Day 3: Simulate</h3><p>Rapid active review of everything, then test under pressure, then re-check the gaps you flagged.</p><div class="g-actions"><button class="btn primary" data-cramallpomo>Rapid retrieval</button><button class="btn" data-game="quiz">Practice games</button></div><div class="g-actions"><button class="btn rust" data-cramretest>Re-check my gaps</button><button class="btn" data-toolblank="spaced-recall.html">Spaced recall</button><button class="btn" data-gameclose>Close</button></div></div>');}
 
 /* ---- Mid-Module Gap Check (shares the 2-per-module cram cap) ---- */
 function moduleKey(){return nextExam().name;}
@@ -2194,7 +2301,7 @@ function renderTogether(){var el=$('#togetherGrid');if(!el)return;el.innerHTML=M
     var btn='<button class="btn primary" data-toolblank="'+esc(m.link)+'">'+esc(m.cta||'Open')+'</button>';
     return '<div class="mode-card"><div class="mode-top '+m.cls+'"><span class="mtag">'+esc(m.tag)+'</span><h3>'+m.emoji+' '+esc(m.name)+'</h3><div class="players">'+esc(m.players)+'</div></div><div class="mode-body"><p>'+esc(m.desc)+'</p>'+badge+btn+'</div></div>';
   }
-  return '<div class="mode-card is-soon"><span class="mode-soon">Coming soon</span><div class="mode-top '+m.cls+'"><span class="mtag">'+esc(m.tag)+'</span><h3>'+m.emoji+' '+esc(m.name)+'</h3><div class="players">'+esc(m.players)+'</div></div><div class="mode-body"><p>'+esc(m.desc)+'</p><span class="proto-badge">In development</span><button class="btn" disabled aria-disabled="true" style="opacity:.55;cursor:not-allowed">Coming soon</button></div></div>';
+  return '<div class="mode-card"><div class="mode-top '+m.cls+'"><span class="mtag">'+esc(m.tag)+'</span><h3>'+m.emoji+' '+esc(m.name)+'</h3><div class="players">'+esc(m.players)+'</div></div><div class="mode-body"><p>'+esc(m.desc)+'</p><button class="btn primary" data-game="'+esc(m.k)+'">Play</button></div></div>';
 }).join('');}
 
 /* =========================================================
@@ -2203,6 +2310,7 @@ function renderTogether(){var el=$('#togetherGrid');if(!el)return;el.innerHTML=M
 function renderAll(){
   $('#greetBadge').textContent=S.profile.name?('Hi, '+S.profile.name):'Welcome';
   renderPlan();renderDailyBuild();renderDashboard();renderMap();renderWeakness();renderFlow();renderEvidence();renderSkills();renderExercises();renderTogether();
+  if(typeof renderSchedBanner==='function')renderSchedBanner();
 }
 
 /* =========================================================
@@ -2210,12 +2318,15 @@ function renderAll(){
 ========================================================= */
 var lastFocus=null;
 document.addEventListener('click',function(e){
-  var t=e.target.closest('[data-session],[data-prove],[data-tool],[data-toolblank],[data-selfev],[data-logev],[data-logafter],[data-stage],[data-unit],[data-prompt],[data-scroll],[data-sclose],[data-game],[data-exercise],[data-gameclose],[data-drawscore],[data-mmscore],[data-opengrades],[data-gradedel],[data-cram],[data-midcram],[data-midstart],[data-weakjump],[data-pomosetup],[data-baseline],[data-cramday],[data-cramallpomo],[data-gapstart],[data-cramskip],[data-cramretest],[data-daydone]');
+  var t=e.target.closest('[data-session],[data-prove],[data-tool],[data-toolblank],[data-selfev],[data-logev],[data-logafter],[data-stage],[data-unit],[data-prompt],[data-scroll],[data-sclose],[data-game],[data-exercise],[data-gameclose],[data-drawscore],[data-mmscore],[data-opengrades],[data-gradedel],[data-cram],[data-gaptopic],[data-topicreview],[data-midcram],[data-midstart],[data-weakjump],[data-pomosetup],[data-baseline],[data-cramday],[data-setdays],[data-cramallpomo],[data-gapstart],[data-cramskip],[data-cramretest],[data-daydone]');
   if(!t)return;
   if(t.hasAttribute('data-game')){openGame(t.getAttribute('data-game'));return;}
   if(t.hasAttribute('data-exercise')){openGame(t.getAttribute('data-exercise'));return;}
   if(t.hasAttribute('data-toolblank')){window.open(t.getAttribute('data-toolblank'),'_blank','noopener');return;}
   if(t.hasAttribute('data-cram')){openCram();return;}
+  if(t.hasAttribute('data-gaptopic')){openTool('card-gap-finder.html');return;}
+  if(t.hasAttribute('data-topicreview')){openTool('card-gap-finder.html#review');return;}
+  if(t.hasAttribute('data-setdays')){if(CRAM){CRAM.nDays=+t.getAttribute('data-setdays');renderCramPlan(CRAM.fromGap);}return;}
   if(t.hasAttribute('data-midcram')){openMidCram();return;}
   if(t.hasAttribute('data-pomosetup')){openSessionChooser('today');return;}
   if(t.hasAttribute('data-baseline')){openBaseline('today');return;}
@@ -2291,10 +2402,56 @@ $('#gameOverlay').addEventListener('click',function(e){if(e.target===this)closeG
   [h,$('#pfRing')].forEach(function(el){if(!el)return;el.addEventListener('pointerdown',startDrag);el.addEventListener('pointermove',moveDrag);el.addEventListener('pointerup',endDrag);});
 })();
 
-/* reset */
-$('#openReset').addEventListener('click',function(){
-  if(confirm('Reset all progress and setup? This clears the sample data on this device.')){store.del(KEY);S=clone(SEED);OB={step:0,data:{}};showOnboard();}
+/* ---- Reset, behind a real confirmation so a stray tap cannot wipe a term ---- */
+var resetLastFocus=null;
+function openReset(){
+  resetLastFocus=document.activeElement;
+  var ov=$('#resetOverlay');
+  $('#resetConfirmBox').checked=false;
+  $('#resetGo').disabled=true;
+  ov.classList.add('open');ov.setAttribute('aria-hidden','false');
+  /* focus the SAFE choice, never the destructive one */
+  setTimeout(function(){$('#resetCancel').focus();},30);
+}
+function closeReset(){
+  var ov=$('#resetOverlay');
+  ov.classList.remove('open');ov.setAttribute('aria-hidden','true');
+  if(resetLastFocus&&resetLastFocus.focus)resetLastFocus.focus();
+}
+function doReset(){
+  /* every key this app owns, so a returning student truly starts clean */
+  store.del(KEY);
+  store.del('mos-schedule');
+  try{localStorage.removeItem(RECALL_KEY);}catch(e){}
+  S=clone(SEED);OB={step:0,data:{}};
+  SCHEDULE=(window.BIO004_SCHEDULE&&window.BIO004_SCHEDULE.weeks&&window.BIO004_SCHEDULE.weeks.length)?window.BIO004_SCHEDULE:blankSchedule();
+  closeReset();
+  showOnboard();
+  toast('Reset done. Starting fresh.');
+}
+$('#openReset').addEventListener('click',openReset);
+$('#resetX').addEventListener('click',closeReset);
+$('#resetCancel').addEventListener('click',closeReset);
+$('#resetConfirmBox').addEventListener('change',function(){$('#resetGo').disabled=!this.checked;});
+$('#resetGo').addEventListener('click',function(){if($('#resetConfirmBox').checked)doReset();});
+$('#resetOverlay').addEventListener('click',function(e){if(e.target===this)closeReset();});
+/* keep tab focus inside the dialog while it is open */
+$('#resetOverlay').addEventListener('keydown',function(e){
+  if(e.key!=='Tab')return;
+  var f=this.querySelectorAll('button,input,[href],[tabindex]:not([tabindex="-1"])');
+  f=Array.prototype.filter.call(f,function(el){return !el.disabled&&el.offsetParent!==null;});
+  if(!f.length)return;
+  var first=f[0],last=f[f.length-1];
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
 });
+
+/* ---- No-schedule banner ---- */
+function renderSchedBanner(){
+  var b=$('#schedBanner');if(!b)return;
+  b.hidden=scheduleLoaded();
+}
+$('#bannerLoad').addEventListener('click',function(){openInstructor();});
 
 /* coach form */
 $('#coachForm').addEventListener('submit',function(e){
@@ -2334,6 +2491,7 @@ document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){
     if($('#gameOverlay').classList.contains('open'))closeGame();
     else if($('#sessionOverlay').classList.contains('open'))closeSession();
+    else if($('#resetOverlay').classList.contains('open'))closeReset();
     else if($('#instrOverlay').classList.contains('open'))closeInstructor();
   }
 });
@@ -2359,6 +2517,7 @@ if('IntersectionObserver' in window){
 ========================================================= */
 if(!Array.isArray(S.grades))S.grades=[];
 applySchedule(false);
+renderSchedBanner();
 ingestRecall();
 renderCoachPrompts();
 coachSay('bot','Blub blub. I am Hootie the Knowfish, your Mastery Coach. I read your progress and point you at the single best next move. Ask me anything, or tap a prompt below.');
@@ -2383,5 +2542,7 @@ else{renderAll();}
   setTimeout(sendHeight,500);
 })();
 </script>
+
+<script src="bio004-dock.js"></script>
 </body>
 </html>
