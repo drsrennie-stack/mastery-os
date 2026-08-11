@@ -123,6 +123,8 @@ section.block:first-of-type{border-top:none}
 .plan-cta{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap}
 /* today's build (daily budget pack) */
 .build-card{padding:20px 22px;margin-top:16px}
+.build-hint{font-size:12.5px;color:var(--ink-faint);max-width:34ch;text-align:right;margin:0}
+@media (max-width:640px){.build-hint{text-align:left;max-width:none}}
 .build-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:12px}
 .build-head h3{font-size:18px}
 .build-bar{height:8px;background:var(--line-soft);border-radius:99px;overflow:hidden;margin-bottom:6px}
@@ -982,7 +984,29 @@ function buildFromSchedule(){
   }
   return {units:units,course:{label:SCHEDULE.course,exam:nextExam().date,examName:nextExam().name,lecture:(cw.lecture||[]).slice(),lab:(cw.lab||cw.lecture||[]).slice(),highyield:SCHEDULE.highyield||''}};
 }
-function applySchedule(force){var b=buildFromSchedule();S.course=b.course;if(force||!(S.__schedV>=2)){S.units=b.units;S.__schedV=2;}save();}
+/* Carry a student's earned progress across a structure rebuild. Competency
+   IDs are stable, so mastery, evidence and recall dates follow the ID even
+   when the week layout changes underneath them. */
+function mergeUnits(oldUnits,newUnits){
+  var prev={};
+  (oldUnits||[]).forEach(function(u){(u.comps||[]).forEach(function(c){prev[c.id]=c;});});
+  newUnits.forEach(function(u){(u.comps||[]).forEach(function(c){
+    var p=prev[c.id];if(!p)return;
+    c.mastery=p.mastery||0;c.conf=p.conf||c.conf;c.last=p.last||'';
+    if(p.next)c.next=p.next;c.ev=p.ev||[];c.today=p.today||null;
+  });});
+  return newUnits;
+}
+function termKey(){return String(SCHEDULE.term||'')+'|'+String(SCHEDULE.start||'')+'|'+((SCHEDULE.weeks&&SCHEDULE.weeks.length)||0);}
+function applySchedule(force){
+  var b=buildFromSchedule();S.course=b.course;
+  /* A stored unit list built for a different term leaves the daily build
+     empty while the budget still reads full hours. Rebuild on term change. */
+  var changed=(S.__termKey!==termKey());
+  if(force||changed||!(S.__schedV>=2)){S.units=mergeUnits(S.units,b.units);S.__schedV=2;}
+  S.__termKey=termKey();
+  save();
+}
 /* ---- Schedule import (instructor setup): accept schedule.js, JSON, or course-schedule HTML ---- */
 function normWeek(w){var o={n:w.n||w.number,start:w.start||w.startDate,end:w.end||w.endDate,title:w.title||w.weekTitle||('Week '+(w.n||w.number)),lecture:w.lecture||[],lab:w.lab||null,labExam:w.labExam||null,tbl:w.tbl||null};if(w.lectureMidterm)o.lectureMidterm=w.lectureMidterm;if(w.cumulative)o.cumulative=w.cumulative;return o;}
 function mapImportedWeek(w){return {n:w.number,start:w.startDate,end:w.endDate,title:w.weekTitle,lecture:w.weekTitle?[w.weekTitle]:[],lab:(w.labChecklist&&w.labChecklist.topics)||null,labExam:null,tbl:null};}
@@ -1206,7 +1230,7 @@ function renderDailyBuild(){
   var fwd=nc?('Keeps you moving forward toward '+esc(nc.label)+' on '+esc(nc.dayName)+'. '):'';
   var note=fwd+'Ordered to your gaps: highest-yield work for Week '+p.week.n+' first, your weakest within that, and competencies you have proven drop out to spaced review. Includes pre-exposure to new material plus due reviews from earlier weeks.'+(nc&&nc.exam&&nc.days<=3?' Weighted toward review with the exam coming up.':'');
   var trim=p.trimmed?'<p class="build-trim">'+p.trimmed+' more competenc'+(p.trimmed===1?'y':'ies')+' did not fit today’s '+fmtHM(p.budget)+'. Add a study day or more hours to reach them, or they roll to tomorrow.</p>':'';
-  el.innerHTML='<div class="card build-card"><div class="build-head"><div><p class="eyebrow">'+eyebrow+'</p><h3>'+fmtHM(doneMins)+' of '+fmtHM(p.budget)+' done</h3></div><button class="btn primary" data-session="today">Start the session</button></div><div class="build-bar" role="img" aria-label="'+pct+' percent of today complete"><span style="width:'+pct+'%"></span></div><p style="font-size:12px;color:var(--ink-faint);margin:0 0 10px">'+note+'</p>'+(rows||'<p style="color:var(--ink-faint);padding:8px 0">Nothing scheduled. Enjoy the breather.</p>')+trim+'</div>';
+  el.innerHTML='<div class="card build-card"><div class="build-head"><div><p class="eyebrow">'+eyebrow+'</p><h3>'+fmtHM(doneMins)+' of '+fmtHM(p.budget)+' done</h3></div><p class="build-hint">This is the plan behind <b>Start today\'s session</b> above. Work it in order, or tap <b>Do it</b> on any single line.</p></div><div class="build-bar" role="img" aria-label="'+pct+' percent of today complete"><span style="width:'+pct+'%"></span></div><p style="font-size:12px;color:var(--ink-faint);margin:0 0 10px">'+note+'</p>'+(rows||'<p style="color:var(--ink-faint);padding:8px 0">Nothing scheduled. Enjoy the breather.</p>')+trim+'</div>';
 }
 
 /* =========================================================
