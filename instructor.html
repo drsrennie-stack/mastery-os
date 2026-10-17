@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mastery OS · Instructor dashboard</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#08101F;--navy-deep:#050A14;--navy-tint:#EEF0F4;--gold:#B8924A;--terra-dark:#A0522D;--off:#FAFAF9;--ink-soft:#2A3949;--line:#D2D6DE;--gray:#5A6170}
+*{box-sizing:border-box}em,i{font-style:normal}
+body{margin:0;background:var(--off);color:var(--navy);font-family:"DM Sans",system-ui,sans-serif;font-size:16px;line-height:1.55}
+.skip{position:absolute;left:12px;top:-60px;background:var(--navy);color:#fff;padding:10px 14px;border-radius:8px}.skip:focus{top:12px}
+:focus-visible{outline:3px solid #8A6A2E;outline-offset:2px}
+main{max-width:1100px;margin:0 auto;padding:28px 16px 80px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--terra-dark);margin:0 0 6px}
+h1{font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:clamp(26px,4vw,34px);margin:0 0 8px}
+h2{font-family:"Plus Jakarta Sans",sans-serif;font-weight:600;color:var(--terra-dark);font-size:20px;margin:0 0 10px}
+.card{background:#fff;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,.08);padding:18px;margin-bottom:16px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.grid>div{min-width:0}
+label.f{display:block;font-weight:700;font-size:14px;margin-bottom:4px}
+input,select{font:inherit;width:100%;min-height:44px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#fff;color:var(--navy)}
+.btn{display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;border-radius:10px;border:1px solid var(--navy);background:var(--navy);color:#fff;font:inherit;font-weight:700;cursor:pointer}
+.btn.ghost{background:#fff;color:var(--navy)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.muted{color:var(--ink-soft);font-size:14.5px}
+.big{font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:30px;margin:0}
+.wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:680px;font-size:14.5px}
+caption{text-align:left;font-weight:700;padding-bottom:6px}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--navy-tint);vertical-align:top}
+th[scope=col]{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}
+.bar{display:inline-block;height:10px;border-radius:999px;background:var(--navy);vertical-align:middle}
+.tag{display:inline-block;font-size:12.5px;font-weight:700;border-radius:999px;padding:1px 9px;border:1px solid var(--navy);margin:0 4px 4px 0}
+.tag.t{border-color:var(--terra-dark);color:var(--terra-dark)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<main id="main">
+<p class="eyebrow">Mastery OS · MedMasters Collaborative · Instructor</p>
+<h1>Instructor dashboard</h1>
+<p>Who is using Mastery OS, how often, and where the whole class is weak. Every student appears only as their private ID. If a student shares their ID with you, you can find them here.</p>
+
+<form class="card" id="cfg" novalidate>
+  <h2>Connect</h2>
+  <div class="grid">
+    <div><label class="f" for="url">Web app URL (ends in /exec)</label><input id="url" autocomplete="off" spellcheck="false"></div>
+    <div><label class="f" for="key">Instructor key (ADMIN_KEY)</label><input id="key" type="password" autocomplete="current-password"></div>
+    <div><label class="f" for="course">Course</label><select id="course"><option value="">Both</option><option value="anatomy">Anatomy</option><option value="physiology">Physiology</option></select></div>
+  </div>
+  <div class="row" style="margin-top:12px"><button class="btn" type="submit">Load the dashboard</button><label class="row muted" style="gap:8px"><input type="checkbox" id="remember" style="width:18px;min-height:18px"> Remember on this computer</label></div>
+  <p class="muted" id="msg" aria-live="polite"></p>
+</form>
+
+<section id="out" hidden>
+  <div class="grid" id="stats"></div>
+  <div class="card"><h2>Class weak spots</h2><p class="muted">Competencies practiced by at least two students, lowest score first. "Felt sure, missed it" counts answers rated 4 or 5 for confidence that scored under 80%.</p><div class="wrap"><table id="weakT"><caption class="sr">Class weak spots</caption></table></div></div>
+  <div class="card"><h2>Students, by private ID</h2>
+    <div class="row" style="margin-bottom:10px"><div style="flex:1;min-width:220px"><label class="f" for="find">Find an ID</label><input id="find" type="search" placeholder="maple-river-otter-42"></div><button type="button" class="btn ghost" id="csv">Download as CSV</button></div>
+    <div class="wrap"><table id="stuT"></table></div></div>
+</section>
+</main>
+<script>
+(function () {
+  'use strict';
+  /* Paste the same web app URL here so you never have to type it. */
+  var DEFAULT_URL = '';
+  var BASES = { anatomy: 'https://drsrennie-stack.github.io/new-build-bio4-solano/competenciesfall2026.js', physiology: 'https://drsrennie-stack.github.io/human-physiology-Fa26/bio005-competencies.js' };
+  var SRC = { 'mastery-os': 'Mastery OS', 'recall-app': 'Recall', 'mastery-check': 'Mastery Check', 'dump-app': 'Brain dumps', 'practice-exam': 'Practice exam', atlas: 'Atlas', 'draw-app': 'Drawing', 'loops-app': 'Loops' };
+  function $(s) { return document.querySelector(s); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  var saved = {}; try { saved = JSON.parse(localStorage.getItem('mos-instructor') || '{}'); } catch (e) {}
+  $('#url').value = saved.url || DEFAULT_URL; $('#key').value = saved.key || ''; $('#remember').checked = !!saved.key;
+  var NAMES = {}, DATA = null;
+  Object.keys(BASES).forEach(function (k) { var s = document.createElement('script'); s.src = BASES[k]; s.onload = function () { (window.BIO004_COMPETENCIES || []).concat(window.BIO005_COMPETENCIES || []).forEach(function (c) { NAMES[c.id] = c.name; }); if (DATA) render(); }; document.head.appendChild(s); });
+  function ago(iso) { var d = (Date.now() - new Date(iso).getTime()) / 864e5; return d < 1 ? 'today' : d < 2 ? 'yesterday' : Math.round(d) + ' days ago'; }
+  $('#cfg').onsubmit = function (e) {
+    e.preventDefault();
+    var url = $('#url').value.trim(), key = $('#key').value, c = $('#course').value;
+    if (!/^https:\/\/script\.google\.com\/.+\/exec$/.test(url)) { $('#msg').textContent = 'The web app URL should start with https://script.google.com and end in /exec.'; $('#url').focus(); return; }
+    if (!key) { $('#msg').textContent = 'Type your instructor key.'; $('#key').focus(); return; }
+    try { localStorage.setItem('mos-instructor', JSON.stringify($('#remember').checked ? { url: url, key: key } : { url: url })); } catch (x) {}
+    $('#msg').textContent = 'Loading…';
+    fetch(url + '?admin=' + encodeURIComponent(key) + (c ? '&course=' + c : '')).then(function (r) { return r.json(); }).then(function (j) {
+      if (!j.ok) throw new Error(j.error || 'The sheet did not answer.');
+      DATA = j; $('#msg').textContent = 'Loaded ' + new Date(j.built).toLocaleString() + '.'; render();
+    }).catch(function (x) { $('#msg').textContent = x.message; });
+  };
+  function render() {
+    var S = DATA.students, act7 = S.filter(function (s) { return s.activeDays7 > 0; }).length;
+    $('#out').hidden = false;
+    $('#stats').innerHTML = [['Students with a record', S.length], ['Active in the last 7 days', act7], ['Attempts recorded', S.reduce(function (a, s) { return a + s.attempts; }, 0)], ['Focus hours logged', Math.round(S.reduce(function (a, s) { return a + s.focusMinutes; }, 0) / 60)]]
+      .map(function (x) { return '<div class="card"><p class="big">' + x[1].toLocaleString() + '</p><p class="muted" style="margin:0">' + x[0] + '</p></div>'; }).join('');
+    $('#weakT').innerHTML = '<caption>Class weak spots</caption><thead><tr><th scope="col">Competency</th><th scope="col">Students</th><th scope="col">Class score</th><th scope="col">Felt sure, missed it</th></tr></thead><tbody>' +
+      DATA.weak.map(function (w) { return '<tr><th scope="row" style="font-weight:600">' + esc(NAMES[w.comp] || w.comp) + '<br><span class="muted">' + esc(w.comp) + '</span></th><td>' + w.students + '</td><td><span class="bar" style="width:' + (w.score || 0) + 'px" aria-hidden="true"></span> ' + (w.score == null ? '' : w.score + '%') + '</td><td>' + w.miscal + '</td></tr>'; }).join('') + '</tbody>';
+    drawStudents();
+  }
+  function drawStudents() {
+    var q = $('#find').value.trim().toLowerCase(), S = DATA.students.filter(function (s) { return !q || s.id.indexOf(q) >= 0; });
+    $('#stuT').innerHTML = '<caption>Students, newest activity first</caption><thead><tr><th scope="col">Private ID</th><th scope="col">Course</th><th scope="col">Last active</th><th scope="col">Days active, 7 / 30</th><th scope="col">Attempts</th><th scope="col">Focus minutes</th><th scope="col">Score</th><th scope="col">Tools used</th></tr></thead><tbody>' +
+      S.map(function (s) { return '<tr><th scope="row">' + esc(s.id) + '</th><td>' + esc(s.course) + '</td><td>' + ago(s.last) + '</td><td>' + s.activeDays7 + ' / ' + s.activeDays30 + '</td><td>' + s.attempts + '</td><td>' + s.focusMinutes + '</td><td>' + (s.score == null ? '' : s.score + '%') + '</td><td>' + Object.keys(s.sources).map(function (k) { return '<span class="tag">' + esc(SRC[k] || k) + '</span>'; }).join('') + '</td></tr>'; }).join('') + '</tbody>';
+  }
+  $('#find').oninput = function () { if (DATA) drawStudents(); };
+  $('#csv').onclick = function () {
+    if (!DATA) return; var cols = ['id', 'course', 'first', 'last', 'activeDays7', 'activeDays30', 'attempts', 'focusMinutes', 'score'];
+    var csv = cols.join(',') + ',tools\n' + DATA.students.map(function (s) { return cols.map(function (c) { return s[c] == null ? '' : s[c]; }).join(',') + ',"' + Object.keys(s.sources).join(' ') + '"'; }).join('\n');
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = 'mastery-os-usage.csv'; document.body.appendChild(a); a.click(); a.remove();
+  };
+  function sendHeight() { var h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight); try { window.parent.postMessage({ type: 'resize', id: 'mos-instructor', frameId: 'mos-instructor', height: h }, '*'); } catch (e) {} }
+  window.addEventListener('load', sendHeight); window.addEventListener('resize', sendHeight);
+  if (window.ResizeObserver) { try { new ResizeObserver(sendHeight).observe(document.body); } catch (e) {} }
+})();
+</script>
+<style>.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}</style>
+</body>
+</html>
