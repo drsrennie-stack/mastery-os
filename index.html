@@ -79,6 +79,8 @@ p{margin:0 0 12px}
 .grid{display:grid;gap:18px}
 .g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
 .g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.g5{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+@media (max-width:560px){.g5{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.mtile{min-height:0;padding:16px 10px 14px}.mtile .tt{font-size:16px}.mtile .td{font-size:13px}}
 .card{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:20px;transition:transform 200ms ease,box-shadow 200ms ease}
 .card.lift:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
 .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
@@ -146,6 +148,7 @@ legend{font-weight:700;color:var(--navy);padding:0;margin-bottom:8px}
 /* mode tiles */
 .tile{display:flex;flex-direction:column;gap:6px;text-align:left;border:0;background:var(--white);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:18px;transition:transform 200ms ease,box-shadow 200ms ease;color:var(--ink);text-decoration:none;min-height:130px}
 .tile:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
+@media (prefers-reduced-motion:reduce){.mtile,.mtile:hover{transition:none;transform:none}}
 .tile .tt{font-family:var(--display);font-weight:700;font-size:18px;color:var(--navy)}
 .tile .td{font-size:14.5px;color:var(--ink-soft)}
 .tile .tc{margin-top:auto;font-size:13px;font-weight:700;color:var(--terra-dark)}
@@ -167,7 +170,21 @@ table.prog th[scope="col"]{font-size:12.5px;text-transform:uppercase;letter-spac
 .tools{list-style:none;margin:0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
 .toolbtn{display:flex;gap:12px;align-items:center;background:var(--white);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:14px;text-decoration:none;color:var(--ink);min-height:72px;transition:transform 200ms ease,box-shadow 200ms ease}
 .toolbtn:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
-.toolbtn svg{width:34px;height:34px;flex:none;color:var(--navy);background:var(--navy-tint);border-radius:10px;padding:6px}
+.toolbtn svg{width:40px;height:40px;flex:none;color:#0B1530;background:linear-gradient(145deg,#C9A14A,#A87F2E);border-radius:12px;padding:8px;box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+.toolbtn.c-blue svg{background:linear-gradient(145deg,#5C7FA8,#2F4C7D)}
+.toolbtn.c-terra svg{background:linear-gradient(145deg,#C2734D,#8B3A2E)}
+/* practice mode tiles: dark navy cards with a colored icon, as on the Fall 2026 page */
+.mtile{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;background:#0B1530;color:#fff;border-radius:18px;padding:22px 16px 20px;min-height:200px;text-decoration:none;box-shadow:0 8px 18px -12px rgba(8,16,31,.4);transition:transform 200ms ease,box-shadow 200ms ease}
+.mtile:hover{transform:translateY(-4px);box-shadow:0 16px 26px -14px rgba(8,16,31,.5)}
+.mtile:focus-visible{outline:3px solid #EBCE86;outline-offset:4px}
+.mtile .mi{width:56px;height:56px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(145deg,#C9A14A,#A87F2E);box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+.mtile .mi svg{width:28px;height:28px;color:#0B1530;stroke-width:2.1}
+.mtile .tt{font-family:var(--display);font-weight:700;font-size:18px;color:#EBCE86;line-height:1.2}
+.mtile .td{font-size:14px;line-height:1.45;color:#E9EDF3}
+.mtile.c-blue .mi{background:linear-gradient(145deg,#5C7FA8,#2F4C7D)}
+.mtile.c-blue .tt{color:#BBD2EE}
+.mtile.c-terra .mi{background:linear-gradient(145deg,#C2734D,#8B3A2E)}
+.mtile.c-terra .tt{color:#F0C4AC}
 .toolbtn b{display:block;color:var(--navy);font-family:var(--display);font-size:15.5px}
 .toolbtn small{display:block;color:var(--ink-soft);font-size:13px;line-height:1.3}
 .fix{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
@@ -356,13 +373,24 @@ table.prog th[scope="col"]{font-size:12.5px;text-transform:uppercase;letter-spac
 'use strict';
 
 /* ---------- 1. SETTINGS DR. RENNIE EDITS ---------- */
+function gradeHours(ck, g) { var t = CONFIG.GRADE_HOURS[ck] || CONFIG.GRADE_HOURS.physiology; return t[g] ? t[g].h : null; }
+function gradeSay(ck, g) { var t = CONFIG.GRADE_HOURS[ck] || CONFIG.GRADE_HOURS.physiology; return t[g] ? t[g].say : ''; }
+function gradeIntro(ck) { var t = CONFIG.GRADE_HOURS[ck] || CONFIG.GRADE_HOURS.physiology; return t.intro; }
 var CONFIG = {
   /* Paste the Apps Script web app URL here after deploying Code.gs.
      Leave it empty and Mastery OS still works, saving on the device only. */
-  SYNC_URL: '',
+  SYNC_URL: 'https://script.google.com/macros/s/AKfycbzWz0DbgBccDJK9-mrdDXH1IAthCeGvd7yBEyu1i3ROs8wTGukrTItN1fSnsW8zFi-k/exec',
   FRAME_ID: 'mastery-os',
-  /* Grade goal -> weekly study hours outside class (spec, Decisions made) */
-  GRADE_HOURS: { A: 20, B: 16, C: 14 },
+  /* Grade goal -> weekly study hours outside class, per course.
+     Anatomy uses what Dr. Rennie tells BIO 004 students: about 25 to 26
+     hours for an A or B, about 15 to 17 for a C. Physiology keeps the spec.
+     h is the starting plan, say is how the range is written to students. */
+  GRADE_HOURS: {
+    anatomy: { A: { h: 26, say: '25 to 26' }, B: { h: 25, say: '25 to 26' }, C: { h: 16, say: '15 to 17' },
+      intro: 'Most students who earn an A or B study about 25 to 26 hours a week outside class. For a C, plan on about 15 to 17.' },
+    physiology: { A: { h: 20, say: '20 or more' }, B: { h: 16, say: '16' }, C: { h: 14, say: '14' },
+      intro: 'Each goal comes with a weekly study target outside class: about 20 hours a week or more for an A, about 16 for a B, and about 14 for a C.' }
+  },
   /* Review spacing ladder in days (spec: 1, 3, 7, 14; tune once data arrives) */
   LADDER: [1, 3, 7, 14, 30, 60],
   HIGH_PERF: 0.8,      /* got/possible at or above this counts as high */
@@ -1066,8 +1094,8 @@ function pace(ck) {
   var ws = weekStart(now()), done = minutesInWeek(ck, ws);
   var planMin = g.weekly * 60, frac = Math.min(1, (now() - ws) / (7 * DAY));
   var expected = planMin * frac, behind = expected - done;
-  var target = CONFIG.GRADE_HOURS[g.grade] || null;
-  return { ws: ws, done: done, planMin: planMin, expected: expected, behind: behind, target: target, grade: g.grade, weekly: g.weekly, daily: g.daily };
+  var target = gradeHours(ck, g.grade);
+  return { say: gradeSay(ck, g.grade), ws: ws, done: done, planMin: planMin, expected: expected, behind: behind, target: target, grade: g.grade, weekly: g.weekly, daily: g.daily };
 }
 function catchUpText(ck, behindMin) {
   var f = pomoCfg().focus, sessions = Math.max(1, Math.round(behindMin / f));
@@ -1277,13 +1305,13 @@ function suRender(err) {
       suChoice('anatomy', d.course, 'Anatomy', 'BIO 004 Human Anatomy, Solano Community College') + suChoice('physiology', d.course, 'Physiology', 'BIO 005 Human Physiology, Yuba College') + '</div>';
     canNext = !!d.course;
   } else if (s === 'grade') {
-    body = '<h2 id="suTitle">What grade are you aiming for' + (SU.goalOnly ? ' in ' + esc(COURSES[d.course].long) : ' in this class') + '?</h2><p class="sub">Each goal comes with a weekly study target outside class: about 20 hours a week or more for an A, about 16 for a B, and about 14 for a C.</p><div class="su-chips" role="group" aria-label="Grade goal">' +
+    body = '<h2 id="suTitle">What grade are you aiming for' + (SU.goalOnly ? ' in ' + esc(COURSES[d.course].long) : ' in this class') + '?</h2><p class="sub">' + esc(gradeIntro(d.course)) + '</p><div class="su-chips" role="group" aria-label="Grade goal">' +
       ['A', 'B', 'C'].map(function (g) { return '<button type="button" class="su-chip" data-v="' + g + '" aria-pressed="' + (d.grade === g) + '">' + g + '</button>'; }).join('') + '</div>';
     canNext = !!d.grade;
   } else if (s === 'weekly') {
-    var tgt = CONFIG.GRADE_HOURS[d.grade];
+    var tgt = gradeHours(d.course, d.grade), tsay = gradeSay(d.course, d.grade);
     if (d.weekly == null) d.weekly = tgt;
-    body = '<h2 id="suTitle">How many hours a week can you study for this class?</h2><p class="sub">Be realistic. This becomes your weekly plan, and Mastery OS tracks your effort against it.' + (tgt ? ' The usual target for ' + (d.grade === 'A' ? 'an ' : 'a ') + d.grade + ' is about ' + tgt + ' hours.' : '') + '</p><label class="su-lbl" for="suWeekly">Hours per week</label><input class="su-input" id="suWeekly" type="number" inputmode="decimal" min="1" max="60" step="0.5" value="' + esc(d.weekly) + '" style="max-width:180px">';
+    body = '<h2 id="suTitle">How many hours a week can you study for this class?</h2><p class="sub">Be realistic. This becomes your weekly plan, and Mastery OS tracks your effort against it.' + (tgt ? ' The usual target for ' + (d.grade === 'A' ? 'an ' : 'a ') + d.grade + ' is about ' + tsay + ' hours.' : '') + '</p><label class="su-lbl" for="suWeekly">Hours per week</label><input class="su-input" id="suWeekly" type="number" inputmode="decimal" min="1" max="60" step="0.5" value="' + esc(d.weekly) + '" style="max-width:180px">';
   } else if (s === 'daily') {
     if (d.daily == null) d.daily = Math.min(8, Math.max(0.5, Math.round((d.weekly / 6) * 2) / 2));
     body = '<h2 id="suTitle">How many hours on a typical day?</h2><p class="sub">This sets how long your daily review list runs.</p><label class="su-lbl" for="suDaily">Hours on a typical day</label><input class="su-input" id="suDaily" type="number" inputmode="decimal" min="0.5" max="12" step="0.5" value="' + esc(d.daily) + '" style="max-width:180px">';
@@ -1385,7 +1413,7 @@ $('#setup').addEventListener('click', function (e) {
   else if (b.hasAttribute('data-v')) {
     var s = SU.steps[SU.i];
     if (s === 'course') SU.d.course = b.getAttribute('data-v');
-    if (s === 'grade') { SU.d.grade = b.getAttribute('data-v'); SU.d.weekly = CONFIG.GRADE_HOURS[SU.d.grade]; SU.d.daily = null; }
+    if (s === 'grade') { SU.d.grade = b.getAttribute('data-v'); SU.d.weekly = gradeHours(SU.d.course, SU.d.grade); SU.d.daily = null; }
     suRender(); var sel = $('#suPanel [aria-pressed="true"]'); if (sel) sel.focus();
   }
 });
@@ -1416,7 +1444,7 @@ ROUTES.home = function () {
       '<p class="big">' + fmtHours(p.done) + ' <span class="muted" style="font-size:16px;font-weight:500">of your ' + esc(p.weekly) + ' h plan</span></p>' +
       '<div class="meter" role="progressbar" aria-label="Hours this week" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><span style="width:' + pct + '%"></span></div><div class="sp" style="height:10px"></div>' +
       '<p aria-live="polite">' + esc(paceMessage(ck)) + '</p>' +
-      (p.target && p.weekly < p.target ? '<p class="muted">Your goal is ' + (p.grade === 'A' ? 'an ' : 'a ') + p.grade + ', which usually takes about ' + p.target + ' hours a week outside class. Your plan is ' + p.weekly + '. You can raise it any time in My ID and settings.</p>' : '') +
+      (p.target && p.weekly < p.target ? '<p class="muted">Your goal is ' + (p.grade === 'A' ? 'an ' : 'a ') + p.grade + ', which usually takes about ' + p.say + ' hours a week outside class. Your plan is ' + p.weekly + '. You can raise it any time in My ID and settings.</p>' : '') +
       '<p class="muted">These numbers are estimates to help you keep going. They are not a prediction of your grade.</p>' +
       '<div class="row"><button type="button" class="btn ghost" data-act="timer">Start a focus session</button></div></section>';
     h += '<section class="card" aria-labelledby="hDue"><h2 id="hDue">Due for review today</h2>';
@@ -1430,9 +1458,7 @@ ROUTES.home = function () {
       h += '<p>Nothing is due right now.</p>' + (ns.length ? '<p class="muted">' + plural(ns.length, 'competency', 'competencies') + ' taught so far have no practice yet. Starting one is the best next step.</p><button type="button" class="btn" data-act="startnew">Practice something new</button>' : '<p class="muted">Pick any practice mode below to keep going.</p>');
     }
     h += '</section></div><div class="sp"></div>';
-    h += '<section aria-labelledby="hModes"><h2 id="hModes">Practice</h2><div class="grid g3">' + c.order.map(function (m) {
-      return '<a class="tile" href="#/' + m + '" target="_top"><span class="tt">' + esc(MODES[m].name) + '</span><span class="td">' + esc(MODES[m].blurb) + '</span></a>';
-    }).join('') + '</div></section><div class="sp"></div>' + toolStrip(ck) + '<div class="sp"></div>';
+    h += '<section aria-labelledby="hModes"><h2 id="hModes">Practice</h2><div class="grid g5">' + c.order.map(modeTile).join('') + '</div></section><div class="sp"></div>' + toolStrip(ck) + '<div class="sp"></div>';
     h += '<div class="grid g2"><section class="card" aria-labelledby="hWeak"><h2 id="hWeak">Your weak spots</h2>' + (weak.length ? '<ul class="list">' + weak.map(function (s) {
       return '<li class="st-locked"><span class="t">' + esc(compName(ck, s.comp)) + '</span><br><span class="muted">DOK ' + s.dok + ' ' + DOK_LABELS[s.dok] + ', strength ' + Math.round(s.strength * 100) + '%' + (s.miscal ? ', felt sure but missed it' : '') + '</span></li>';
     }).join('') + '</ul><div class="sp" style="height:10px"></div><div class="row"><a class="btn" href="#/weak" target="_top">Open my weak spots</a><a class="btn ghost" href="#/coach" target="_top">Ask the AI Mastery Coach</a></div>' : '<p class="muted">Weak spots show up here once you have practiced a few topics in any of your tools.</p><a class="btn ghost" href="#/weak" target="_top">Open my weak spots</a>') + '</section>';
@@ -1483,8 +1509,8 @@ function startNew() {
 /* ---------- 17. PRACTICE MENU ---------- */
 ROUTES.practice = function () {
   var c = course();
-  view(crumb() + '<h1>Practice</h1><p class="lead">Every mode saves what you got right and how sure you felt before you answered. Pick whatever you need today.</p><div class="grid g3">' +
-    c.order.map(function (m) { return '<a class="tile" href="#/' + m + '" target="_top"><span class="tt">' + esc(MODES[m].name) + '</span><span class="td">' + esc(MODES[m].blurb) + '</span></a>'; }).join('') +
+  view(crumb() + '<h1>Practice</h1><p class="lead">Every mode saves what you got right and how sure you felt before you answered. Pick whatever you need today.</p><div class="grid g5">' +
+    c.order.map(modeTile).join('') +
     '</div><div class="sp"></div>' + toolStrip(c.key) + '<div class="sp"></div><div class="card"><h2>What you see</h2><label class="row" style="gap:10px;font-weight:700"><input type="checkbox" id="showAll"' + (P.showAll ? ' checked' : '') + ' style="width:20px;height:20px;accent-color:#08101F"> Show topics from later weeks too</label><p class="muted" style="margin-top:8px">Off by default, so you only see what has been taught so far (through week ' + currentWeek(c.key) + ').</p></div>');
   $('#showAll').addEventListener('change', function (e) { P.showAll = e.target.checked; saveProfile(); });
 };
@@ -1593,7 +1619,7 @@ ROUTES.me = function () {
     '<button type="button" class="btn ghost" id="mePinSave">Save my new PIN</button><p id="mePinMsg" aria-live="polite" class="muted"></p></section><div class="sp"></div>' +
     '<section class="card stack" aria-labelledby="hName"><h2 id="hName">Your name</h2><p class="muted">Stored only in this browser.</p><label class="f" for="meName">What should we call you?</label><input class="field" id="meName" maxlength="40" value="' + esc(P.name || '') + '"><button type="button" class="btn ghost" id="meNameSave">Save name</button></section></div><div class="sp"></div>' +
     '<section class="card stack" aria-labelledby="hGoal"><h2 id="hGoal">Your goal for ' + esc(course().long) + '</h2>' +
-    '<fieldset><legend>Grade you are aiming for</legend><div class="row">' + ['A', 'B', 'C'].map(function (x) { return '<label class="row" style="gap:6px;font-weight:700"><input type="radio" name="meGrade" value="' + x + '"' + (g.grade === x ? ' checked' : '') + ' style="width:18px;height:18px;accent-color:#08101F"> ' + x + ' (about ' + CONFIG.GRADE_HOURS[x] + ' h a week)</label>'; }).join('') + '</div></fieldset>' +
+    '<fieldset><legend>Grade you are aiming for</legend><div class="row">' + ['A', 'B', 'C'].map(function (x) { return '<label class="row" style="gap:6px;font-weight:700"><input type="radio" name="meGrade" value="' + x + '"' + (g.grade === x ? ' checked' : '') + ' style="width:18px;height:18px;accent-color:#08101F"> ' + x + ' (about ' + gradeSay(course().key || P.course, x) + ' h a week)</label>'; }).join('') + '</div></fieldset>' +
     '<div class="grid g2"><div><label class="f" for="meWeekly">Hours a week you can study</label><input class="field" id="meWeekly" type="number" min="1" max="60" step="0.5" value="' + esc(g.weekly) + '"></div><div><label class="f" for="meDaily">Hours on a typical day</label><input class="field" id="meDaily" type="number" min="0.5" max="12" step="0.5" value="' + esc(g.daily) + '"></div></div>' +
     '<div class="row"><button type="button" class="btn" id="meGoalSave">Save my goal</button></div><p id="meMsg" aria-live="polite"></p></section><div class="sp"></div>' +
     '<section class="card stack" aria-labelledby="hSave"><h2 id="hSave">Saving and syncing</h2><p data-sync></p><div class="row"><button type="button" class="btn ghost" id="meSync">Send now</button><button type="button" class="btn ghost" id="meExport">Download my record (CSV)</button></div></section><div class="sp"></div>' +
@@ -2127,6 +2153,12 @@ var ICONS = {
   exam: '<path d="M5 3h14v18H5z"/><path d="M8 8h8M8 12h8M8 16h5"/>'
 };
 function icon(n) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' + (ICONS[n] || ICONS.book) + '</svg>'; }
+var ICON_COLOR = { cards: 'c-blue', globe: 'c-blue', loop: 'c-terra', target: 'c-terra' };
+var MODE_LOOK = { recall: ['cards', 'c-blue'], flash: ['cards', 'c-blue'], loops: ['loop', 'c-terra'], draw: ['pencil', ''], dump: ['brain', ''], exam: ['exam', 'c-terra'] };
+function modeTile(m) {
+  var L = MODE_LOOK[m] || ['book', ''];
+  return '<a class="mtile ' + L[1] + '" href="#/' + m + '" target="_top"><span class="mi">' + icon(L[0]) + '</span><span class="tt">' + esc(MODES[m].name) + '</span><span class="td">' + esc(MODES[m].blurb) + '</span></a>';
+}
 function siteUrl(ck, path) { return /^https?:/.test(path) ? path : COURSES[ck].base + path; }
 function linkAttrs(url) {
   if (url.charAt(0) === '#') return 'href="' + esc(url) + '"';
@@ -2152,7 +2184,7 @@ function toolsFor(ck) {
 }
 function toolStrip(ck, title) {
   return '<section aria-labelledby="hTools"><h2 id="hTools">' + esc(title || 'Your course tools') + '</h2><p class="muted" style="margin-top:-4px">Everything you do in these tools counts toward your weak spots here.</p><ul class="tools">' +
-    toolsFor(ck).map(function (t) { return '<li><a class="toolbtn" ' + linkAttrs(t.url) + '>' + icon(t.icon) + '<span><b>' + esc(t.name) + '</b><small>' + esc(t.sub) + '</small></span></a></li>'; }).join('') + '</ul></section>';
+    toolsFor(ck).map(function (t) { return '<li><a class="toolbtn ' + (ICON_COLOR[t.icon] || '') + '" ' + linkAttrs(t.url) + '>' + icon(t.icon) + '<span><b>' + esc(t.name) + '</b><small>' + esc(t.sub) + '</small></span></a></li>'; }).join('') + '</ul></section>';
 }
 
 /* where to go to fix one competency, using her own pages */
