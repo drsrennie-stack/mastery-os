@@ -57,9 +57,12 @@ th[scope=col]{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;col
 
 <section id="out" hidden>
   <div class="grid" id="stats"></div>
+  <div class="card"><h2>How each tool is used</h2><p class="muted">Unique students counts each private ID once. Times used counts each card, question, brain dump, drawing or Loop result once. Study days counts one per student per day. Tools used outside Mastery OS show up the next time the student opens Mastery OS on that browser.</p>
+    <div class="row" style="margin-bottom:10px"><div style="min-width:220px"><label class="f" for="period">Time span</label><select id="period"><option value="d7">Last 7 days</option><option value="d30">Last 30 days</option><option value="all">All term</option></select></div></div>
+    <div class="wrap"><table id="toolT"></table></div></div>
   <div class="card"><h2>Class weak spots</h2><p class="muted">Competencies practiced by at least two students, lowest score first. "Felt sure, missed it" counts answers rated 4 or 5 for confidence that scored under 80%.</p><div class="wrap"><table id="weakT"><caption class="sr">Class weak spots</caption></table></div></div>
   <div class="card"><h2>Students, by private ID</h2>
-    <div class="row" style="margin-bottom:10px"><div style="flex:1;min-width:220px"><label class="f" for="find">Find an ID</label><input id="find" type="search" placeholder="maple-river-otter-42"></div><button type="button" class="btn ghost" id="csv">Download as CSV</button></div>
+    <div class="row" style="margin-bottom:10px"><div style="flex:1;min-width:220px"><label class="f" for="find">Find an ID</label><input id="find" type="search" placeholder="maple-river-otter-42"></div><div style="min-width:220px"><label class="f" for="tf">Used this tool</label><select id="tf"><option value="">Any tool</option></select></div><button type="button" class="btn ghost" id="csv">Download as CSV</button></div>
     <div class="wrap"><table id="stuT"></table></div></div>
 </section>
 </main>
@@ -69,7 +72,9 @@ th[scope=col]{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;col
   /* Paste the same web app URL here so you never have to type it. */
   var DEFAULT_URL = 'https://script.google.com/macros/s/AKfycbzWz0DbgBccDJK9-mrdDXH1IAthCeGvd7yBEyu1i3ROs8wTGukrTItN1fSnsW8zFi-k/exec';
   var BASES = { anatomy: 'https://drsrennie-stack.github.io/new-build-bio4-solano/competenciesfall2026.js', physiology: 'https://drsrennie-stack.github.io/human-physiology-Fa26/bio005-competencies.js' };
-  var SRC = { 'mastery-os': 'Mastery OS', 'recall-app': 'Recall', 'mastery-check': 'Mastery Check', 'dump-app': 'Brain dumps', 'practice-exam': 'Practice exam', atlas: 'Atlas', 'draw-app': 'Drawing', 'loops-app': 'Loops' };
+  var SRC = { 'mastery-os': 'Mastery OS', 'recall-app': 'Recall cards (app)', 'mastery-check': 'Mastery Check', 'dump-app': 'Brain dumps (app)', 'practice-exam': 'Practice exam', atlas: 'Digital Atlas', 'draw-app': 'Drawing (app)', 'loops-app': 'Loops (app)',
+    'hub-flashcard': 'Recall cards in Mastery OS', 'hub-braindump': 'Brain dumps in Mastery OS', 'hub-draw': 'Drawing in Mastery OS', 'hub-exam': 'Practice questions in Mastery OS', 'hub-loop': 'Loops in Mastery OS', 'hub-atlas': 'Atlas in Mastery OS' };
+  function tname(k) { return SRC[k] || k; }
   function $(s) { return document.querySelector(s); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   var saved = {}; try { saved = JSON.parse(localStorage.getItem('mos-instructor') || '{}'); } catch (e) {}
@@ -96,17 +101,35 @@ th[scope=col]{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;col
       .map(function (x) { return '<div class="card"><p class="big">' + x[1].toLocaleString() + '</p><p class="muted" style="margin:0">' + x[0] + '</p></div>'; }).join('');
     $('#weakT').innerHTML = '<caption>Class weak spots</caption><thead><tr><th scope="col">Competency</th><th scope="col">Students</th><th scope="col">Class score</th><th scope="col">Felt sure, missed it</th></tr></thead><tbody>' +
       DATA.weak.map(function (w) { return '<tr><th scope="row" style="font-weight:600">' + esc(NAMES[w.comp] || w.comp) + '<br><span class="muted">' + esc(w.comp) + '</span></th><td>' + w.students + '</td><td><span class="bar" style="width:' + (w.score || 0) + 'px" aria-hidden="true"></span> ' + (w.score == null ? '' : w.score + '%') + '</td><td>' + w.miscal + '</td></tr>'; }).join('') + '</tbody>';
+    drawTools();
+    var tf = $('#tf'), keep = tf.value;
+    tf.innerHTML = '<option value="">Any tool</option>' + (DATA.tools || []).map(function (t) { return '<option value="' + esc(t.tool) + '">' + esc(tname(t.tool)) + '</option>'; }).join('');
+    tf.value = keep;
     drawStudents();
   }
+  function drawTools() {
+    var b = $('#period').value, T = DATA.tools || [];
+    var label = { d7: 'last 7 days', d30: 'last 30 days', all: 'all term' }[b];
+    $('#toolT').innerHTML = '<caption>Tool use, ' + label + '</caption><thead><tr><th scope="col">Tool</th><th scope="col">Unique students</th><th scope="col">Times used</th><th scope="col">Study days</th><th scope="col">Last used</th></tr></thead><tbody>' +
+      (T.length ? T.map(function (t) { var x = t[b] || { uses: 0, students: 0, studentDays: 0 }; return '<tr><th scope="row" style="font-weight:600">' + esc(tname(t.tool)) + '</th><td>' + x.students + '</td><td>' + x.uses.toLocaleString() + '</td><td>' + x.studentDays + '</td><td>' + ago(t.last) + '</td></tr>'; }).join('') : '<tr><td colspan="5">No tool use recorded yet.</td></tr>') + '</tbody>';
+  }
+  $('#period').onchange = function () { if (DATA) drawTools(); };
   function drawStudents() {
-    var q = $('#find').value.trim().toLowerCase(), S = DATA.students.filter(function (s) { return !q || s.id.indexOf(q) >= 0; });
-    $('#stuT').innerHTML = '<caption>Students, newest activity first</caption><thead><tr><th scope="col">Private ID</th><th scope="col">Course</th><th scope="col">Last active</th><th scope="col">Days active, 7 / 30</th><th scope="col">Attempts</th><th scope="col">Focus minutes</th><th scope="col">Score</th><th scope="col">Tools used</th></tr></thead><tbody>' +
-      S.map(function (s) { return '<tr><th scope="row">' + esc(s.id) + '</th><td>' + esc(s.course) + '</td><td>' + ago(s.last) + '</td><td>' + s.activeDays7 + ' / ' + s.activeDays30 + '</td><td>' + s.attempts + '</td><td>' + s.focusMinutes + '</td><td>' + (s.score == null ? '' : s.score + '%') + '</td><td>' + Object.keys(s.sources).map(function (k) { return '<span class="tag">' + esc(SRC[k] || k) + '</span>'; }).join('') + '</td></tr>'; }).join('') + '</tbody>';
+    var q = $('#find').value.trim().toLowerCase(), tf = $('#tf').value, S = DATA.students.filter(function (s) { return (!q || s.id.indexOf(q) >= 0) && (!tf || (s.tools && s.tools[tf])); });
+    $('#stuT').innerHTML = '<caption>Students, newest activity first</caption><thead><tr><th scope="col">Private ID</th><th scope="col">Course</th><th scope="col">Last active</th><th scope="col">Days active, 7 / 30</th><th scope="col">Attempts</th><th scope="col">Focus minutes</th><th scope="col">Score</th><th scope="col">Tools used, times used</th></tr></thead><tbody>' +
+      S.map(function (s) { return '<tr><th scope="row">' + esc(s.id) + '</th><td>' + esc(s.course) + '</td><td>' + ago(s.last) + '</td><td>' + s.activeDays7 + ' / ' + s.activeDays30 + '</td><td>' + s.attempts + '</td><td>' + s.focusMinutes + '</td><td>' + (s.score == null ? '' : s.score + '%') + '</td><td>' + toolTags(s) + '</td></tr>'; }).join('') + '</tbody>';
+  }
+  function toolTags(s) {
+    var t = s.tools || {};
+    return Object.keys(t).sort(function (a, b) { return t[b].uses - t[a].uses; }).map(function (k) { return '<span class="tag">' + esc(tname(k)) + ': ' + t[k].uses + '</span>'; }).join('');
   }
   $('#find').oninput = function () { if (DATA) drawStudents(); };
+  $('#tf').onchange = function () { if (DATA) drawStudents(); };
   $('#csv').onclick = function () {
     if (!DATA) return; var cols = ['id', 'course', 'first', 'last', 'activeDays7', 'activeDays30', 'attempts', 'focusMinutes', 'score'];
-    var csv = cols.join(',') + ',tools\n' + DATA.students.map(function (s) { return cols.map(function (c) { return s[c] == null ? '' : s[c]; }).join(',') + ',"' + Object.keys(s.sources).join(' ') + '"'; }).join('\n');
+    var TK = (DATA.tools || []).map(function (t) { return t.tool; });
+    var head = cols.concat(TK.map(function (k) { return '"' + tname(k) + ' (times used)"'; })).join(',');
+    var csv = head + '\n' + DATA.students.map(function (s) { var t = s.tools || {}; return cols.map(function (c) { return s[c] == null ? '' : s[c]; }).concat(TK.map(function (k) { return t[k] ? t[k].uses : 0; })).join(','); }).join('\n');
     var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = 'mastery-os-usage.csv'; document.body.appendChild(a); a.click(); a.remove();
   };
   function sendHeight() { var h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight); try { window.parent.postMessage({ type: 'resize', id: 'mos-instructor', frameId: 'mos-instructor', height: h }, '*'); } catch (e) {} }
