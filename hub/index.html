@@ -1,0 +1,2450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mastery OS · MedMasters Collaborative</title>
+<meta name="description" content="Mastery OS, the practice hub for BIO 004 Human Anatomy and BIO 005 Human Physiology.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#08101F; --navy-deep:#050A14; --near-black:#05080F; --navy-tint:#EEF0F4;
+  --gold:#B8924A; --terra:#C2734D; --terra-dark:#A0522D;
+  --white:#FFFFFF; --off:#FAFAF9;
+  --ink:#08101F; --ink-soft:#2A3949; --line:#D2D6DE; --gray:#5A6170;
+  --shadow:0 1px 3px rgba(0,0,0,0.08); --shadow-up:0 8px 16px rgba(0,0,0,0.10);
+  --r:12px; --r-lg:16px;
+  --display:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+em,i{font-style:normal}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--off);color:var(--ink);font-family:var(--body);font-size:16.5px;line-height:1.6}
+img{max-width:100%;height:auto}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+[hidden]{display:none!important}
+.sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip{position:absolute;left:12px;top:-60px;z-index:200;background:var(--navy);color:#fff;padding:10px 16px;border-radius:8px;font-weight:700;text-decoration:none}
+.skip:focus{top:12px}
+:focus-visible{outline:3px solid #8A6A2E;outline-offset:2px}
+#setup :focus-visible,.pf :focus-visible{outline-color:var(--gold)}
+
+/* ---------- header ---------- */
+.top{background:var(--white);box-shadow:var(--shadow);position:sticky;top:0;z-index:40}
+.top-in{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--navy);margin-right:auto}
+.brand svg{width:30px;height:36px;flex:none}
+.su-logo{display:block;margin:0 auto 18px;width:70px;height:83px}
+.brand b{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.01em}
+.brand span{display:block;font-size:12px;color:var(--ink-soft);font-weight:500;line-height:1.2}
+.picker{display:inline-flex;border:1px solid var(--navy);border-radius:999px;padding:3px;background:var(--white)}
+.picker button{border:0;background:transparent;border-radius:999px;padding:7px 16px;font-weight:700;font-size:14.5px;color:var(--navy);min-height:36px}
+.picker button[aria-pressed="true"]{background:var(--navy);color:#fff}
+.nav{display:flex;flex-wrap:wrap;gap:4px;width:100%;border-top:1px solid var(--navy-tint);padding-top:8px}
+.nav a{text-decoration:none;color:var(--navy);font-weight:700;font-size:14.5px;padding:7px 12px;border-radius:8px;min-height:36px;display:inline-flex;align-items:center}
+.nav a:hover{background:var(--navy-tint)}
+.nav a[aria-current="page"]{background:var(--navy);color:#fff}
+.nav .spacer{flex:1}
+.iconbtn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--navy);background:var(--white);color:var(--navy);border-radius:8px;padding:6px 12px;font-weight:700;font-size:14.5px;min-height:36px}
+.iconbtn:hover{background:var(--navy-tint)}
+.iconbtn svg{width:18px;height:18px}
+
+/* ---------- private ID bar ---------- */
+.idbar{background:var(--navy);color:#fff;font-size:14px}
+.idbar-in{max-width:1080px;margin:0 auto;padding:6px 16px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.idbar b{letter-spacing:.01em}
+.idbar .linkbtn{color:#E3CFA4;font-weight:700}
+.idbar form{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:flex-end;width:100%;padding:6px 0 4px}
+.idbar label{display:flex;flex-direction:column;gap:3px;font-weight:700;font-size:13px;color:#E6ECEF}
+.idbar input{min-height:40px;border-radius:8px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.08);color:#fff;padding:6px 10px;font:inherit}
+.idbar input:focus{outline:3px solid var(--gold);outline-offset:1px}
+.idbar .btn{min-height:40px;padding:6px 14px;font-size:14px;background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.idbar .btn:hover{background:#CFA95F}
+.idbar .msg{width:100%;margin:0;color:#E6ECEF}
+.idbar :focus-visible{outline-color:var(--gold)}
+
+/* ---------- layout ---------- */
+main{max-width:1080px;margin:0 auto;padding:24px 16px 96px;outline:none}
+.eyebrow{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--terra-dark);margin:0 0 6px}
+h1{font-family:var(--display);font-weight:800;color:var(--navy);font-size:clamp(26px,4.4vw,36px);line-height:1.15;letter-spacing:-.015em;margin:0 0 8px}
+h2{font-family:var(--display);font-weight:600;color:var(--terra-dark);font-size:21px;line-height:1.25;margin:0 0 10px}
+h3{font-family:var(--display);font-weight:600;color:var(--terra-dark);font-size:17px;line-height:1.3;margin:0 0 8px}
+p{margin:0 0 12px}
+.lead{font-size:17px;color:var(--ink-soft);max-width:62ch}
+.muted{color:var(--ink-soft);font-size:14.5px}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:20px;transition:transform 200ms ease,box-shadow 200ms ease}
+.card.lift:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.stack>*+*{margin-top:12px}
+.sp{height:18px}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:10px;padding:10px 18px;min-height:44px;font-weight:700;font-size:15.5px;border:1px solid var(--navy);background:var(--navy);color:#fff;text-decoration:none;transition:transform 200ms ease,box-shadow 200ms ease,background 200ms ease}
+.btn:hover{background:var(--navy-deep);transform:translateY(-2px);box-shadow:var(--shadow-up)}
+.btn.ghost{background:var(--white);color:var(--navy)}
+.btn.ghost:hover{background:var(--navy-tint)}
+.btn.terra{background:var(--terra-dark);border-color:var(--terra-dark)}
+.btn.terra:hover{background:#86431f}
+.btn.key{box-shadow:0 0 0 2px var(--white),0 0 0 4px var(--gold)}
+.btn.sm{min-height:36px;padding:6px 12px;font-size:14px}
+.btn[disabled],.btn[aria-disabled="true"]{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.linkbtn{background:none;border:0;padding:0;color:var(--navy);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- forms ---------- */
+label.f{display:block;font-weight:700;font-size:14.5px;margin-bottom:6px;color:var(--navy)}
+.field{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--white);min-height:44px}
+.field:focus{border-color:var(--navy);outline:3px solid #8A6A2E;outline-offset:1px}
+textarea.field{min-height:120px;resize:vertical;line-height:1.5}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend{font-weight:700;color:var(--navy);padding:0;margin-bottom:8px}
+
+/* confidence scale */
+.conf{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.conf label{display:flex;flex-direction:column;align-items:center;gap:2px;border:1px dashed var(--gray);border-radius:10px;padding:8px 4px;text-align:center;cursor:pointer;background:var(--white);min-height:60px;justify-content:center}
+.conf label b{font-family:var(--display);font-size:20px;line-height:1}
+.conf label span{font-size:12.5px;color:var(--ink-soft);line-height:1.2}
+.conf input{position:absolute;opacity:0;pointer-events:none}
+.conf input:checked+label{border:2px solid var(--gold);background:var(--white)}
+.conf input:focus-visible+label{outline:3px solid #8A6A2E;outline-offset:2px}
+@media (max-width:480px){.conf label span{font-size:11px}}
+
+/* options */
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--white);cursor:pointer}
+.opt input{margin-top:5px;width:18px;height:18px;flex:none;accent-color:var(--navy)}
+.opt:hover{border-color:var(--navy)}
+.opt.ok{border:2px solid var(--navy);background:var(--navy-tint)}
+.opt.no{border:2px solid var(--terra-dark)}
+.opt.out{opacity:.45}
+.tag{display:inline-block;font-size:12.5px;font-weight:700;border-radius:999px;padding:2px 10px;border:1px solid var(--navy);color:var(--navy);background:var(--white);white-space:nowrap}
+.tag.terra{border-color:var(--terra-dark);color:var(--terra-dark)}
+.tag.gold{border-color:var(--gold);color:var(--navy)}
+.note{background:var(--navy-tint);border-radius:10px;padding:12px 14px}
+.warnnote{border:1px solid var(--terra-dark);border-radius:10px;padding:12px 14px;background:var(--white)}
+
+/* states: locked / unlocked / completed (never green) */
+.st-locked{border:1px dashed var(--gray)!important}
+.st-open{border:1px solid var(--gold)!important}
+.st-done{border:1px solid var(--navy)!important;background:var(--navy-tint)!important}
+
+/* lists */
+.list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.list li{border-radius:10px;padding:12px 14px;background:var(--white)}
+.list .t{font-weight:700;color:var(--navy)}
+.meter{height:10px;border-radius:999px;background:var(--navy-tint);overflow:hidden}
+.meter>span{display:block;height:100%;background:var(--navy);border-radius:999px;transition:width .4s ease}
+.meter.gold>span{background:var(--gold)}
+.big{font-family:var(--display);font-weight:800;font-size:30px;color:var(--navy);line-height:1.1}
+
+/* mode tiles */
+.tile{display:flex;flex-direction:column;gap:6px;text-align:left;border:0;background:var(--white);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:18px;transition:transform 200ms ease,box-shadow 200ms ease;color:var(--ink);text-decoration:none;min-height:130px}
+.tile:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
+.tile .tt{font-family:var(--display);font-weight:700;font-size:18px;color:var(--navy)}
+.tile .td{font-size:14.5px;color:var(--ink-soft)}
+.tile .tc{margin-top:auto;font-size:13px;font-weight:700;color:var(--terra-dark)}
+
+/* progress table */
+.tbl-wrap{overflow-x:auto}
+table.prog{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px}
+table.prog caption{text-align:left;font-family:var(--display);font-weight:600;color:var(--terra-dark);font-size:17px;padding:4px 0 8px}
+table.prog th,table.prog td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--navy-tint);vertical-align:top}
+table.prog th[scope="col"]{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}
+.cell{display:inline-flex;min-width:64px;justify-content:center;border-radius:8px;padding:3px 8px;font-weight:700;font-size:13.5px}
+.cell.none{border:1px dashed var(--gray);color:var(--gray)}
+.cell.weak{border:1px solid var(--terra-dark);color:var(--terra-dark)}
+.cell.mid{border:1px solid var(--gold);color:var(--navy)}
+.cell.strong{border:1px solid var(--navy);background:var(--navy-tint);color:var(--navy)}
+.cell.miscal{border:2px solid var(--terra-dark);color:var(--terra-dark)}
+
+/* course tools */
+.tools{list-style:none;margin:0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.toolbtn{display:flex;gap:12px;align-items:center;background:var(--white);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:14px;text-decoration:none;color:var(--ink);min-height:72px;transition:transform 200ms ease,box-shadow 200ms ease}
+.toolbtn:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
+.toolbtn svg{width:34px;height:34px;flex:none;color:var(--navy);background:var(--navy-tint);border-radius:10px;padding:6px}
+.toolbtn b{display:block;color:var(--navy);font-family:var(--display);font-size:15.5px}
+.toolbtn small{display:block;color:var(--ink-soft);font-size:13px;line-height:1.3}
+.fix{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.fix a{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:13.5px;font-weight:700;color:var(--navy);text-decoration:none;background:var(--white);min-height:34px}
+.fix a:hover{border-color:var(--navy);background:var(--navy-tint)}
+.fix svg{width:16px;height:16px}
+.dokrow{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.statrow{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.statrow .card{padding:14px 16px}
+.engine{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:16px}
+
+/* practice runner */
+.runner{max-width:760px;margin:0 auto}
+.qhead{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:13.5px;color:var(--ink-soft);margin-bottom:10px}
+.prompt{font-family:var(--display);font-weight:700;font-size:clamp(18px,2.6vw,22px);line-height:1.35;color:var(--navy);margin:0 0 16px}
+.answer{border-radius:10px;padding:14px 16px;background:var(--navy-tint)}
+.checklist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.checklist label{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;background:var(--white)}
+.checklist input{width:20px;height:20px;margin-top:2px;flex:none;accent-color:var(--navy)}
+.checklist input:checked+span{color:var(--navy);font-weight:700}
+.stationimg{width:100%;border-radius:10px;background:var(--navy-tint);min-height:200px;display:block}
+.drawwrap{position:relative;border:1px solid var(--line);border-radius:10px;background:#fff;touch-action:none}
+.drawwrap canvas{display:block;width:100%;height:420px;border-radius:10px}
+.banner{border-radius:var(--r);background:var(--white);box-shadow:var(--shadow);padding:14px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:18px}
+.banner.gold{border:1px solid var(--gold)}
+.loading{padding:40px 0;text-align:center;color:var(--ink-soft)}
+.kbd{font-size:12.5px;color:var(--ink-soft)}
+
+/* ---------- setup (calm, one question at a time) ---------- */
+#setup{position:fixed;inset:0;z-index:100;background:radial-gradient(120% 120% at 50% 0%,#101B33 0%,var(--navy) 46%,var(--near-black) 100%);color:#fff;display:flex;flex-direction:column}
+.su-stage{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 16px;overflow:auto}
+.su-panel{width:100%;max-width:560px;text-align:center}
+#setup h2{color:#fff;font-family:var(--display);font-weight:800;font-size:clamp(24px,5vw,34px);margin:0 0 12px;outline:none}
+#setup p.sub{color:#E6ECEF;font-size:16.5px;max-width:48ch;margin:0 auto 24px;line-height:1.6}
+.su-dots{display:flex;gap:8px;justify-content:center;margin-bottom:26px}
+.su-dots span{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.25)}
+.su-dots span.on{background:var(--gold)}
+.su-choices{display:grid;gap:12px;max-width:440px;margin:0 auto;text-align:left}
+.su-choice{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.22);border-radius:var(--r);padding:15px 17px;color:#fff;transition:transform 200ms ease,border-color 200ms ease}
+.su-choice:hover{border-color:var(--gold);transform:translateY(-2px)}
+.su-choice[aria-pressed="true"]{border-color:var(--gold);background:rgba(184,146,74,.14)}
+.su-choice .ck{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.5);margin-top:1px}
+.su-choice[aria-pressed="true"] .ck{border-color:var(--gold);background:var(--gold)}
+.su-choice b{display:block;font-size:16px}
+.su-choice small{display:block;font-size:14px;color:#DDE5E9;line-height:1.45}
+.su-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.su-chip{min-width:64px;min-height:48px;border-radius:999px;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.06);color:#fff;font-weight:800;font-size:18px;padding:8px 20px}
+.su-chip[aria-pressed="true"]{border-color:var(--gold);background:var(--gold);color:var(--navy)}
+.su-input{width:100%;max-width:420px;margin:0 auto;display:block;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.3);color:#fff;font-size:19px;padding:13px 16px;border-radius:var(--r);text-align:center}
+.su-input::placeholder{color:#C9D3D8}
+.su-input:focus{border-color:var(--gold);outline:3px solid var(--gold);outline-offset:2px}
+.su-lbl{display:block;color:#E6ECEF;font-weight:700;margin-bottom:10px}
+.su-id{font-family:var(--display);font-weight:800;font-size:clamp(26px,6vw,38px);letter-spacing:.01em;color:#fff;background:rgba(255,255,255,.08);border:1.5px dashed var(--gold);border-radius:var(--r);padding:16px;margin:0 auto 18px;max-width:480px;word-break:break-word}
+.su-note{color:#E6ECEF;font-size:15px;text-align:left;max-width:470px;margin:0 auto 16px;line-height:1.6}
+.su-note li{margin-bottom:6px}
+.su-foot{padding:16px 16px 26px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+#setup .btn{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+#setup .btn:hover{background:#CFA95F;border-color:#CFA95F}
+#setup .btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.45)}
+#setup .btn.ghost:hover{background:rgba(255,255,255,.1)}
+#setup .check{display:flex;gap:10px;align-items:center;justify-content:center;color:#fff;font-weight:700}
+#setup .check input{width:20px;height:20px;accent-color:var(--gold)}
+#setup .err{color:#FFD9C7;font-weight:700;margin-top:10px}
+
+/* ---------- dialog ---------- */
+.dlg-back{position:fixed;inset:0;background:rgba(5,8,15,.6);z-index:90;display:flex;align-items:center;justify-content:center;padding:16px}
+.dlg{background:var(--white);border-radius:var(--r-lg);box-shadow:0 20px 40px rgba(0,0,0,.25);max-width:560px;width:100%;max-height:calc(100vh - 32px);overflow:auto;padding:22px}
+.dlg h2{outline:none}
+
+/* ---------- floating focus timer ---------- */
+.pf{position:fixed;right:16px;bottom:16px;width:300px;max-width:calc(100vw - 32px);background:var(--navy-deep);color:#fff;border-radius:var(--r-lg);box-shadow:0 20px 40px -12px rgba(0,0,0,.5);z-index:80;overflow:hidden}
+.pf-head{display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,.06);cursor:grab;touch-action:none;user-select:none}
+.pf-head b{margin-right:auto;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#E3CFA4}
+.pf-x{width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;font-size:16px;line-height:1}
+.pf-x:hover{background:rgba(255,255,255,.12)}
+.pf-ring{position:relative;width:150px;height:150px;margin:14px auto 6px}
+.pf-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.pf-track{fill:none;stroke:rgba(255,255,255,.14);stroke-width:9}
+.pf-arc{fill:none;stroke:url(#pfGrad);stroke-width:9;stroke-linecap:round;stroke-dasharray:326.726;transition:stroke-dashoffset .5s linear}
+.pf-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.pf-clock{font-family:var(--display);font-weight:800;font-size:32px;font-variant-numeric:tabular-nums}
+.pf-lbl{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#E3CFA4}
+.pf-body{padding:4px 14px 14px;text-align:center}
+.pf-body .btn{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.35);color:#fff;min-height:40px;padding:6px 12px;font-size:14px}
+.pf-body .btn:hover{background:rgba(255,255,255,.18)}
+.pf.mini{width:auto;border-radius:999px}
+.pf.mini .pf-ring,.pf.mini .pf-body{display:none}
+.pf.mini .pf-head{border-radius:999px;background:transparent;padding:8px 12px}
+.pf .mini-clock{display:none;font-family:var(--display);font-weight:800;font-variant-numeric:tabular-nums}
+.pf.mini .mini-clock{display:inline}
+
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 18px;border-radius:10px;box-shadow:var(--shadow-up);z-index:150;max-width:calc(100vw - 32px);font-weight:500}
+
+@media (max-width:700px){
+  .top{position:static}
+  .top-in{gap:8px 10px}
+  .nav{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+  .nav a{white-space:nowrap}
+  .nav .spacer{display:none}
+  .iconbtn span{font-size:14px}
+  .card{padding:16px}
+  .drawwrap canvas{height:340px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+  .card.lift:hover,.tile:hover,.btn:hover,.su-choice:hover{transform:none}
+}
+@media print{.top,.pf,.skip,.toast{display:none!important}body{background:#fff}.card{box-shadow:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<div class="idbar" id="idBar" hidden></div>
+<header class="top" role="banner">
+  <div class="top-in">
+    <a class="brand" href="#/home" target="_top" aria-label="Mastery OS, go to Today">
+      <svg class="brandlogo" viewBox="40 10 125 148" aria-hidden="true" focusable="false"><g transform="translate(0,18)"><g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#C2734D"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C2734D"/></g><g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#A0522D"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#A0522D"/></g><g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#1E2A47"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#1E2A47"/></g></g></svg>
+      <span><b>Mastery OS</b><span id="brandSub">MedMasters Collaborative</span></span>
+    </a>
+    <div class="picker" role="group" aria-label="Choose your course">
+      <button type="button" data-course="anatomy" aria-pressed="false">Anatomy</button>
+      <button type="button" data-course="physiology" aria-pressed="false">Physiology</button>
+    </div>
+    <button type="button" class="iconbtn" id="timerBtn" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg>
+      <span>Focus timer</span>
+    </button>
+    <nav class="nav" aria-label="Main">
+      <a href="#/home" target="_top" data-nav="home">Today</a>
+      <a href="#/practice" target="_top" data-nav="practice">Practice</a>
+      <a href="#/weak" target="_top" data-nav="weak">My weak spots</a>
+      <a href="#/progress" target="_top" data-nav="progress">My progress</a>
+      <a href="#/reflect" target="_top" data-nav="reflect">Weekly reflection</a>
+      <a href="#/coach" target="_top" data-nav="coach">AI Mastery Coach</a>
+      <span class="spacer"></span>
+      <a href="#/me" target="_top" data-nav="me">My ID and settings</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" tabindex="-1"></main>
+
+<div id="setup" hidden role="dialog" aria-modal="true" aria-labelledby="suTitle">
+  <div class="su-stage"><div class="su-panel" id="suPanel"></div></div>
+  <div class="su-foot" id="suFoot"></div>
+</div>
+
+<div id="dlgHost"></div>
+
+<div id="pf" class="pf" hidden role="region" aria-label="Focus timer">
+  <div class="pf-head" id="pfHead">
+    <b id="pfName">Focus timer</b>
+    <span class="mini-clock" id="pfMiniClock" aria-hidden="true">25:00</span>
+    <button type="button" class="pf-x" id="pfMin" aria-label="Fold the timer" aria-expanded="true">&#8211;</button>
+    <button type="button" class="pf-x" id="pfClose" aria-label="Stop and close the timer">&#10005;</button>
+  </div>
+  <div class="pf-ring">
+    <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+      <defs><linearGradient id="pfGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B8924A"/><stop offset="1" stop-color="#C2734D"/></linearGradient></defs>
+      <circle class="pf-track" cx="60" cy="60" r="52"/><circle class="pf-arc" id="pfArc" cx="60" cy="60" r="52"/>
+    </svg>
+    <div class="pf-c"><span class="pf-clock" id="pfClock">25:00</span><span class="pf-lbl" id="pfLbl">Focus</span></div>
+  </div>
+  <div class="pf-body" id="pfBody"></div>
+  <p class="sr" aria-live="polite" id="pfLive"></p>
+</div>
+
+<div id="live" class="sr" aria-live="polite" aria-atomic="true"></div>
+<div id="toastHost" aria-live="polite"></div>
+
+<script src="mos-dok-rubric.js"></script>
+<script src="dok-overrides.js"></script>
+<script>
+/* ============================================================
+   MASTERY OS  ·  Dr. Sharilyn Rennie  ·  MedMasters Collaborative
+   Built from the Mastery OS Framework Spec, Draft 2 (Sep 29 2026).
+
+   Three layers: practice modes, the evidence record, the review
+   engine. Around them: guided setup, weekly goal and pace, the
+   focus timer, and the Sunday reflection.
+
+   PRIVACY: the student's name lives only in this browser. The only
+   identifier that ever leaves the device is the random private ID.
+   ============================================================ */
+'use strict';
+
+/* ---------- 1. SETTINGS DR. RENNIE EDITS ---------- */
+function gradeHours(ck, g) { var t = CONFIG.GRADE_HOURS[ck] || CONFIG.GRADE_HOURS.physiology; return t[g] ? t[g].h : null; }
+function gradeSay(ck, g) { var t = CONFIG.GRADE_HOURS[ck] || CONFIG.GRADE_HOURS.physiology; return t[g] ? t[g].say : ''; }
+function gradeIntro(ck) { var t = CONFIG.GRADE_HOURS[ck] || CONFIG.GRADE_HOURS.physiology; return t.intro; }
+var CONFIG = {
+  /* Paste the Apps Script web app URL here after deploying Code.gs.
+     Leave it empty and Mastery OS still works, saving on the device only. */
+  SYNC_URL: 'https://script.google.com/macros/s/AKfycbzWz0DbgBccDJK9-mrdDXH1IAthCeGvd7yBEyu1i3ROs8wTGukrTItN1fSnsW8zFi-k/exec',
+  FRAME_ID: 'mastery-os',
+  /* Grade goal -> weekly study hours outside class, per course.
+     Anatomy uses what Dr. Rennie tells BIO 004 students: about 25 to 26
+     hours for an A or B, about 15 to 17 for a C. Physiology keeps the spec.
+     h is the starting plan, say is how the range is written to students. */
+  GRADE_HOURS: {
+    anatomy: { A: { h: 26, say: '25 to 26' }, B: { h: 25, say: '25 to 26' }, C: { h: 16, say: '15 to 17' },
+      intro: 'Most students who earn an A or B study about 25 to 26 hours a week outside class. For a C, plan on about 15 to 17.' },
+    physiology: { A: { h: 20, say: '20 or more' }, B: { h: 16, say: '16' }, C: { h: 14, say: '14' },
+      intro: 'Each goal comes with a weekly study target outside class: about 20 hours a week or more for an A, about 16 for a B, and about 14 for a C.' }
+  },
+  /* Review spacing ladder in days (spec: 1, 3, 7, 14; tune once data arrives) */
+  LADDER: [1, 3, 7, 14, 30, 60],
+  HIGH_PERF: 0.8,      /* got/possible at or above this counts as high */
+  HIGH_CONF: 4         /* confidence 4 or 5 counts as high */
+};
+
+var COURSES = {
+  anatomy: {
+    key: 'anatomy', label: 'Anatomy', long: 'BIO 004 Human Anatomy', school: 'Solano Community College',
+    base: 'https://drsrennie-stack.github.io/new-build-bio4-solano/',
+    weekStarts: null, start: '2026-08-17',
+    /* module of each week, for practice exam links (Exam 1 wks 1-3, 2 wks 4-6, 3 wks 7-10, 4 wks 11-13, 5 wks 14-17) */
+    moduleOfWeek: function (w) { return w <= 3 ? 1 : w <= 6 ? 2 : w <= 10 ? 3 : w <= 13 ? 4 : 5; },
+    order: ['recall', 'loops', 'draw', 'dump', 'exam'],
+    core: ['competenciesfall2026.js', '@mos-anatomy-data.js'],
+    packs: {
+      recall: ['card-competency-map.js', 'card-competency-fine.js', 'bio004-card-bank.js'],
+      flash: ['card-competency-map.js', 'card-competency-fine.js', 'bio004-card-bank.js'],
+      exam: ['card-competency-map.js', 'card-competency-fine.js', 'bio004-card-bank.js', 'bio004-mastery-items.js', 'bio004-mastery-exam.js'],
+      dump: ['bio004-braindump-practice-data.js'],
+      draw: ['draw-checklists.js'],
+      loops: ['@mos-loops-anatomy.js']
+    },
+    /* her own engines, mounted inside Mastery OS */
+    engines: { recall: 'recall-view.js', dump: 'braindump-view.js' }
+  },
+  physiology: {
+    key: 'physiology', label: 'Physiology', long: 'BIO 005 Human Physiology', school: 'Yuba College',
+    base: 'https://drsrennie-stack.github.io/human-physiology-Fa26/',
+    /* week open dates, from bio005-exam-bank.js */
+    weekStarts: ['2026-09-08','2026-09-16','2026-09-21','2026-09-28','2026-10-05','2026-10-12','2026-10-19','2026-10-26','2026-11-02','2026-11-09','2026-11-16','2026-11-23','2026-11-30','2026-12-07','2026-12-14'],
+    moduleOfWeek: function (w) { return w <= 3 ? 1 : w <= 8 ? 2 : 3; },
+    order: ['exam', 'dump', 'flash', 'draw', 'loops'],
+    core: ['bio005-competencies.js'],
+    packs: {
+      flash: ['bio005-exam-bank.js'],
+      exam: ['bio005-exam-bank.js'],
+      dump: ['bio005-exam-bank.js'],
+      draw: ['os/draw-checklists.js'],
+      loops: []
+    },
+    engines: {}
+  }
+};
+
+var MODES = {
+  recall: { key: 'recall', name: 'Recall cards', blurb: 'Your spaced recall cards. Say how sure you are, answer, and see why.' },
+  flash: { key: 'flash', name: 'Flashcards', blurb: 'See a prompt, answer from memory, flip, and mark whether you got it.' },
+  dump:  { key: 'dump',  name: 'Brain dumps', blurb: 'Write everything you know with notes closed, then check it against the key.' },
+  draw:  { key: 'draw',  name: 'Draw it to know it', blurb: 'Draw your note sheet prompt from memory, then check it against the key.' },
+  exam:  { key: 'exam',  name: 'Exam engine', blurb: 'One question at a time with your reasoning, one hint and one retry.' },
+  loops: { key: 'loops', name: 'Loops', blurb: 'Name the labeled structures on real lab images, one station at a time.' }
+};
+var MODE_ROW = { atlas: 'atlas', recall: 'flashcard', flash: 'flashcard', dump: 'braindump', draw: 'draw', exam: 'exam', loops: 'loop' };
+var CONF_LABELS = ['', 'No idea', 'Unsure', 'Fairly sure', 'Sure', 'Certain'];
+var DOK_LABELS = ['', 'Recall', 'Application', 'Analysis', 'Extended thinking'];
+
+/* ---------- 2. SMALL HELPERS ---------- */
+function $(s, r) { return (r || document).querySelector(s); }
+function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function now() { return Date.now(); }
+var DAY = 86400000;
+function dayNum(t) { var d = new Date(t); return Math.floor((d.getTime() - d.getTimezoneOffset() * 60000) / DAY); }
+function iso(t) { return new Date(t).toISOString(); }
+function round1(n) { return Math.round(n * 10) / 10; }
+function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var x = a[i]; a[i] = a[j]; a[j] = x; } return a; }
+function uniq(a) { var o = {}, r = []; a.forEach(function (x) { if (!o[x]) { o[x] = 1; r.push(x); } }); return r; }
+function plural(n, one, many) { return n + ' ' + (n === 1 ? one : (many || one + 's')); }
+function numWord(n) { return ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'][n] || String(n); }
+function fmtClock(s) { s = Math.max(0, Math.round(s)); var m = Math.floor(s / 60), x = s % 60; return m + ':' + (x < 10 ? '0' : '') + x; }
+function fmtHours(min) { var h = min / 60; return (h < 10 ? round1(h) : Math.round(h)) + ' h'; }
+function fmtDate(t) { return new Date(t).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }); }
+function live(msg) { var l = $('#live'); l.textContent = ''; setTimeout(function () { l.textContent = msg; }, 30); }
+function toast(msg, ms) {
+  var h = $('#toastHost'); h.innerHTML = '<div class="toast" role="status">' + esc(msg) + '</div>';
+  clearTimeout(toast._t); toast._t = setTimeout(function () { h.innerHTML = ''; }, ms || 3200);
+}
+
+/* storage: every read and write guarded, the page works without it */
+var LS = {
+  get: function (k, d) { try { var v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } },
+  del: function (k) { try { localStorage.removeItem(k); } catch (e) {} }
+};
+var KEYS = { profile: 'mos2-profile', ev: 'mos2-evidence', q: 'mos2-queue', sess: 'mos2-sessions', ref: 'mos2-reflections', flags: 'mos2-flags' };
+
+/* ---------- 3. THE PRIVATE ID ---------- */
+/* Three short words and a number, made at random on this device.
+   The student never picks it, so it cannot contain their name. */
+var ID_WORDS = ('acorn alder amber anchor apple arbor aspen autumn badger bamboo basil bay beacon beach birch bison bluff bramble brook canyon cardinal cedar cliff clover comet coral cove crane creek cricket cypress daisy delta dune eagle elm ember falcon fern field finch fjord flint forest fox garnet glacier glade granite grove harbor hawk hazel heron hickory hill holly island ivy jade juniper kelp kestrel lagoon lake larch lark laurel lichen lily linden lotus lynx magnolia mallard maple marsh meadow mesa mint moss moth nectar oak ocean orchid osprey otter owl pebble pecan pelican pine plover pond poppy prairie quail quartz rain raven reed ridge river robin rowan saffron sand sorrel sequoia shore sierra sparrow spruce stone summit swan tern thistle thrush tide timber topaz trail tulip tundra valley violet walnut wave willow wren yarrow yew zephyr').split(' ');
+function rnd(n) {
+  try { var a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; } catch (e) { return Math.floor(Math.random() * n); }
+}
+function newId() {
+  var w = [], pool = ID_WORDS.slice();
+  for (var i = 0; i < 3; i++) { var k = rnd(pool.length); w.push(pool[k]); pool.splice(k, 1); }
+  return w.join('-') + '-' + (10 + rnd(90));
+}
+var ID_RE = /^[a-z]+-[a-z]+-[a-z]+-\d{2}$/;
+var PIN_RE = /^\d{4,6}$/;
+/* The PIN never leaves the device as typed: only a SHA-256 of ID + PIN is
+   stored or sent, so not even Dr. Rennie can read it. */
+function pinHash(id, pin) {
+  var text = 'mastery-os|' + id + '|' + pin;
+  try {
+    var bytes = new TextEncoder().encode(text);
+    return crypto.subtle.digest('SHA-256', bytes).then(function (buf) {
+      return Array.prototype.map.call(new Uint8Array(buf), function (b) { return (b < 16 ? '0' : '') + b.toString(16); }).join('');
+    });
+  } catch (e) { return Promise.reject(new Error('This browser cannot set a PIN.')); }
+}
+function cleanId(s) { return String(s || '').trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''); }
+
+/* ---------- 4. STATE ---------- */
+var P = LS.get(KEYS.profile, null);          /* profile (name stays here, never sent) */
+/* Evidence is stored compactly, one array per row, to stay well inside the
+   browser's storage limit even with a full term of imported recall history. */
+var EV_COLS = ['student_id', 'course', 'mode', 'item_id', 'competency', 'dok', 'got', 'possible', 'confidence', 'reasoning_score', 'minutes', 'timestamp', 'attempt_id', 'during_focus', 'source', 't'];
+function packEV(rows) { return { v: 2, cols: EV_COLS, rows: rows.map(function (r) { return EV_COLS.map(function (c) { return r[c]; }); }) }; }
+function unpackEV(x) {
+  if (!x) return [];
+  if (Array.isArray(x)) return x;
+  return (x.rows || []).map(function (a) { var o = {}; (x.cols || EV_COLS).forEach(function (c, i) { o[c] = a[i]; }); if (!o.source) o.source = 'mastery-os'; return o; });
+}
+var EV = unpackEV(LS.get(KEYS.ev, null));    /* evidence rows, the source of truth */
+var QUEUE = LS.get(KEYS.q, []);              /* posts waiting for the sheet */
+var SESS = LS.get(KEYS.sess, []);            /* completed focus sessions */
+var REF = LS.get(KEYS.ref, []);              /* weekly reflections */
+var FLAGS = LS.get(KEYS.flags, {});
+function saveProfile() { LS.set(KEYS.profile, P); }
+function saveEV() { if (!LS.set(KEYS.ev, packEV(EV))) toast('This browser is out of space. Your record is safe in the class sheet if it is connected.'); }
+function saveAll() { saveEV(); LS.set(KEYS.q, QUEUE); LS.set(KEYS.sess, SESS); LS.set(KEYS.ref, REF); LS.set(KEYS.flags, FLAGS); saveProfile(); }
+function course() { return (P && COURSES[P.course]) || COURSES.anatomy; }
+function goal(c) { c = c || course().key; return (P && P.goals && P.goals[c]) || null; }
+function pomoCfg() {
+  var p = (P && P.pomodoro) || {};
+  return { focus: p.focus || 25, shortBrk: p.shortBrk || 5, longBrk: p.longBrk != null ? p.longBrk : 15, blocks: p.blocks || 4, longEvery: p.longEvery != null ? p.longEvery : 4 };
+}
+
+/* ---------- 5. SYNC TO THE GOOGLE SHEET ---------- */
+var SYNC = { busy: false, last: null, error: null };
+function enqueue(action, item) { QUEUE.push({ action: action, item: item }); LS.set(KEYS.q, QUEUE); flushSoon(); }
+function flushSoon() { clearTimeout(flushSoon._t); flushSoon._t = setTimeout(flush, 800); }
+function flush() {
+  if (!CONFIG.SYNC_URL || SYNC.busy || !QUEUE.length) { renderSyncLine(); return Promise.resolve(); }
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) { renderSyncLine(); return Promise.resolve(); }
+  SYNC.busy = true;
+  var batch = QUEUE.slice(0, 150), byAction = {};
+  batch.forEach(function (b) { (byAction[b.action] = byAction[b.action] || []).push(b.item); });
+  var jobs = Object.keys(byAction).map(function (a) {
+    return fetch(CONFIG.SYNC_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: a, items: byAction[a] }) })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { if (!j || !j.ok) throw new Error((j && j.error) || 'The sheet did not accept the rows'); return j; });
+  });
+  return Promise.all(jobs).then(function () {
+    QUEUE = QUEUE.slice(batch.length); LS.set(KEYS.q, QUEUE); SYNC.last = now(); SYNC.error = null;
+    SYNC.busy = false; renderSyncLine(); if (QUEUE.length) flushSoon();
+  }).catch(function (e) {
+    SYNC.busy = false; SYNC.error = e.message || String(e); renderSyncLine();
+    clearTimeout(flush._retry); flush._retry = setTimeout(flush, 60000);
+  });
+}
+function syncStatusText() {
+  if (!CONFIG.SYNC_URL) return 'Saving on this device. The class sheet is not connected yet.';
+  if (QUEUE.length && SYNC.error) return plural(QUEUE.length, 'record') + ' waiting to send. Trying again in a minute.';
+  if (QUEUE.length) return plural(QUEUE.length, 'record') + ' waiting to send.';
+  return 'Everything is saved' + (SYNC.last ? ', last sent ' + new Date(SYNC.last).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : '') + '.';
+}
+function renderSyncLine() { $$('[data-sync]').forEach(function (el) { el.textContent = syncStatusText(); }); }
+window.addEventListener('online', flushSoon);
+
+function restoreFromSheet(id, ph) {
+  if (!CONFIG.SYNC_URL) return Promise.reject(new Error('The class sheet is not connected yet, so there is nothing to restore from.'));
+  return fetch(CONFIG.SYNC_URL + '?id=' + encodeURIComponent(id) + '&pin=' + encodeURIComponent(ph || '')).then(function (r) { return r.json(); }).then(function (j) {
+    if (!j || !j.ok) throw new Error((j && j.error) || 'The sheet did not answer.');
+    return j;
+  });
+}
+function mergeRestored(j) {
+  var seen = {};
+  EV.forEach(function (r) { seen[r.attempt_id + '|' + r.competency + '|' + r.dok] = 1; });
+  (j.evidence || []).forEach(function (r) {
+    var k = r.attempt_id + '|' + r.competency + '|' + r.dok; if (seen[k]) return; seen[k] = 1;
+    EV.push(normRow(r));
+  });
+  var sseen = {}; SESS.forEach(function (s) { sseen[s.at] = 1; });
+  (j.sessions || []).forEach(function (s) { if (!sseen[s.timestamp]) SESS.push({ course: s.course, minutes: +s.minutes, at: new Date(s.timestamp).getTime() }); });
+  var rseen = {}; REF.forEach(function (r) { rseen[r.course + r.weekOf] = 1; });
+  (j.reflections || []).forEach(function (r) {
+    var wk = new Date(r.week_of).getTime();
+    if (!rseen[r.course + wk]) REF.push({ course: r.course, weekOf: wk, a1: r.q1_how_well, a2: r.q2_surprised, a3: r.q3_focus_topic, a3comp: r.q3_competency || '', a4: r.q4_change, at: new Date(r.timestamp).getTime() });
+  });
+  if (j.profile) {
+    try { var g = typeof j.profile.goals === 'string' ? JSON.parse(j.profile.goals) : j.profile.goals; if (g) P.goals = Object.assign({}, g, P.goals || {}); } catch (e) {}
+    if (j.profile.last_course && COURSES[j.profile.last_course] && !P.course) P.course = j.profile.last_course;
+  }
+  EV.sort(function (a, b) { return a.t - b.t; });
+  invalidate(); saveAll();
+}
+function normRow(r) {
+  return {
+    student_id: r.student_id, course: r.course, mode: r.mode, item_id: String(r.item_id), competency: r.competency,
+    dok: +r.dok, got: +r.got, possible: +r.possible, confidence: (r.confidence === '' || r.confidence == null) ? '' : +r.confidence,
+    reasoning_score: (r.reasoning_score === '' || r.reasoning_score == null) ? '' : +r.reasoning_score,
+    minutes: +r.minutes || 0, timestamp: r.timestamp, attempt_id: String(r.attempt_id || r.timestamp),
+    during_focus: r.during_focus === true || r.during_focus === 'TRUE' || r.during_focus === 'true',
+    source: r.source || 'mastery-os',
+    t: new Date(r.timestamp).getTime()
+  };
+}
+function pushProfile() {
+  if (!P || !P.id) return;
+  enqueue('profile', { student_id: P.id, pin_hash: P.pinHash || '', old_pin_hash: P.pinHash || '', goals: JSON.stringify(P.goals || {}), last_course: P.course, focus_minutes: pomoCfg().focus, updated: iso(now()) });
+}
+
+/* ---------- 6. LOADING EACH COURSE'S CONTENT ---------- */
+/* The content stays where it already lives, in each course repo.
+   Nothing is copied. A student picks a course and the hub loads
+   that course's files. Big banks load only when a mode needs them. */
+var LOADED = {}, DATA = {};
+function srcFor(c, f) {
+  if (f.charAt(0) === '@') return f.slice(1);
+  var base = (window.MOS_BASE_OVERRIDE && window.MOS_BASE_OVERRIDE[c.key]) || c.base;
+  return base + f;
+}
+function loadScript(url) {
+  if (LOADED[url]) return LOADED[url];
+  LOADED[url] = new Promise(function (res, rej) {
+    var s = document.createElement('script'); s.src = url; s.async = false;
+    s.onload = function () { res(); };
+    s.onerror = function () { delete LOADED[url]; rej(new Error('Could not load ' + url.split('/').pop())); };
+    document.head.appendChild(s);
+  });
+  return LOADED[url];
+}
+function loadList(c, files) {
+  return files.reduce(function (p, f) { return p.then(function () { return loadScript(srcFor(c, f)); }); }, Promise.resolve());
+}
+function ensureCore(ck) {
+  var c = COURSES[ck];
+  return loadList(c, c.core).then(function () { buildComps(ck); });
+}
+function ensureMode(ck, mode) {
+  var c = COURSES[ck];
+  return ensureCore(ck).then(function () { return loadList(c, c.packs[mode] || []); }).then(function () { buildItems(ck, mode); return D(ck).items[mode] || []; });
+}
+function ensureAll(ck) {
+  var p = Promise.resolve();
+  uniq(COURSES[ck].order.concat(COURSES[ck].packs.flash ? ['flash'] : [])).forEach(function (m) { if (m === 'recall') return; p = p.then(function () { return ensureMode(ck, m).catch(function () { return []; }); }); });
+  return p;
+}
+function D(ck) { return DATA[ck] || (DATA[ck] = { comps: [], byId: {}, items: {}, byComp: {} }); }
+
+function buildComps(ck) {
+  var d = D(ck); if (d.comps.length) return;
+  var list = ck === 'anatomy' ? (window.BIO004_COMPETENCIES || []) : (window.BIO005_COMPETENCIES || []);
+  d.comps = list.map(function (c) {
+    return { id: c.id, name: c.name, can: c.can, week: +c.week || 0, dok: +c.dok || 1, yield: c.yield || 'core', group: c.general || c.system || 'Other', module: c.module || null };
+  });
+  d.comps.forEach(function (c) { d.byId[c.id] = c; });
+}
+function compObjs(ck, ids) { var d = D(ck); return (ids || []).map(function (id) { return d.byId[id]; }).filter(Boolean); }
+function weekOfComps(ck, ids) {
+  var w = compObjs(ck, ids).map(function (c) { return c.week; }); return w.length ? Math.min.apply(null, w) : 0;
+}
+function dokFor(id, authored, text) {
+  var O = window.MOS_DOK_OVERRIDES || {};
+  if (O[id]) return +O[id];
+  /* Once Dr. Rennie approves the rubric, dok-overrides.js turns this on and
+     the rubric's confident placements replace the older hand-set levels. */
+  if (window.MOS_DOK_USE_RUBRIC && window.MOS_DOK) { var m = window.MOS_DOK.match(text); if (m.sure) return m.dok; }
+  if (authored >= 1 && authored <= 4) return +authored;
+  return window.MOS_DOK ? window.MOS_DOK.match(text).dok : 1;
+}
+function linesFor(ck, idBase, lines, comps, promptDok) {
+  var objs = compObjs(ck, comps);
+  return (lines || []).map(function (text, i) {
+    var ld = window.MOS_DOK ? window.MOS_DOK.lineDok(text) : 1;
+    var O = window.MOS_DOK_OVERRIDES || {}, oid = idBase + '#' + i;
+    return {
+      text: String(text), dok: O[oid] ? +O[oid] : (ld === 2 ? Math.max(2, Math.min(promptDok || 2, 4)) : 1),
+      comps: window.MOS_DOK ? window.MOS_DOK.lineComps(text, objs) : comps
+    };
+  });
+}
+function valid(ck, ids) { var d = D(ck); return uniq((ids || []).filter(function (id) { return d.byId[id]; })); }
+
+function buildItems(ck, mode) {
+  var d = D(ck); if (d.items[mode]) return;
+  var out = [];
+  if (ck === 'anatomy') out = buildAnatomy(mode); else out = buildPhysio(mode);
+  out.forEach(function (it) { it.course = ck; it.mode = mode; if (it.week == null) it.week = weekOfComps(ck, it.comps); });
+  d.items[mode] = out;
+  if (mode === 'recall') return; /* her recall engine runs these; the review list uses the flash copy */
+  out.forEach(function (it) {
+    var lines = it.lines || (it.opts ? [].concat.apply([], it.opts.map(function (o) { return o.lines; })) : null);
+    var keys = lines ? uniq([].concat.apply([], lines.map(function (l) { return l.comps.map(function (c) { return c + '|' + l.dok; }); })))
+                        : it.comps.map(function (c) { return c + '|' + it.dok; });
+    keys.forEach(function (k) { (d.byComp[k] = d.byComp[k] || []).push(it); });
+  });
+}
+
+/* ---- BIO 004 anatomy ---- */
+function anatomyCardComps(t, c) {
+  var M = window.BIO004_CARD_COMPETENCY_MAP || {};
+  var e = M[t.id + ':' + c.id] || M[t.id] || {};
+  return valid('anatomy', e.comps || []);
+}
+function buildAnatomy(mode) {
+  var out = [];
+  if (mode === 'flash' || mode === 'recall' || mode === 'exam') {
+    /* the Recall Rx v3 bank: every card has four choices, a why, and a note on every choice */
+    var B = window.BIO004_CARD_BANK || { modules: [] };
+    B.modules.forEach(function (m) { (m.topics || []).forEach(function (t) { (t.cards || []).forEach(function (c) {
+      var key = c.lt ? c.lt + ':' + c.lid : t.id + ':' + c.id;
+      var comps = c.competencyId && D('anatomy').byId[c.competencyId] ? [c.competencyId] : anatomyCardComps({ id: c.lt || t.id }, { id: c.lid || c.id }).slice(0, 1);
+      if (!comps.length) return;
+      var id = 'card:' + key, why = c.why || c.explanation || '';
+      var hasOpts = c.options && c.options.length > 1 && c.correctIndex != null;
+      var ans = c.a || (hasOpts ? c.options[c.correctIndex] : '');
+      if (mode !== 'exam') {
+        if (!c.q || !ans) return;
+        out.push({ id: id, kind: 'card', prompt: c.q, answer: ans, explain: why, comps: comps, dok: dokFor(id, c.dok, c.q), topic: t.title, module: m.n });
+      } else if (hasOpts) {
+        out.push({ id: id, kind: 'mc', prompt: c.q, options: c.options, correct: c.correctIndex, why: why, whyNot: c.notes || null, comps: comps, dok: dokFor(id, c.dok, c.q), topic: t.title, module: m.n });
+      }
+    }); }); });
+    if (mode === 'exam') {
+      var MI = (window.BIO004_MASTERY && window.BIO004_MASTERY.items) || {};
+      Object.keys(MI).forEach(function (k) {
+        var q = MI[k]; var comps = valid('anatomy', [q.comp]); if (!comps.length) return;
+        var id = 'a:mi:' + q.id;
+        out.push({ id: id, kind: 'mc', prompt: q.stem, options: q.options, correct: q.correct, why: q.why || '', whyNot: q.whyNot || null, comps: comps, dok: dokFor(id, q.dok, q.stem) });
+      });
+      var EX = (window.BIO004_MASTERY && window.BIO004_MASTERY.exam) || {};
+      Object.keys(EX).forEach(function (mk) { (EX[mk].tf || []).forEach(function (q) {
+        var comps = valid('anatomy', [q.comp]); if (!comps.length) return;
+        var id = 'a:tf:' + q.id, plain = q.st.replace(/\[\[|\]\]/g, '');
+        out.push({ id: id, kind: 'tffix', prompt: q.st, truth: !!q.ans, accept: q.accept || [], term: (q.st.match(/\[\[(.+?)\]\]/) || [])[1] || '', comps: comps, dok: dokFor(id, q.dok, plain), why: '' });
+      }); });
+    }
+  }
+  if (mode === 'dump') {
+    /* the current brain dumps: 519 prompts, three levels, a key point and a why for each */
+    var DP = window.BIO004_DUMP_PRACTICE || { modules: [] };
+    DP.modules.forEach(function (m) { (m.topics || []).forEach(function (t) { (t.prompts || []).forEach(function (pr) {
+      var comps = valid('anatomy', pr.cids || []); if (!comps.length) return;
+      var lv = pr.lv || 1, objs = compObjs('anatomy', comps);
+      out.push({ id: pr.id, kind: 'dump', title: t.title + ' · Level ' + lv, prompt: pr.p, comps: comps, dok: dokFor(pr.id, lv, pr.p), level: lv, module: m.n,
+        lines: (pr.k || []).map(function (k) { return { text: k.pt, why: k.why, dok: lv, comps: window.MOS_DOK ? window.MOS_DOK.lineComps(k.pt, objs) : comps }; }) });
+    }); }); });
+  }
+  if (mode === 'draw') {
+    /* Note sheets with a key ("Your drawing should show") first, then the
+       worksheet drawings for the competencies whose sheets have no key yet. */
+    var AN = window.MOS_ANATOMY || { sheets: {} }, covered = {};
+    Object.keys(AN.sheets).forEach(function (cid) {
+      var sh = AN.sheets[cid], opts = (sh.opts || []).filter(function (o) { return o.items && o.items.length; });
+      if (!opts.length || !D('anatomy').byId[cid]) return;
+      covered[cid] = 1;
+      out.push({ id: 'sheet:' + cid, kind: 'draw', title: sh.name, code: 'Note sheet ' + sh.n, module: sh.module, comps: [cid], dok: 2, sheet: sh.packet, key: sh.key,
+        opts: opts.map(function (o) { return { k: o.k, form: o.form, prompt: o.text, then: o.then, check: o.check, lines: o.items.map(function (t) { return { text: t, dok: window.MOS_DOK ? window.MOS_DOK.lineDok(t) : 1, comps: [cid] }; }) }; }) });
+    });
+    (window.BIO004_DRAW || []).forEach(function (dr) {
+      var comps = valid('anatomy', dr.comps || []); if (!comps.length || !dr.items || !dr.items.length) return;
+      if (comps.every(function (c) { return covered[c]; })) return;
+      var id = 'a:draw:' + dr.id;
+      out.push({ id: id, kind: 'draw', title: dr.name, code: dr.code, prompt: dr.standard, warm: dr.brainDump, knowWhen: dr.youKnowItWhen, comps: comps, dok: 2, week: dr.week, lines: linesFor('anatomy', id, dr.items, comps, 2) });
+    });
+  }
+  if (mode === 'loops') {
+    var L = window.MOS_LOOPS_ANATOMY || { loops: [] };
+    L.loops.forEach(function (l) {
+      var comps = valid('anatomy', l.comps || []); if (!comps.length) return;
+      out.push({ id: 'a:loop:' + l.id, loopId: l.id, kind: 'loop', title: l.title, unit: l.unit, module: l.module, dir: l.dir, stations: l.stations, comps: comps, dok: 1, imgBase: L.imgBase });
+    });
+  }
+  return out;
+}
+
+/* ---- BIO 005 physiology ---- */
+function buildPhysio(mode) {
+  var out = [], EB = window.BIO005_EXAM_BANK || { items: [] };
+  if (mode === 'flash') {
+    EB.items.forEach(function (q) {
+      if (q.type !== 'mc') return; var comps = valid('physiology', [q.competencyId]); if (!comps.length) return;
+      var id = 'p:' + q.id;
+      out.push({ id: id, kind: 'card', prompt: q.stem, answer: q.options[q.correct], explain: q.why || '', comps: comps, dok: dokFor(id, q.dok, q.stem), topic: q.topic, week: q.week });
+    });
+  }
+  if (mode === 'exam') {
+    EB.items.forEach(function (q) {
+      var comps = valid('physiology', [q.competencyId]); if (!comps.length) return;
+      var id = 'p:' + q.id, base = { id: id, comps: comps, topic: q.topic, week: q.week, why: q.why || '', whyNot: q.whyNot || null };
+      if (q.type === 'mc' || q.type === 'app') out.push(Object.assign(base, { kind: 'mc', caseText: q.case || '', prompt: q.stem, options: q.options, correct: q.correct, dok: dokFor(id, q.dok, (q.case || '') + ' ' + q.stem) }));
+      else if (q.type === 'ma') out.push(Object.assign(base, { kind: 'ma', prompt: q.stem, options: q.options, correct: q.correct, dok: dokFor(id, q.dok, q.stem) }));
+      else if (q.type === 'tf') out.push(Object.assign(base, { kind: 'tf', prompt: q.statement, truth: !!q.truth, correction: q.correction || '', dok: dokFor(id, q.dok, q.statement) }));
+    });
+  }
+  if (mode === 'dump') {
+    EB.items.forEach(function (q) {
+      if (q.type !== 'bd') return; var comps = valid('physiology', [q.competencyId]); if (!comps.length) return;
+      var id = 'p:' + q.id, pd = dokFor(id, q.dok, q.prompt);
+      var lines = (q.rubric || []).map(function (t) { return { text: t, dok: pd, comps: comps }; });
+      out.push({ id: id, kind: 'dump', title: q.topic, prompt: q.prompt, comps: comps, dok: pd, week: q.week, lines: lines });
+    });
+  }
+  if (mode === 'draw') {
+    (window.BIO005_DRAW || []).forEach(function (dr) {
+      var comps = valid('physiology', [dr.id]); if (!comps.length) return;
+      var c = D('physiology').byId[dr.id], text = String(dr.prompt || '').replace(/^From memory, on paper:\s*/i, '');
+      /* The stored checklist dropped parts of the can-do statement, so the
+         list is rebuilt from the full statement, in Dr. Rennie's words. */
+      var parts = text.replace(/\.$/, '').split(/,\s*(?:and\s+)?|;\s*|\s+and\s+(?=(?:then\s+)?(?:state|explain|name|identify|classify|predict|trace|compare|show|label|describe|mark|determine|indicate|contrast|distinguish|relate|use)\b)/i).map(function (s) { s = s.replace(/^and\s+/i, '').trim(); return s.charAt(0).toUpperCase() + s.slice(1); }).filter(function (s) { return s.length > 2; });
+      var id = 'p:draw:' + dr.id;
+      out.push({ id: id, kind: 'draw', title: dr.name, prompt: text, comps: comps, dok: c ? c.dok : 2, week: dr.week,
+        lines: parts.map(function (t) { return { text: t, dok: c ? c.dok : 2, comps: comps }; }) });
+    });
+  }
+  return out;
+}
+
+/* ---------- 7. WHICH WEEK IS IT ---------- */
+function currentWeek(ck, t) {
+  var c = COURSES[ck]; t = t || now();
+  if (c.weekStarts) {
+    var w = 0; c.weekStarts.forEach(function (d, i) { if (new Date(d + 'T00:00:00').getTime() <= t) w = i + 1; }); return w;
+  }
+  var s = new Date(c.start + 'T00:00:00').getTime();
+  return t < s ? 0 : Math.floor((t - s) / (7 * DAY)) + 1;
+}
+function taught(ck, week) { return P && P.showAll ? true : (week == null || week <= currentWeek(ck)); }
+
+/* ---------- 7b. YOUR OTHER TOOLS FEED THE SAME RECORD ---------- */
+/* All of Dr. Rennie's pages live on drsrennie-stack.github.io, so they
+   share this browser's storage. Mastery OS reads what each tool already
+   saves and turns it into evidence rows, without changing the tools:
+
+     Recall cards     bio004-recall-v2 (+ bio004-recall-progress for confidence)
+     Mastery Check    bio004-mastery-v1
+     Brain dumps      bio004-dump-levels-v1
+     Practice exam    bio004-evidence-v1, source 'exam'
+     Digital Atlas    bio004-evidence-v1, source 'atlas'
+     Drawing canvas   bio004-evidence-v1, source 'draw'
+     Loops app        loopsEngine_v1 (counts only, read as changes since last look)
+
+   Every imported row gets an id built from the tool's own record, so
+   reading the same record twice never counts it twice. */
+var SRC_LABEL = { 'mastery-os': 'Mastery OS', 'recall-app': 'Recall cards', 'mastery-check': 'Mastery Check', 'dump-app': 'Brain dumps', 'practice-exam': 'Practice exam', atlas: 'Digital Atlas', 'draw-app': 'Drawing canvas', 'loops-app': 'Loops' };
+function rawLS(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
+function localDayStart(dateStr) { var p = String(dateStr).split('-'); return new Date(+p[0], +p[1] - 1, +p[2], 9, 0, 0).getTime(); }
+var CONF3 = { sure: 5, think: 3, no: 1, high: 5, med: 3, low: 1 };
+
+function ingestAnatomy() {
+  if (!P || !P.id) return 0;
+  var A = window.MOS_ANATOMY; if (!A || !A.idx) return 0;
+  var have = {}; EV.forEach(function (r) { have[r.attempt_id + '|' + r.competency] = 1; });
+  var add = [], d = D('anatomy');
+  function push(o) {
+    if (!o.comp || !d.byId[o.comp] || !(o.possible > 0)) return;
+    var k = o.att + '|' + o.comp; if (have[k]) return; have[k] = 1;
+    add.push({ student_id: P.id, course: 'anatomy', mode: o.mode, item_id: String(o.item || ''), competency: o.comp, dok: Math.max(1, Math.min(4, +o.dok || 1)),
+      got: round1(Math.max(0, Math.min(o.got, o.possible))), possible: o.possible, confidence: o.conf || '', reasoning_score: '', minutes: round1(o.min || 0),
+      timestamp: iso(o.t), attempt_id: o.att, during_focus: false, source: o.src, t: o.t });
+  }
+  /* recall cards */
+  var rv = rawLS('bio004-recall-v2'), rp = rawLS('bio004-recall-progress') || {};
+  if (rv && rv.topics) Object.keys(rv.topics).forEach(function (T) {
+    var cards = (rv.topics[T] || {}).cards || {};
+    Object.keys(cards).forEach(function (C) {
+      var key = T + ':' + C, ix = A.idx.cards[key]; if (!ix) return;
+      var h = cards[C].history || [], perDay = {}, prog = rp[key] || {};
+      h.forEach(function (e, i) {
+        var day = e.at, k = perDay[day] = (perDay[day] || 0) + 1;
+        var last = i === h.length - 1 && prog.last === day;
+        push({ src: 'recall-app', mode: 'flashcard', item: 'card:' + key, comp: ix[0], dok: ix[1], got: e.correct ? 1 : 0, possible: 1,
+          conf: last ? CONF3[prog.conf] : '', min: 0.75, t: Math.min(now(), localDayStart(day) + k * 60000), att: 'rc|' + key + '|' + day + '|' + k });
+      });
+    });
+  });
+  /* Mastery Check */
+  var mc = rawLS('bio004-mastery-v1');
+  if (mc && mc.days) Object.keys(mc.days).forEach(function (dk) {
+    var day = mc.days[dk] || {}, sets = (day.checks || []).slice();
+    if (day.prove && day.prove.revealed) sets.push(day.prove);
+    sets.forEach(function (ch) {
+      var t = new Date(ch.at || dk.split('|')[0]).getTime(); if (isNaN(t)) return;
+      (ch.answers || []).forEach(function (a, i) {
+        var dok = 2, got, pos, conf = '';
+        if (a.kind === 'mc') {
+          dok = a.id && a.id.indexOf('c:') === 0 ? ((A.idx.cards[a.id.slice(2)] || [])[1] || 2) : (A.idx.mi[a.id] || 2);
+          got = +a.ptsRight || 0; pos = 4;
+          var top = Math.max.apply(null, (a.pts || [0]).map(Number)); conf = top >= 4 ? 5 : top === 3 ? 4 : top === 2 ? 3 : top === 1 ? 2 : '';
+        } else if (a.kind === 'tf') { dok = A.idx.tf[a.id] || 2; got = a.right ? 1 : 0; pos = 1; }
+        else if (a.kind === 'match') { dok = 1; got = a.right ? 1 : 0; pos = 1; }
+        else return;
+        push({ src: 'mastery-check', mode: 'exam', item: a.id, comp: a.comp, dok: dok, got: got, possible: pos, conf: conf, min: 1, t: t + i * 1000, att: 'mc|' + (ch.id || dk) + '|' + (ch.kind || '') + '|' + i });
+      });
+    });
+  });
+  /* brain dumps */
+  var bd = rawLS('bio004-dump-levels-v1');
+  if (bd && bd.runs) Object.keys(bd.runs).forEach(function (pid) {
+    var ix = A.idx.dumps[pid]; if (!ix) return;
+    (bd.runs[pid] || []).forEach(function (r) {
+      var t = new Date(r.at).getTime(); if (isNaN(t) || !(r.of > 0)) return;
+      ix[0].forEach(function (comp) {
+        push({ src: 'dump-app', mode: 'braindump', item: pid, comp: comp, dok: ix[1], got: r.got, possible: r.of, conf: CONF3[r.conf] || '', min: 8, t: t, att: 'bd|' + pid + '|' + r.at });
+      });
+    });
+  });
+  /* practice exam, Atlas, drawing canvas: the shared log those tools write */
+  var ev = rawLS('bio004-evidence-v1');
+  if (Array.isArray(ev)) ev.forEach(function (e) {
+    var map = { exam: ['practice-exam', 'exam'], atlas: ['atlas', 'atlas'], draw: ['draw-app', 'draw'] }[e.source];
+    if (!map || !e.at) return; var t = new Date(e.at).getTime(); if (isNaN(t)) return;
+    var c = d.byId[e.comp], dok = e.source === 'atlas' ? 1 : e.source === 'draw' ? 2 : (c ? c.dok : 2);
+    push({ src: map[0], mode: map[1], item: e.page || e.source, comp: e.comp, dok: dok, got: +e.got || 0, possible: +e.of || 0, conf: CONF3[e.conf] || '', min: 0, t: t, att: 'ev|' + e.source + '|' + e.comp + '|' + e.at });
+  });
+  /* Loops app: it keeps running counts per station, so read the change since the
+     last look, and credit only the competency each station's structure belongs to */
+  var le = rawLS('loopsEngine_v1'), ST = A.idx.stations || {};
+  if (le && typeof le === 'object') {
+    var snap = FLAGS.loopSnap || {}, per = {}, nowT = now();
+    Object.keys(le).forEach(function (k) {
+      var s = le[k] || {}, seen = +s.seen || 0, good = (+s.good || 0) + (+s.easy || 0), was = snap[k] || { seen: 0, good: 0 };
+      if (seen > was.seen) (ST[k] || []).forEach(function (comp) {
+        var g = per[comp] || (per[comp] = { seen: 0, good: 0, conf: [], loops: {} });
+        g.seen += seen - was.seen; g.good += Math.max(0, Math.min(seen - was.seen, good - was.good)); if (s.lastConf > 0) g.conf.push(+s.lastConf); g.loops[k.split('#')[0]] = 1;
+      });
+      snap[k] = { seen: seen, good: good };
+    });
+    Object.keys(per).forEach(function (comp) {
+      var g = per[comp], cf = g.conf.length ? Math.round(g.conf.reduce(function (a, b) { return a + b; }, 0) / g.conf.length) : 0;
+      push({ src: 'loops-app', mode: 'loop', item: 'loopsapp:' + Object.keys(g.loops).join('+'), comp: comp, dok: 1, got: g.good, possible: g.seen, conf: ({ 1: 1, 2: 2, 3: 4, 4: 5 })[cf] || '', min: g.seen * 0.5, t: nowT, att: 'lp|' + comp + '|' + nowT });
+    });
+    FLAGS.loopSnap = snap; LS.set(KEYS.flags, FLAGS);
+  }
+  if (add.length) {
+    add.forEach(function (r) { EV.push(r); var send = Object.assign({}, r); delete send.t; enqueue('evidence', send); });
+    EV.sort(function (a, b) { return a.t - b.t; });
+    invalidate(); saveEV();
+  }
+  return add.length;
+}
+function ingestAll() {
+  try { var n = ingestAnatomy(); if (n) live(plural(n, 'new result') + ' from your other tools added to your record.'); return n; } catch (e) { return 0; }
+}
+var ingestSoon = (function () { var t; return function () { clearTimeout(t); t = setTimeout(function () { var n = ingestAll(); if (n && /^#\/?(home|weak|progress)?$/.test(location.hash || '#/home')) route(); }, 500); }; })();
+window.addEventListener('storage', ingestSoon);
+window.addEventListener('focus', ingestSoon);
+
+/* ---------- 8. THE EVIDENCE RECORD ---------- */
+/* One row per attempt per competency (and per DOK level, for
+   checklists tagged line by line). Fields follow the spec, plus
+   attempt_id and during_focus so hours are never double counted. */
+var FOCUS_ON = false; /* true while a focus block is running */
+function recordAttempt(o) {
+  /* o: {course, mode, item, groups:[{comp, dok, got, possible}], confidence, reasoning, minutes} */
+  if (!P || !P.id) return;
+  var t = now(), att = P.id.split('-').pop() + '-' + t.toString(36) + '-' + rnd(1e6).toString(36);
+  var merged = {};
+  o.groups.forEach(function (g) {
+    if (!g.possible) return;
+    var k = g.comp + '|' + g.dok;
+    if (!merged[k]) merged[k] = { comp: g.comp, dok: g.dok, got: 0, possible: 0 };
+    merged[k].got += g.got; merged[k].possible += g.possible;
+  });
+  Object.keys(merged).forEach(function (k) {
+    var g = merged[k];
+    var row = {
+      student_id: P.id, course: o.course, mode: MODE_ROW[o.mode], item_id: o.item.id, competency: g.comp,
+      dok: g.dok, got: round1(g.got), possible: g.possible, confidence: o.confidence,
+      reasoning_score: o.reasoning == null ? '' : o.reasoning,
+      minutes: round1(Math.min(o.minutes || 0, 90)), timestamp: iso(t), attempt_id: o.attemptId || att, during_focus: FOCUS_ON, source: 'mastery-os', t: t
+    };
+    EV.push(row);
+    var send = Object.assign({}, row); delete send.t;
+    enqueue('evidence', send);
+  });
+  invalidate(); saveEV();
+}
+function splitByGroups(item, ticked) {
+  /* checklist items: ticked is an array of booleans per line */
+  var groups = [];
+  item.lines.forEach(function (l, i) { l.comps.forEach(function (c) { groups.push({ comp: c, dok: l.dok, got: ticked[i] ? 1 : 0, possible: 1 }); }); });
+  return groups;
+}
+
+/* ---------- 9. THE REVIEW ENGINE ---------- */
+/* Strength on every competency at every DOK level, updated from two
+   signals: performance (got / possible) and confidence (rated before
+   the answer). Spacing works like Anki: success stretches the gap,
+   a miss resets it. Felt sure and got it wrong is the top priority. */
+var CACHE = {};
+function invalidate() { CACHE = {}; }
+function engine(ck) {
+  if (CACHE[ck]) return CACHE[ck];
+  var keys = {};
+  EV.filter(function (r) { return r.course === ck; }).sort(function (a, b) { return a.t - b.t; }).forEach(function (r) {
+    var k = r.competency + '|' + r.dok;
+    var s = keys[k] || (keys[k] = { key: k, comp: r.competency, dok: +r.dok, level: -1, dueDay: 0, strength: 0, n: 0, miscal: false, lastAt: 0, lastPerf: 0, lastConf: 0, hist: [] });
+    applyResult(s, r.got / r.possible, +r.confidence, r.t);
+  });
+  CACHE[ck] = keys; return keys;
+}
+function applyResult(s, perf, conf, t) {
+  var hi = perf >= CONFIG.HIGH_PERF, sure = conf >= CONFIG.HIGH_CONF, L = CONFIG.LADDER, d = dayNum(t);
+  s.n++; s.strength = s.n === 1 ? perf : (0.6 * s.strength + 0.4 * perf);
+  if (hi && sure) { s.level = Math.min(s.level + 1, L.length - 1); s.dueDay = d + L[s.level]; s.miscal = false; s.state = 'knows'; }
+  else if (hi && !sure) { s.level = Math.min(s.level + 1, L.length - 1); s.dueDay = d + Math.max(1, Math.round(L[s.level] / 2)); s.miscal = false; s.state = 'unsure'; }
+  else if (!hi && !sure) { s.level = -1; s.dueDay = d + 1; s.state = 'knowsNot'; }
+  else { s.level = -1; s.dueDay = d; s.miscal = true; s.state = 'miscal'; }
+  s.lastAt = t; s.lastPerf = perf; s.lastConf = conf; s.hist.push({ t: t, perf: perf, conf: conf });
+}
+function stateLabel(s) {
+  if (!s) return 'Not started';
+  if (s.miscal) return 'Felt sure, missed it';
+  return { knows: 'Knows it', unsure: 'Knows it, not sure yet', knowsNot: 'Still learning' }[s.state] || 'Practiced';
+}
+function dueList(ck) {
+  var E = engine(ck), today = dayNum(now()), d = D(ck);
+  var list = Object.keys(E).map(function (k) { return E[k]; }).filter(function (s) { return s.dueDay <= today && d.byId[s.comp]; });
+  var pin = pinnedComp(ck);
+  list.sort(function (a, b) {
+    if (a.miscal !== b.miscal) return a.miscal ? -1 : 1;
+    if (pin && (a.comp === pin) !== (b.comp === pin)) return a.comp === pin ? -1 : 1;
+    if (Math.abs(a.strength - b.strength) > 0.05) return a.strength - b.strength;
+    return a.dueDay - b.dueDay;
+  });
+  return list;
+}
+function weakList(ck, n) {
+  var E = engine(ck), d = D(ck);
+  return Object.keys(E).map(function (k) { return E[k]; }).filter(function (s) { return d.byId[s.comp] && (s.strength < 0.8 || s.miscal); })
+    .sort(function (a, b) { return (b.miscal - a.miscal) || (a.strength - b.strength); }).slice(0, n || 6);
+}
+function notStarted(ck) {
+  var E = engine(ck), seen = {}; Object.keys(E).forEach(function (k) { seen[E[k].comp] = 1; });
+  var ord = { core: 0, high: 1, support: 2 };
+  return D(ck).comps.filter(function (c) { return !seen[c.id] && c.week > 0 && c.week <= currentWeek(ck); })
+    .sort(function (a, b) { return (b.week - a.week) || ((ord[a.yield] || 0) - (ord[b.yield] || 0)); });
+}
+/* pick the best item for one competency at one level, from any loaded mode */
+var MODE_PREF = { 1: ['flash', 'loops', 'draw', 'exam', 'dump'], 2: ['exam', 'dump', 'draw', 'flash', 'loops'], 3: ['exam', 'dump', 'draw', 'flash'], 4: ['dump', 'exam', 'draw', 'flash'] };
+function lastSeen(ck) {
+  if (CACHE['seen' + ck]) return CACHE['seen' + ck];
+  var m = {}; EV.forEach(function (r) { if (r.course === ck) m[r.item_id] = Math.max(m[r.item_id] || 0, r.t); });
+  return (CACHE['seen' + ck] = m);
+}
+function pickItem(ck, comp, dok, avoid, used) {
+  var d = D(ck), seen = lastSeen(ck), tries = [dok, dok + 1, dok - 1, dok + 2, dok - 2].filter(function (x) { return x >= 1 && x <= 4; });
+  for (var ti = 0; ti < tries.length; ti++) {
+    var pool = (d.byComp[comp + '|' + tries[ti]] || []).filter(function (it) { return !avoid[it.id]; });
+    if (!pool.length) continue;
+    var pref = (MODE_PREF[tries[ti]] || MODE_PREF[2]).slice();
+    /* spread a review across modes: the mode used least so far goes first */
+    if (used) pref = pref.map(function (m, i) { return { m: m, i: i }; }).sort(function (a, b) { return ((used[a.m] || 0) - (used[b.m] || 0)) || (a.i - b.i); }).map(function (x) { return x.m; });
+    for (var mi = 0; mi < pref.length; mi++) {
+      var p2 = pool.filter(function (it) { return it.mode === pref[mi]; });
+      if (!p2.length) continue;
+      p2 = shuffle(p2).sort(function (a, b) { return (seen[a.id] || 0) - (seen[b.id] || 0); });
+      return { item: p2[0], dok: tries[ti], exact: ti === 0 };
+    }
+  }
+  return null;
+}
+
+/* ---------- 10. THE WEEK, GOAL AND PACE ---------- */
+/* The week turns over on Sunday at 5 pm. */
+function weekStart(t) {
+  var d = new Date(t); var s = new Date(d.getFullYear(), d.getMonth(), d.getDate() - d.getDay(), 17, 0, 0, 0);
+  if (s.getTime() > t) s = new Date(s.getFullYear(), s.getMonth(), s.getDate() - 7, 17, 0, 0, 0);
+  return s.getTime();
+}
+function minutesInWeek(ck, ws) {
+  var we = ws + 7 * DAY, mins = 0, seenAtt = {};
+  SESS.forEach(function (s) { if (s.course === ck && s.at >= ws && s.at < we) mins += s.minutes; });
+  EV.forEach(function (r) {
+    if (r.course !== ck || r.t < ws || r.t >= we || r.during_focus || seenAtt[r.attempt_id]) return;
+    seenAtt[r.attempt_id] = 1; mins += r.minutes || 0;
+  });
+  return mins;
+}
+function attemptsInWeek(ck, ws) {
+  var we = ws + 7 * DAY, a = {}, byMode = {};
+  EV.forEach(function (r) { if (r.course === ck && r.t >= ws && r.t < we && !a[r.attempt_id]) { a[r.attempt_id] = 1; byMode[r.mode] = (byMode[r.mode] || 0) + 1; } });
+  return byMode;
+}
+/* rough minutes per activity, from the student's own history when there is enough */
+function avgMinutes(ck) {
+  var def = { flashcard: 1.2, exam: 2.5, braindump: 12, draw: 22, loop: 12 }, per = {}, att = {};
+  EV.forEach(function (r) { if (r.course === ck && !att[r.attempt_id]) { att[r.attempt_id] = 1; (per[r.mode] = per[r.mode] || []).push(r.minutes || 0); } });
+  var out = {};
+  Object.keys(def).forEach(function (m) { var a = per[m] || []; out[m] = a.length >= 8 ? Math.max(0.5, a.reduce(function (x, y) { return x + y; }, 0) / a.length) : def[m]; });
+  return out;
+}
+function pace(ck) {
+  var g = goal(ck); if (!g) return null;
+  var ws = weekStart(now()), done = minutesInWeek(ck, ws);
+  var planMin = g.weekly * 60, frac = Math.min(1, (now() - ws) / (7 * DAY));
+  var expected = planMin * frac, behind = expected - done;
+  var target = gradeHours(ck, g.grade);
+  return { say: gradeSay(ck, g.grade), ws: ws, done: done, planMin: planMin, expected: expected, behind: behind, target: target, grade: g.grade, weekly: g.weekly, daily: g.daily };
+}
+function catchUpText(ck, behindMin) {
+  var f = pomoCfg().focus, sessions = Math.max(1, Math.round(behindMin / f));
+  var av = avgMinutes(ck), flashRound = av.flashcard * 20, dump = av.braindump, exam = av.exam * 10;
+  var alt, rounds;
+  if (ck === 'physiology') {
+    rounds = Math.max(1, Math.floor((behindMin - dump) / exam));
+    alt = numWord(rounds) + ' exam engine ' + (rounds === 1 ? 'set' : 'sets') + ' of ten questions and a brain dump';
+  } else {
+    rounds = Math.max(1, Math.floor((behindMin - dump) / flashRound));
+    alt = numWord(rounds) + ' recall ' + (rounds === 1 ? 'round' : 'rounds') + ' of 20 cards and a brain dump';
+  }
+  return 'That is roughly ' + numWord(sessions) + ' focus ' + (sessions === 1 ? 'session' : 'sessions') + ' of ' + f + ' minutes, or ' + alt + '.';
+}
+function paceMessage(ck) {
+  var p = pace(ck); if (!p) return '';
+  if (p.behind >= 30) {
+    var h = p.behind / 60, hs = h < 1 ? 'about ' + Math.round(p.behind / 5) * 5 + ' minutes' : 'about ' + (Math.round(h * 2) / 2) + ' ' + (Math.round(h * 2) / 2 === 1 ? 'hour' : 'hours');
+    return 'You are ' + hs + ' behind your plan for this week. ' + catchUpText(ck, p.behind);
+  }
+  if (p.done >= p.planMin) return 'You have met your plan for this week. Anything more is extra practice.';
+  return 'You are on pace for your goal this week.';
+}
+
+/* ---------- 11. REFLECTION HELPERS ---------- */
+function reflectionFor(ck, ws) { for (var i = 0; i < REF.length; i++) if (REF[i].course === ck && REF[i].weekOf === ws) return REF[i]; return null; }
+function pendingReflection(ck) {
+  /* the week that ended at the most recent Sunday 5 pm */
+  var thisWs = weekStart(now()), prevWs = thisWs - 7 * DAY;
+  if (reflectionFor(ck, prevWs)) return null;
+  var any = EV.some(function (r) { return r.course === ck && r.t >= prevWs && r.t < thisWs; }) || SESS.some(function (s) { return s.course === ck && s.at >= prevWs && s.at < thisWs; });
+  return any ? prevWs : null;
+}
+function pinnedComp(ck) {
+  var ws = weekStart(now()) - 7 * DAY, r = reflectionFor(ck, ws);
+  return r && r.a3comp ? r.a3comp : null;
+}
+function weekSummary(ck, ws) {
+  var we = ws + 7 * DAY, rows = EV.filter(function (r) { return r.course === ck && r.t >= ws && r.t < we; });
+  var sessions = SESS.filter(function (s) { return s.course === ck && s.at >= ws && s.at < we; });
+  /* strength per competency at the start and end of the week */
+  function strengthAt(t) {
+    var keys = {}; EV.filter(function (r) { return r.course === ck && r.t < t; }).sort(function (a, b) { return a.t - b.t; }).forEach(function (r) {
+      var k = r.competency + '|' + r.dok, s = keys[k] || (keys[k] = { comp: r.competency, level: -1, dueDay: 0, strength: 0, n: 0, hist: [] });
+      applyResult(s, r.got / r.possible, +r.confidence, r.t);
+    });
+    var byComp = {}; Object.keys(keys).forEach(function (k) { var s = keys[k]; (byComp[s.comp] = byComp[s.comp] || []).push(s.strength); });
+    Object.keys(byComp).forEach(function (c) { var a = byComp[c]; byComp[c] = a.reduce(function (x, y) { return x + y; }, 0) / a.length; });
+    return byComp;
+  }
+  var before = strengthAt(ws), after = strengthAt(we), comps = uniq(rows.map(function (r) { return r.competency; }));
+  var cal = comps.map(function (c) {
+    var rs = rows.filter(function (r) { return r.competency === c; }), rc = rs.filter(function (r) { return r.confidence >= 1; });
+    var conf = rc.length ? rc.reduce(function (x, r) { return x + (r.confidence - 1) / 4; }, 0) / rc.length : null;
+    var got = rs.reduce(function (x, r) { return x + r.got; }, 0), pos = rs.reduce(function (x, r) { return x + r.possible; }, 0);
+    return { comp: c, conf: conf, perf: pos ? got / pos : 0, n: rs.length };
+  }).filter(function (x) { return x.conf != null; }).sort(function (a, b) { return Math.abs(b.conf - b.perf) - Math.abs(a.conf - a.perf); });
+  var grew = comps.filter(function (c) { return (after[c] || 0) - (before[c] || 0) >= 0.1 && (after[c] || 0) >= 0.6; });
+  var weak = comps.filter(function (c) { return (after[c] || 0) < 0.6; });
+  var att = {}; rows.forEach(function (r) { att[r.attempt_id] = r.mode; });
+  var byMode = {}; Object.keys(att).forEach(function (a) { byMode[att[a]] = (byMode[att[a]] || 0) + 1; });
+  return { sessions: sessions.length, focusMin: sessions.reduce(function (x, s) { return x + s.minutes; }, 0), byMode: byMode, activities: Object.keys(att).length, grew: grew, weak: weak, cal: cal };
+}
+
+/* ---------- 12. ROUTER ---------- */
+var ROUTES = {};
+var RUN = null; /* the practice session in progress, if any */
+function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
+var ALIAS = { 's-weak': 'weak', 's-recall': 'recall', 's-dumps': 'dump', 's-loops': 'loops' };
+function hashParam(name) { var m = (location.hash || '').match(new RegExp('[?&]' + name + '=([^&#]+)')); return m ? decodeURIComponent(m[1]) : null; }
+function route() {
+  var h = (location.hash || '#/home').replace(/^#\/?/, ''), parts = h.split('?')[0].split('&')[0].split('/'), name = parts[0] || 'home';
+  name = ALIAS[name] || name;
+  if (!P || !P.id) { showSetup(); return; }
+  if (!goal()) { showSetup('goal'); return; }
+  /* her brain dump and recall engines change the hash themselves; leave them be */
+  if ((name === 'dump' && $('#dumpMount')) || (name === 'recall' && $('#recallMount') && !hashParam('comp'))) return;
+  if (RUN && name !== 'run') RUN = null;
+  if (!ROUTES[name]) name = 'home';
+  $$('.nav a').forEach(function (a) {
+    var nav = a.getAttribute('data-nav');
+    var on = nav === name || (nav === 'practice' && ['run', 'flash', 'exam', 'dump', 'draw', 'loops', 'recall'].indexOf(name) >= 0);
+    if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  });
+  renderHeader(); renderIdBar();
+  ROUTES[name](parts.slice(1));
+  window.scrollTo(0, 0);
+  var h1 = $('#main h1'); if (h1) { h1.setAttribute('tabindex', '-1'); h1.focus({ preventScroll: true }); }
+  sendHeight();
+}
+window.addEventListener('hashchange', route);
+function view(html) { $('#main').innerHTML = html; renderSyncLine(); sendHeight(); }
+function crumb() { var c = course(); return '<p class="eyebrow">' + esc(c.long.split(' ')[0] + ' ' + c.long.split(' ')[1]) + ' · ' + esc(c.long.split(' ').slice(2).join(' ')) + ' · MedMasters Collaborative</p>'; }
+function loadingView(msg) { view('<div class="loading" role="status"><p>' + esc(msg || 'Loading your course content…') + '</p></div>'); }
+function failView(e) { view(crumb() + '<h1>That did not load</h1><div class="warnnote"><p>' + esc(e.message || e) + '</p><p>Check your connection and try again. Your saved work is safe.</p></div><div class="sp"></div><button type="button" class="btn" onclick="route()">Try again</button>'); }
+
+function renderHeader() {
+  var c = course();
+  $$('.picker button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-course') === c.key)); });
+  $('#brandSub').textContent = c.long;
+}
+function setCourse(ck) {
+  if (!COURSES[ck] || !P) return;
+  P.course = ck; saveProfile(); pushProfile(); invalidate();
+  live('Switched to ' + COURSES[ck].long + '.');
+  if (!goal(ck)) { showSetup('goal'); return; }
+  var h = (location.hash || '').replace(/^#\/?/, '').split('/')[0];
+  if (h === 'run' || h === 'practice') go('#/home'); else route();
+}
+
+/* ---------- 12b. THE PRIVATE ID BAR, at the top of every screen ---------- */
+var IDBAR_OPEN = false;
+function renderIdBar() {
+  var el = $('#idBar'); if (!P || !P.id) { el.hidden = true; return; }
+  el.hidden = false;
+  el.innerHTML = '<div class="idbar-in"><span>Your private ID: <b>' + esc(P.id) + '</b></span>' +
+    '<button type="button" class="linkbtn" id="idbToggle" aria-expanded="' + IDBAR_OPEN + '" aria-controls="idbForm">Bring back my data with my ID</button>' +
+    '<form id="idbForm"' + (IDBAR_OPEN ? '' : ' hidden') + ' novalidate><label for="idbId">Private ID<input id="idbId" autocomplete="username" autocapitalize="none" spellcheck="false" value="' + esc(P.id) + '" size="24"></label>' +
+    '<label for="idbPin">PIN<input id="idbPin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="6" size="8"></label>' +
+    '<button type="submit" class="btn">Bring back my data</button><p class="msg" id="idbMsg" aria-live="polite">Use this on a new device, after clearing your browser, or if your progress looks empty.</p></form></div>';
+  $('#idbToggle').onclick = function () { IDBAR_OPEN = !IDBAR_OPEN; renderIdBar(); if (IDBAR_OPEN) $('#idbPin').focus(); else $('#idbToggle').focus(); };
+  $('#idbForm').onsubmit = function (e) {
+    e.preventDefault();
+    var id = cleanId($('#idbId').value), pin = ($('#idbPin').value || '').trim(), msg = $('#idbMsg');
+    if (!ID_RE.test(id)) { msg.textContent = 'That does not look like a private ID. It is three words and a two-digit number, joined by dashes.'; $('#idbId').focus(); return; }
+    if (!PIN_RE.test(pin)) { msg.textContent = 'Type your PIN. It is 4 to 6 numbers.'; $('#idbPin').focus(); return; }
+    if (id !== P.id && !window.confirmSwitch) {
+      openDialog('<h2 id="dlgT">Switch to a different ID?</h2><p>This device is set up with <b>' + esc(P.id) + '</b>. Switching to <b>' + esc(id) + '</b> clears this device and loads that ID’s record instead. Work saved under ' + esc(P.id) + ' stays in the class sheet.</p><div class="row"><button type="button" class="btn" id="swKeep">Keep ' + esc(P.id) + '</button><button type="button" class="btn terra" id="swGo">Switch</button></div>', { focus: '#swKeep' });
+      $('#swKeep').onclick = closeDialog;
+      $('#swGo').onclick = function () { closeDialog(); doRestore(id, pin, true); };
+      return;
+    }
+    doRestore(id, pin, id !== P.id);
+  };
+}
+function doRestore(id, pin, switching) {
+  var msg = $('#idbMsg'); if (msg) msg.textContent = 'Looking for your record…';
+  var ph;
+  pinHash(id, pin).then(function (h) { ph = h; return restoreFromSheet(id, h); }).then(function (j) {
+    if (switching) { EV = []; QUEUE = []; SESS = []; REF = []; FLAGS = {}; P.id = id; }
+    P.pinHash = ph; var before = EV.length; mergeRestored(j); saveProfile();
+    IDBAR_OPEN = false; toast((EV.length - before) ? plural(EV.length - before, 'result') + ' brought back.' : 'Your record is up to date.'); route();
+  }).catch(function (e) { var m = $('#idbMsg'); if (m) m.textContent = e.message; });
+}
+
+/* ---------- 13. DIALOGS ---------- */
+var DLG = null;
+function openDialog(html, opts) {
+  opts = opts || {};
+  var ret = document.activeElement;
+  $('#dlgHost').innerHTML = '<div class="dlg-back"><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="dlgT">' + html + '</div></div>';
+  var box = $('#dlgHost .dlg');
+  DLG = { ret: ret, onClose: opts.onClose };
+  var first = opts.focus ? $(opts.focus, box) : $('#dlgT', box);
+  if (first) { if (!first.hasAttribute('tabindex') && first.id === 'dlgT') first.setAttribute('tabindex', '-1'); first.focus(); }
+  $('#dlgHost .dlg-back').addEventListener('mousedown', function (e) { if (e.target === e.currentTarget) closeDialog(); });
+  return box;
+}
+function closeDialog() {
+  if (!DLG) return; var d = DLG; DLG = null; $('#dlgHost').innerHTML = '';
+  if (d.onClose) d.onClose(); if (d.ret && d.ret.focus) try { d.ret.focus(); } catch (e) {}
+}
+document.addEventListener('keydown', function (e) {
+  var host = DLG ? $('#dlgHost .dlg') : (!$('#setup').hidden ? $('#setup') : null);
+  if (!host) return;
+  if (e.key === 'Escape' && DLG) { e.preventDefault(); closeDialog(); return; }
+  if (e.key !== 'Tab') return;
+  var f = $$('button:not([disabled]),a[href],input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])', host).filter(function (x) { return x.offsetParent !== null; });
+  if (!f.length) return;
+  var a = f[0], z = f[f.length - 1];
+  if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+  else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+});
+
+/* ---------- 14. GUIDED SETUP ---------- */
+/* Calm, one question at a time, like the Mac-style introduction. */
+var SU = null;
+var NEW_STEPS = ['welcome', 'name', 'course', 'grade', 'weekly', 'daily', 'id', 'pin'];
+var SU_LOGO = '<svg class="su-logo" viewBox="40 10 125 148" aria-hidden="true" focusable="false"><g transform="translate(0,18)"><g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#C2734D"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C2734D"/></g><g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#A0522D"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#A0522D"/></g><g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#FFFFFF"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#FFFFFF"/></g></g></svg>';
+function showSetup(mode) {
+  var el = $('#setup'); el.hidden = false; document.body.style.overflow = 'hidden';
+  if (mode === 'goal') SU = { steps: ['grade', 'weekly', 'daily', 'goalDone'], i: 0, d: { course: course().key }, goalOnly: true };
+  else if (!SU || SU.goalOnly) SU = { steps: NEW_STEPS.slice(), i: 0, d: {} };
+  suRender();
+}
+function hideSetup() { $('#setup').hidden = true; document.body.style.overflow = ''; SU = null; }
+function suDots() {
+  var n = SU.steps.length, h = '<div class="su-dots" role="img" aria-label="Step ' + (SU.i + 1) + ' of ' + n + '">';
+  for (var i = 0; i < n; i++) h += '<span class="' + (i <= SU.i ? 'on' : '') + '"></span>';
+  return h + '</div>';
+}
+function suChoice(val, cur, title, sub) {
+  return '<button type="button" class="su-choice" data-v="' + esc(val) + '" aria-pressed="' + (cur === val) + '"><span class="ck" aria-hidden="true"></span><span><b>' + esc(title) + '</b>' + (sub ? '<small>' + esc(sub) + '</small>' : '') + '</span></button>';
+}
+function suRender(err) {
+  var s = SU.steps[SU.i], d = SU.d, c = COURSES[d.course] || null, body = '', next = 'Continue', back = SU.i > 0, canNext = true;
+  if (s === 'welcome') {
+    body = SU_LOGO + '<h2 id="suTitle">Welcome to Mastery OS</h2><p class="sub">This is where you prove to yourself that you know the material. Setup takes about a minute, and you can change any of it later.</p>';
+    next = 'Start setup';
+  } else if (s === 'restore') {
+    body = '<h2 id="suTitle">Bring back your progress</h2><p class="sub">Type the private ID you wrote down and the PIN you picked. The ID looks like four parts joined by dashes, for example maple-river-otter-42.</p><label class="su-lbl" for="suRid">Your private ID</label><input class="su-input" id="suRid" autocomplete="username" autocapitalize="none" spellcheck="false" value="' + esc(d.rid || '') + '"><div style="height:14px"></div><label class="su-lbl" for="suRpin">Your PIN</label><input class="su-input" id="suRpin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="6" style="max-width:200px">';
+    next = 'Restore my progress';
+  } else if (s === 'name') {
+    body = '<h2 id="suTitle">What should we call you?</h2><p class="sub">Your name stays on this device. It is never sent anywhere.</p><label class="su-lbl sr" for="suName">Your first name</label><input class="su-input" id="suName" autocomplete="given-name" maxlength="40" value="' + esc(d.name || '') + '" placeholder="First name">';
+  } else if (s === 'course') {
+    body = '<h2 id="suTitle">Which course are you in?</h2><p class="sub">If you take both, pick one for now. You can switch at the top of any screen.</p><div class="su-choices" role="group" aria-label="Course">' +
+      suChoice('anatomy', d.course, 'Anatomy', 'BIO 004 Human Anatomy, Solano Community College') + suChoice('physiology', d.course, 'Physiology', 'BIO 005 Human Physiology, Yuba College') + '</div>';
+    canNext = !!d.course;
+  } else if (s === 'grade') {
+    body = '<h2 id="suTitle">What grade are you aiming for' + (SU.goalOnly ? ' in ' + esc(COURSES[d.course].long) : ' in this class') + '?</h2><p class="sub">' + esc(gradeIntro(d.course)) + '</p><div class="su-chips" role="group" aria-label="Grade goal">' +
+      ['A', 'B', 'C'].map(function (g) { return '<button type="button" class="su-chip" data-v="' + g + '" aria-pressed="' + (d.grade === g) + '">' + g + '</button>'; }).join('') + '</div>';
+    canNext = !!d.grade;
+  } else if (s === 'weekly') {
+    var tgt = gradeHours(d.course, d.grade), tsay = gradeSay(d.course, d.grade);
+    if (d.weekly == null) d.weekly = tgt;
+    body = '<h2 id="suTitle">How many hours a week can you study for this class?</h2><p class="sub">Be realistic. This becomes your weekly plan, and Mastery OS tracks your effort against it.' + (tgt ? ' The usual target for ' + (d.grade === 'A' ? 'an ' : 'a ') + d.grade + ' is about ' + tsay + ' hours.' : '') + '</p><label class="su-lbl" for="suWeekly">Hours per week</label><input class="su-input" id="suWeekly" type="number" inputmode="decimal" min="1" max="60" step="0.5" value="' + esc(d.weekly) + '" style="max-width:180px">';
+  } else if (s === 'daily') {
+    if (d.daily == null) d.daily = Math.min(8, Math.max(0.5, Math.round((d.weekly / 6) * 2) / 2));
+    body = '<h2 id="suTitle">How many hours on a typical day?</h2><p class="sub">This sets how long your daily review list runs.</p><label class="su-lbl" for="suDaily">Hours on a typical day</label><input class="su-input" id="suDaily" type="number" inputmode="decimal" min="0.5" max="12" step="0.5" value="' + esc(d.daily) + '" style="max-width:180px">';
+  } else if (s === 'id') {
+    if (!d.id) d.id = newId();
+    body = '<h2 id="suTitle">Here is your private ID</h2><p class="sub">Please write it down somewhere safe.</p><p class="su-id" id="suIdText">' + esc(d.id) + '</p>' +
+      '<ul class="su-note"><li>This ID is the only thing that leaves your device. It goes with your practice results to Dr. Rennie’s class sheet.</li><li>Your name stays on this computer. Dr. Rennie cannot connect the ID to you unless you choose to share it.</li><li>If you ever want help with your data, you can share this ID with Dr. Rennie.</li><li>If you switch computers or clear your browser, type this ID back in to bring your progress back.</li></ul>' +
+      '<div class="row" style="justify-content:center;margin-bottom:14px"><button type="button" class="btn ghost" id="suCopy">Copy my ID</button></div>' +
+      '<label class="check"><input type="checkbox" id="suWrote"' + (d.wrote ? ' checked' : '') + '> I wrote my ID down</label>';
+    canNext = !!d.wrote;
+  } else if (s === 'pin') {
+    body = '<h2 id="suTitle">Pick a PIN</h2><p class="sub">Choose 4 to 6 numbers you will remember. You need your ID and this PIN to bring your progress back on another device. The PIN is scrambled before it is saved, so nobody can read it, not even Dr. Rennie.</p>' +
+      '<label class="su-lbl" for="suPin">Your PIN</label><input class="su-input" id="suPin" type="password" inputmode="numeric" autocomplete="new-password" maxlength="6" style="max-width:200px"><div style="height:14px"></div>' +
+      '<label class="su-lbl" for="suPin2">Type it again</label><input class="su-input" id="suPin2" type="password" inputmode="numeric" autocomplete="new-password" maxlength="6" style="max-width:200px">';
+    next = 'Finish setup';
+  } else if (s === 'goalDone') {
+    body = SU_LOGO + '<h2 id="suTitle">You are set for ' + esc(COURSES[d.course].label) + '</h2><p class="sub">Your plan is ' + esc(d.weekly) + ' hours a week, about ' + esc(d.daily) + ' on a typical day. Your private ID stays the same for both courses.</p>';
+    next = 'Go to Today';
+  }
+  $('#suPanel').innerHTML = suDots() + body + (err ? '<p class="err" role="alert">' + esc(err) + '</p>' : '');
+  var foot = '';
+  if (back) foot += '<button type="button" class="btn ghost" id="suBack">Back</button>';
+  if (s === 'welcome') foot += '<button type="button" class="btn ghost" id="suHave">I already have an ID</button>';
+  foot += '<button type="button" class="btn" id="suNext"' + (canNext ? '' : ' aria-disabled="true"') + '>' + esc(next) + '</button>';
+  $('#suFoot').innerHTML = foot;
+  var inp = $('#suPanel input'); (inp || $('#suTitle')).focus();
+  if (!inp) $('#suTitle').setAttribute('tabindex', '-1'), $('#suTitle').focus();
+}
+function suRead() {
+  var s = SU.steps[SU.i], d = SU.d;
+  if (s === 'name') { d.name = ($('#suName').value || '').trim().slice(0, 40); if (!d.name) return 'Type the name you would like us to use.'; }
+  if (s === 'restore') { d.rid = cleanId($('#suRid').value); d.rpin = ($('#suRpin').value || '').trim(); if (!ID_RE.test(d.rid)) return 'That does not look like a private ID. It should be three words and a two-digit number, joined by dashes.'; if (!PIN_RE.test(d.rpin)) return 'Type your PIN. It is 4 to 6 numbers.'; }
+  if (s === 'pin') { var a = ($('#suPin').value || '').trim(), b = ($('#suPin2').value || '').trim(); if (!PIN_RE.test(a)) return 'Your PIN needs to be 4 to 6 numbers.'; if (a !== b) return 'The two PINs do not match. Type them again.'; if (/^(\d)\1+$/.test(a) || '0123456789'.indexOf(a) >= 0) return 'Pick a PIN that is harder to guess than ' + a + '.'; d.pin = a; }
+  if (s === 'course' && !d.course) return 'Pick a course.';
+  if (s === 'grade' && !d.grade) return 'Pick a grade goal.';
+  if (s === 'weekly') { var w = parseFloat($('#suWeekly').value); if (!(w >= 1 && w <= 60)) return 'Enter a number of hours between 1 and 60.'; d.weekly = w; }
+  if (s === 'daily') { var y = parseFloat($('#suDaily').value); if (!(y >= 0.5 && y <= 12)) return 'Enter a number of hours between 0.5 and 12.'; if (y * 7 < d.weekly) {} d.daily = y; }
+  if (s === 'id' && !d.wrote) return 'Tick the box once you have written your ID down.';
+  return null;
+}
+function suNext() {
+  var err = suRead(); if (err) { suRender(err); return; }
+  var s = SU.steps[SU.i], d = SU.d;
+  if (s === 'restore') {
+    var id = d.rid, ph = null;
+    $('#suNext').textContent = 'Looking for your progress…';
+    pinHash(id, d.rpin).then(function (h) { ph = h; return restoreFromSheet(id, h); }).then(function (j) {
+      P = { v: 2, id: id, pinHash: ph, name: '', course: null, goals: {}, created: iso(now()) };
+      mergeRestored(j);
+      SU.steps = ['restore', 'name'].concat(P.course ? [] : ['course']).concat(['restored']); SU.i = 1; SU.d.restored = j; suRender();
+    }).catch(function (e) {
+      P = null; suRender(e.message + ' You can start fresh with this ID so your new work joins it later, or go back and check it.');
+      SU.d.restoreFailed = true;
+      $('#suFoot').insertAdjacentHTML('afterbegin', '<button type="button" class="btn ghost" id="suKeepId">Use this ID anyway</button>');
+    });
+    return;
+  }
+  if (s === 'pin') { finishSetup(); return; }
+  if (s === 'goalDone') { finishGoal(); return; }
+  if (s === 'name' && SU.steps.indexOf('restored') >= 0) {
+    P.name = d.name;
+    if (SU.steps[SU.i + 1] === 'course') { SU.i++; suRender(); return; }
+    finishRestore(); return;
+  }
+  if (s === 'course' && SU.steps.indexOf('restored') >= 0) { P.course = d.course; finishRestore(); return; }
+  SU.i++; suRender();
+}
+function finishRestore() {
+  P.course = P.course || SU.d.course || 'anatomy'; saveProfile();
+  hideSetup(); ingestAll(); toast('Welcome back, ' + (P.name || 'friend') + '. Your progress is restored.'); go('#/home'); route();
+}
+function finishSetup() {
+  var d = SU.d;
+  pinHash(d.id, d.pin).then(function (h) {
+    P = { v: 2, id: d.id, pinHash: h, name: d.name, course: d.course, goals: {}, created: iso(now()), pomodoro: null, showAll: false, spellStrict: false };
+    P.goals[d.course] = { grade: d.grade, weekly: d.weekly, daily: d.daily };
+    saveProfile(); pushProfile(); hideSetup(); ingestAll();
+    toast('Setup done. Welcome, ' + d.name + '.'); go('#/home'); route();
+  }).catch(function (e) { suRender(e.message); });
+}
+function finishGoal() {
+  var d = SU.d; P.goals = P.goals || {}; P.goals[d.course] = { grade: d.grade, weekly: d.weekly, daily: d.daily };
+  saveProfile(); pushProfile(); hideSetup(); go('#/home'); route();
+}
+$('#setup').addEventListener('click', function (e) {
+  var b = e.target.closest('button'); if (!b || !SU) return;
+  if (b.id === 'suNext') { if (b.getAttribute('aria-disabled') === 'true') { var er = suRead(); suRender(er || null); return; } suNext(); }
+  else if (b.id === 'suBack') {
+    if (SU.goalOnly && SU.i === 0) return;
+    if (SU.steps[SU.i] === 'restore') { SU.steps = NEW_STEPS.slice(); SU.i = 0; }
+    else SU.i = Math.max(0, SU.i - 1);
+    suRender();
+  }
+  else if (b.id === 'suHave') { SU.steps = ['restore']; SU.i = 0; suRender(); }
+  else if (b.id === 'suKeepId') {
+    SU.d.id = SU.d.rid; SU.d.wrote = true; SU.steps = ['restore', 'name', 'course', 'grade', 'weekly', 'daily', 'pin']; SU.i = 1; P = null; suRender();
+  }
+  else if (b.id === 'suCopy') { copyText(SU.d.id); }
+  else if (b.hasAttribute('data-v')) {
+    var s = SU.steps[SU.i];
+    if (s === 'course') SU.d.course = b.getAttribute('data-v');
+    if (s === 'grade') { SU.d.grade = b.getAttribute('data-v'); SU.d.weekly = gradeHours(SU.d.course, SU.d.grade); SU.d.daily = null; }
+    suRender(); var sel = $('#suPanel [aria-pressed="true"]'); if (sel) sel.focus();
+  }
+});
+$('#setup').addEventListener('change', function (e) { if (e.target.id === 'suWrote') { SU.d.wrote = e.target.checked; var n = $('#suNext'); if (e.target.checked) n.removeAttribute('aria-disabled'); else n.setAttribute('aria-disabled', 'true'); } });
+$('#setup').addEventListener('keydown', function (e) { if (e.key === 'Enter' && e.target.tagName === 'INPUT' && e.target.type !== 'checkbox') { e.preventDefault(); suNext(); } });
+function copyText(t) {
+  var done = function () { toast('Copied.'); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, function () { fallbackCopy(t); done(); });
+  else { fallbackCopy(t); done(); }
+}
+function fallbackCopy(t) { var a = document.createElement('textarea'); a.value = t; a.setAttribute('readonly', ''); a.style.position = 'absolute'; a.style.left = '-9999px'; document.body.appendChild(a); a.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(a); }
+
+/* ---------- 15. TODAY ---------- */
+function greeting() { var h = new Date().getHours(); return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening'; }
+function compName(ck, id) { var c = D(ck).byId[id]; return c ? c.name : id; }
+ROUTES.home = function () {
+  var ck = course().key;
+  loadingView();
+  ensureCore(ck).then(function () {
+    ingestAll();
+    var c = course(), p = pace(ck), due = dueList(ck), pend = pendingReflection(ck), weak = weakList(ck, 5);
+    var budgetMin = Math.round((goal(ck).daily || 1) * 60), perKey = 8, fit = Math.max(3, Math.floor(budgetMin / perKey));
+    var h = crumb() + '<h1>' + esc(greeting()) + ', ' + esc(P.name || 'there') + '</h1><p class="lead">Week ' + currentWeek(ck) + ' of ' + esc(c.long) + '. Here is your goal for the week and what is due for review today.</p>';
+    if (pend) h += '<div class="banner gold"><span><b>Your week wrapped up Sunday at 5 pm.</b> A short reflection shows how your confidence lined up with your results.</span><a class="btn sm" href="#/reflect" target="_top">Reflect on last week</a></div>';
+    var pct = p ? Math.min(100, Math.round(p.done / Math.max(1, p.planMin) * 100)) : 0;
+    h += '<div class="grid g2">';
+    h += '<section class="card" aria-labelledby="hWeek"><h2 id="hWeek">This week</h2>' +
+      '<p class="big">' + fmtHours(p.done) + ' <span class="muted" style="font-size:16px;font-weight:500">of your ' + esc(p.weekly) + ' h plan</span></p>' +
+      '<div class="meter" role="progressbar" aria-label="Hours this week" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><span style="width:' + pct + '%"></span></div><div class="sp" style="height:10px"></div>' +
+      '<p aria-live="polite">' + esc(paceMessage(ck)) + '</p>' +
+      (p.target && p.weekly < p.target ? '<p class="muted">Your goal is ' + (p.grade === 'A' ? 'an ' : 'a ') + p.grade + ', which usually takes about ' + p.say + ' hours a week outside class. Your plan is ' + p.weekly + '. You can raise it any time in My ID and settings.</p>' : '') +
+      '<p class="muted">These numbers are estimates to help you keep going. They are not a prediction of your grade.</p>' +
+      '<div class="row"><button type="button" class="btn ghost" data-act="timer">Start a focus session</button></div></section>';
+    h += '<section class="card" aria-labelledby="hDue"><h2 id="hDue">Due for review today</h2>';
+    if (due.length) {
+      h += '<p class="muted">' + plural(due.length, 'topic') + ' due. Your daily plan fits about ' + Math.min(due.length, fit) + '.</p><ul class="list">' + due.slice(0, 6).map(function (s) {
+        return '<li class="' + (s.miscal ? 'st-open' : 'st-locked') + '"><span class="t">' + esc(compName(ck, s.comp)) + '</span><br><span class="muted">DOK ' + s.dok + ', ' + DOK_LABELS[s.dok] + ' · ' + esc(stateLabel(s)) + '</span>' + (s.miscal ? ' <span class="tag terra">Top priority</span>' : '') + '</li>';
+      }).join('') + '</ul>' + (due.length > 6 ? '<p class="muted">and ' + (due.length - 6) + ' more.</p>' : '') +
+        '<div class="sp" style="height:10px"></div><button type="button" class="btn key" data-act="review">Start today’s review</button>';
+    } else {
+      var ns = notStarted(ck);
+      h += '<p>Nothing is due right now.</p>' + (ns.length ? '<p class="muted">' + plural(ns.length, 'competency', 'competencies') + ' taught so far have no practice yet. Starting one is the best next step.</p><button type="button" class="btn" data-act="startnew">Practice something new</button>' : '<p class="muted">Pick any practice mode below to keep going.</p>');
+    }
+    h += '</section></div><div class="sp"></div>';
+    h += '<section aria-labelledby="hModes"><h2 id="hModes">Practice</h2><div class="grid g3">' + c.order.map(function (m) {
+      return '<a class="tile" href="#/' + m + '" target="_top"><span class="tt">' + esc(MODES[m].name) + '</span><span class="td">' + esc(MODES[m].blurb) + '</span></a>';
+    }).join('') + '</div></section><div class="sp"></div>' + toolStrip(ck) + '<div class="sp"></div>';
+    h += '<div class="grid g2"><section class="card" aria-labelledby="hWeak"><h2 id="hWeak">Your weak spots</h2>' + (weak.length ? '<ul class="list">' + weak.map(function (s) {
+      return '<li class="st-locked"><span class="t">' + esc(compName(ck, s.comp)) + '</span><br><span class="muted">DOK ' + s.dok + ' ' + DOK_LABELS[s.dok] + ', strength ' + Math.round(s.strength * 100) + '%' + (s.miscal ? ', felt sure but missed it' : '') + '</span></li>';
+    }).join('') + '</ul><div class="sp" style="height:10px"></div><div class="row"><a class="btn" href="#/weak" target="_top">Open my weak spots</a><a class="btn ghost" href="#/coach" target="_top">Ask the AI Mastery Coach</a></div>' : '<p class="muted">Weak spots show up here once you have practiced a few topics in any of your tools.</p><a class="btn ghost" href="#/weak" target="_top">Open my weak spots</a>') + '</section>';
+    h += '<section class="card" aria-labelledby="hSync"><h2 id="hSync">Your record</h2><p data-sync></p><p class="muted">Every attempt saves one row: what you practiced, how many you got out of how many, and how confident you felt beforehand. Your private ID is ' + esc(P.id) + '.</p><a class="linkbtn" href="#/progress" target="_top">See everything on My progress</a></section></div>';
+    view(h);
+  }).catch(failView);
+};
+$('#main').addEventListener('click', function (e) {
+  var b = e.target.closest('[data-act]'); if (!b) return;
+  var a = b.getAttribute('data-act');
+  if (a === 'timer') openTimerSetup();
+  if (a === 'review') startReview();
+  if (a === 'startnew') startNew();
+});
+
+/* ---------- 16. DAILY REVIEW ---------- */
+function startReview() {
+  var ck = course().key; loadingView('Building today’s review from every practice mode…');
+  ensureAll(ck).then(function () {
+    var due = dueList(ck), budget = Math.round(goal(ck).daily * 60), avoid = {}, used = {}, tasks = [], mins = 0, av = avgMinutes(ck);
+    var pin = pinnedComp(ck);
+    if (pin && !due.some(function (s) { return s.comp === pin; })) { var E = engine(ck); var ps = Object.keys(E).map(function (k) { return E[k]; }).filter(function (s) { return s.comp === pin; })[0]; due.unshift(ps || { comp: pin, dok: (D(ck).byId[pin] || {}).dok || 1 }); }
+    for (var i = 0; i < due.length; i++) {
+      var s = due[i], pk = pickItem(ck, s.comp, s.dok, avoid, used); if (!pk) continue; used[pk.item.mode] = (used[pk.item.mode] || 0) + 1;
+      avoid[pk.item.id] = 1;
+      tasks.push({ item: pk.item, key: s, note: pk.exact ? '' : 'No DOK ' + s.dok + ' item exists yet for this competency, so this one is DOK ' + pk.dok + '.' });
+      mins += pk.item.mode === 'flash' ? av.flashcard * 3 : pk.item.mode === 'exam' ? av.exam * 2 : pk.item.mode === 'loops' ? av.loop : pk.item.mode === 'draw' ? av.draw : av.braindump;
+      if (mins >= budget && tasks.length >= 3) break;
+    }
+    if (!tasks.length) { view(crumb() + '<h1>Today’s review</h1><p>None of the topics due today has a practice item yet. Try any practice mode instead.</p><a class="btn" href="#/practice" target="_top">Go to Practice</a>'); return; }
+    RUN = { kind: 'review', tasks: tasks, i: 0, results: [] };
+    go('#/run');
+  }).catch(failView);
+}
+function startNew() {
+  var ck = course().key; loadingView();
+  ensureAll(ck).then(function () {
+    var ns = notStarted(ck), tasks = [], avoid = {};
+    for (var i = 0; i < ns.length && tasks.length < 5; i++) {
+      var pk = pickItem(ck, ns[i].id, ns[i].dok, avoid); if (!pk) continue; avoid[pk.item.id] = 1;
+      tasks.push({ item: pk.item, key: { comp: ns[i].id, dok: pk.dok }, note: '' });
+    }
+    if (!tasks.length) { go('#/practice'); return; }
+    RUN = { kind: 'new', tasks: tasks, i: 0, results: [] }; go('#/run');
+  }).catch(failView);
+}
+
+/* ---------- 17. PRACTICE MENU ---------- */
+ROUTES.practice = function () {
+  var c = course();
+  view(crumb() + '<h1>Practice</h1><p class="lead">Every mode saves what you got right and how sure you felt before you answered. Pick whatever you need today.</p><div class="grid g3">' +
+    c.order.map(function (m) { return '<a class="tile" href="#/' + m + '" target="_top"><span class="tt">' + esc(MODES[m].name) + '</span><span class="td">' + esc(MODES[m].blurb) + '</span></a>'; }).join('') +
+    '</div><div class="sp"></div>' + toolStrip(c.key) + '<div class="sp"></div><div class="card"><h2>What you see</h2><label class="row" style="gap:10px;font-weight:700"><input type="checkbox" id="showAll"' + (P.showAll ? ' checked' : '') + ' style="width:20px;height:20px;accent-color:#08101F"> Show topics from later weeks too</label><p class="muted" style="margin-top:8px">Off by default, so you only see what has been taught so far (through week ' + currentWeek(c.key) + ').</p></div>');
+  $('#showAll').addEventListener('change', function (e) { P.showAll = e.target.checked; saveProfile(); });
+};
+
+/* ---------- 18. MY PROGRESS ---------- */
+ROUTES.progress = function () {
+  var ck = course().key; loadingView();
+  ensureCore(ck).then(function () {
+    var E = engine(ck), d = D(ck), levels = ck === 'physiology' ? [1, 2, 3] : [1, 2, 3, 4], today = dayNum(now());
+    var groups = {}; d.comps.forEach(function (c) { if (!taught(ck, c.week)) return; (groups[c.group] = groups[c.group] || []).push(c); });
+    var h = crumb() + '<h1>My progress</h1><p class="lead">Your strength on every competency at every DOK level. A score of 80% or more counts as knowing it. Items marked “Felt sure, missed it” come back first.</p>';
+    h += '<p class="muted">DOK 1 Recall · DOK 2 Application · DOK 3 Analysis' + (levels.length > 3 ? ' · DOK 4 Extended thinking' : '') + '</p>';
+    var gk = Object.keys(groups);
+    if (!gk.length) h += '<p>No competencies have been taught yet this term.</p>';
+    gk.forEach(function (g, gi) {
+      h += '<div class="card" style="margin-bottom:16px"><div class="tbl-wrap" tabindex="0" role="region" aria-label="' + esc(g) + ' table, scrolls sideways on small screens"><table class="prog"><caption>' + esc(g) + '</caption><thead><tr><th scope="col">Competency</th>' + levels.map(function (l) { return '<th scope="col">DOK ' + l + '</th>'; }).join('') + '</tr></thead><tbody>';
+      groups[g].forEach(function (c) {
+        h += '<tr><th scope="row" style="font-weight:600">' + esc(c.name) + '<br><span class="muted">Week ' + c.week + '</span></th>';
+        levels.forEach(function (l) {
+          var s = E[c.id + '|' + l];
+          if (!s) { h += '<td><span class="cell none">Not yet</span></td>'; return; }
+          var cls = s.miscal ? 'miscal' : s.strength >= 0.8 ? 'strong' : s.strength >= 0.5 ? 'mid' : 'weak';
+          var due = s.dueDay <= today ? 'Due now' : 'Next ' + fmtDate((s.dueDay) * DAY + new Date().getTimezoneOffset() * 60000);
+          h += '<td><span class="cell ' + cls + '">' + Math.round(s.strength * 100) + '%</span><br><span class="muted" style="font-size:12.5px">' + esc(s.miscal ? 'Felt sure, missed it' : due) + '</span></td>';
+        });
+        h += '</tr>';
+      });
+      h += '</tbody></table></div></div>';
+    });
+    view(h);
+  }).catch(failView);
+};
+
+/* ---------- 19. WEEKLY REFLECTION ---------- */
+ROUTES.reflect = function () {
+  var ck = course().key; loadingView();
+  ensureCore(ck).then(function () {
+    var pend = pendingReflection(ck), ws = pend || (weekStart(now()) - 7 * DAY), done = reflectionFor(ck, ws);
+    var sum = weekSummary(ck, ws), we = ws + 7 * DAY;
+    var h = crumb() + '<h1>Weekly reflection</h1><p class="lead">The week of ' + fmtDate(ws) + ' at 5 pm to ' + fmtDate(we) + ' at 5 pm.</p>';
+    h += '<div class="grid g3"><div class="card"><h2>Focus sessions</h2><p class="big">' + sum.sessions + '</p><p class="muted">' + fmtHours(sum.focusMin) + ' of focused time</p></div>' +
+      '<div class="card"><h2>Activities</h2><p class="big">' + sum.activities + '</p><p class="muted">' + (Object.keys(sum.byMode).map(function (m) { return sum.byMode[m] + ' ' + m; }).join(', ') || 'None yet') + '</p></div>' +
+      '<div class="card"><h2>Where you grew</h2>' + (sum.grew.length ? '<ul>' + sum.grew.slice(0, 5).map(function (c) { return '<li>' + esc(compName(ck, c)) + '</li>'; }).join('') + '</ul>' : '<p class="muted">Keep practicing and growth shows up here.</p>') + '</div></div><div class="sp"></div>';
+    h += '<div class="card"><h2>How sure you felt next to how you did</h2><p>This is the most useful thing on the page. Where the two numbers are far apart, your sense of what you know is off, and that is worth fixing.</p>';
+    if (sum.cal.length) {
+      h += '<div class="tbl-wrap" tabindex="0" role="region" aria-label="Confidence compared with results"><table class="prog"><caption class="sr">Confidence compared with results, by competency</caption><thead><tr><th scope="col">Competency</th><th scope="col">How sure you felt</th><th scope="col">How you did</th><th scope="col">What it means</th></tr></thead><tbody>' +
+        sum.cal.slice(0, 12).map(function (x) {
+          var gap = x.conf - x.perf, m = gap > 0.25 ? 'You felt surer than you scored' : gap < -0.25 ? 'You did better than you felt' : 'Your confidence matched your results';
+          return '<tr><th scope="row" style="font-weight:600">' + esc(compName(ck, x.comp)) + '</th><td>' + Math.round(x.conf * 100) + '%</td><td>' + Math.round(x.perf * 100) + '%</td><td>' + m + '</td></tr>';
+        }).join('') + '</tbody></table></div>';
+    } else h += '<p class="muted">No practice was recorded that week.</p>';
+    h += (sum.weak.length ? '<h3 style="margin-top:14px">Still weak</h3><ul>' + sum.weak.slice(0, 6).map(function (c) { return '<li>' + esc(compName(ck, c)) + '</li>'; }).join('') + '</ul>' : '') + '</div><div class="sp"></div>';
+    var opts = uniq(sum.weak.concat(sum.cal.map(function (x) { return x.comp; })).concat(weakList(ck, 8).map(function (s) { return s.comp; })));
+    var v = done || {};
+    h += '<form class="card stack" id="refForm" novalidate><h2>Your answers</h2>' +
+      '<div><label class="f" for="r1">How well do you think you know this week’s material?</label><textarea class="field" id="r1" rows="3">' + esc(v.a1 || '') + '</textarea></div>' +
+      '<div><label class="f" for="r2">What surprised you when you compared your confidence to your results?</label><textarea class="field" id="r2" rows="3">' + esc(v.a2 || '') + '</textarea></div>' +
+      '<div><label class="f" for="r3c">Which topic do you most need to work on next week?</label><select class="field" id="r3c"><option value="">Pick a topic, or write your own below</option>' + opts.map(function (c) { return '<option value="' + esc(c) + '"' + (v.a3comp === c ? ' selected' : '') + '>' + esc(compName(ck, c)) + '</option>'; }).join('') + '</select>' +
+      '<label class="f" for="r3" style="margin-top:8px">In your own words (optional)</label><input class="field" id="r3" value="' + esc(v.a3 || '') + '"></div>' +
+      '<div><label class="f" for="r4">What will you do differently next week?</label><textarea class="field" id="r4" rows="3">' + esc(v.a4 || '') + '</textarea></div>' +
+      '<p class="muted">The topic you pick moves to the top of next week’s review list. Your answers are saved under your private ID, never your name.</p>' +
+      '<div class="row"><button type="submit" class="btn">' + (done ? 'Update my reflection' : 'Save my reflection') + '</button></div><p id="refMsg" aria-live="polite"></p></form>';
+    view(h);
+    $('#refForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var r = { course: ck, weekOf: ws, a1: $('#r1').value.trim(), a2: $('#r2').value.trim(), a3: $('#r3').value.trim(), a3comp: $('#r3c').value, a4: $('#r4').value.trim(), at: now() };
+      if (!r.a1 && !r.a2 && !r.a3 && !r.a3comp && !r.a4) { $('#refMsg').textContent = 'Answer at least one question before saving.'; $('#r1').focus(); return; }
+      REF = REF.filter(function (x) { return !(x.course === ck && x.weekOf === ws); }); REF.push(r); LS.set(KEYS.ref, REF);
+      enqueue('reflection', { student_id: P.id, course: ck, week_of: iso(ws), q1_how_well: r.a1, q2_surprised: r.a2, q3_focus_topic: r.a3 || compName(ck, r.a3comp), q3_competency: r.a3comp, q4_change: r.a4,
+        summary: JSON.stringify({ sessions: sum.sessions, activities: sum.activities, cal: sum.cal.slice(0, 12).map(function (x) { return [x.comp, Math.round(x.conf * 100), Math.round(x.perf * 100)]; }) }), timestamp: iso(now()) });
+      invalidate(); $('#refMsg').textContent = 'Saved. Next week’s review starts with the topic you picked.'; toast('Reflection saved.');
+    });
+  }).catch(failView);
+};
+
+/* ---------- 20. AI MASTERY COACH ---------- */
+/* Opens Claude with a study prompt the student can read, edit, and
+   choose to send. Topics only: never the private ID, never the name. */
+ROUTES.coach = function () {
+  var ck = course().key; loadingView();
+  ensureCore(ck).then(function () {
+    var c = course(), weak = weakList(ck, 6), d = D(ck);
+    var lines = weak.map(function (s) { var cc = d.byId[s.comp]; return '- ' + cc.name + ' (' + cc.can + ') My gap is at DOK ' + s.dok + ', ' + DOK_LABELS[s.dok].toLowerCase() + (s.miscal ? '. I felt sure about this one and got it wrong.' : '.'); });
+    if (!lines.length) lines = notStarted(ck).slice(0, 5).map(function (cc) { return '- ' + cc.name + ' (' + cc.can + ')'; });
+    var prompt = 'I am a student in ' + c.long + '. Help me study the topics below, where my practice results are weakest.\n\n' + lines.join('\n') +
+      '\n\nPlease quiz me one question at a time and wait for my answer before going on. Match each question to the level listed (recall, application, analysis, or extended thinking). After each answer, tell me what I got right, what I missed, and why. Use correct anatomy and physiology terms and explain any hard ones in plain words. Do not give me the answer before I try.';
+    view(crumb() + '<h1>AI Mastery Coach</h1><p class="lead">This builds a study prompt from your weak spots. Read it, change anything you like, and choose whether to send it to Claude.</p>' +
+      '<div class="note"><p style="margin:0">Mastery OS never sends anything to an AI service on its own. This prompt holds study topics only, never your private ID or your name.</p></div><div class="sp"></div>' +
+      '<div class="card"><label class="f" for="coachTxt">Your study prompt</label><textarea class="field" id="coachTxt" rows="14">' + esc(prompt) + '</textarea><div class="sp" style="height:12px"></div>' +
+      '<div class="row"><button type="button" class="btn" id="coachGo">Open in Claude</button><button type="button" class="btn ghost" id="coachCopy">Copy the prompt</button></div><p class="muted" style="margin-top:10px">Opens claude.ai in a new tab. You may need to sign in.</p></div>');
+    $('#coachGo').addEventListener('click', function () { var w = window.open('https://claude.ai/new?q=' + encodeURIComponent($('#coachTxt').value), '_blank', 'noopener'); if (w) w.opener = null; });
+    $('#coachCopy').addEventListener('click', function () { copyText($('#coachTxt').value); });
+  }).catch(failView);
+};
+
+/* ---------- 21. MY ID AND SETTINGS ---------- */
+ROUTES.me = function () {
+  var ck = course().key, g = goal(ck);
+  view(crumb() + '<h1>My ID and settings</h1>' +
+    '<div class="grid g2"><section class="card stack" aria-labelledby="hId"><h2 id="hId">Your private ID</h2><p class="big" style="font-size:24px;word-break:break-word">' + esc(P.id) + '</p>' +
+    '<p>This is the only thing that leaves your device. If you switch computers or clear your browser, choose “I already have an ID” at setup and type it in to bring your progress back.</p><div class="row"><button type="button" class="btn ghost" id="meCopy">Copy my ID</button></div>' +
+    '<p class="muted">Want help with your data? You can share this ID with Dr. Rennie. She cannot connect it to you unless you do.</p></section>' +
+    '<section class="card stack" aria-labelledby="hPin"><h2 id="hPin">Your PIN</h2><p class="muted">You need your ID and PIN to bring your progress back on another device.' + (P.pinHash ? '' : ' You have not set a PIN yet.') + '</p>' +
+    (P.pinHash ? '<label class="f" for="mePin0">Current PIN</label><input class="field" id="mePin0" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password">' : '') +
+    '<label class="f" for="mePin1">New PIN, 4 to 6 numbers</label><input class="field" id="mePin1" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"><label class="f" for="mePin2">Type the new PIN again</label><input class="field" id="mePin2" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password">' +
+    '<button type="button" class="btn ghost" id="mePinSave">Save my new PIN</button><p id="mePinMsg" aria-live="polite" class="muted"></p></section><div class="sp"></div>' +
+    '<section class="card stack" aria-labelledby="hName"><h2 id="hName">Your name</h2><p class="muted">Stored only in this browser.</p><label class="f" for="meName">What should we call you?</label><input class="field" id="meName" maxlength="40" value="' + esc(P.name || '') + '"><button type="button" class="btn ghost" id="meNameSave">Save name</button></section></div><div class="sp"></div>' +
+    '<section class="card stack" aria-labelledby="hGoal"><h2 id="hGoal">Your goal for ' + esc(course().long) + '</h2>' +
+    '<fieldset><legend>Grade you are aiming for</legend><div class="row">' + ['A', 'B', 'C'].map(function (x) { return '<label class="row" style="gap:6px;font-weight:700"><input type="radio" name="meGrade" value="' + x + '"' + (g.grade === x ? ' checked' : '') + ' style="width:18px;height:18px;accent-color:#08101F"> ' + x + ' (about ' + gradeSay(course().key || P.course, x) + ' h a week)</label>'; }).join('') + '</div></fieldset>' +
+    '<div class="grid g2"><div><label class="f" for="meWeekly">Hours a week you can study</label><input class="field" id="meWeekly" type="number" min="1" max="60" step="0.5" value="' + esc(g.weekly) + '"></div><div><label class="f" for="meDaily">Hours on a typical day</label><input class="field" id="meDaily" type="number" min="0.5" max="12" step="0.5" value="' + esc(g.daily) + '"></div></div>' +
+    '<div class="row"><button type="button" class="btn" id="meGoalSave">Save my goal</button></div><p id="meMsg" aria-live="polite"></p></section><div class="sp"></div>' +
+    '<section class="card stack" aria-labelledby="hSave"><h2 id="hSave">Saving and syncing</h2><p data-sync></p><div class="row"><button type="button" class="btn ghost" id="meSync">Send now</button><button type="button" class="btn ghost" id="meExport">Download my record (CSV)</button></div></section><div class="sp"></div>' +
+    '<section class="card stack" aria-labelledby="hReset"><h2 id="hReset">Start over on this device</h2><p>Clears your name, goals and practice record from this browser. Anything already sent to the class sheet stays there under your ID.</p><div class="row"><button type="button" class="btn terra" id="meReset">Start over…</button></div></section>');
+  $('#meCopy').onclick = function () { copyText(P.id); };
+  $('#mePinSave').onclick = function () {
+    var m = $('#mePinMsg'), a = $('#mePin1').value.trim(), b = $('#mePin2').value.trim(), cur = $('#mePin0') ? $('#mePin0').value.trim() : null;
+    if (!PIN_RE.test(a)) { m.textContent = 'Your new PIN needs to be 4 to 6 numbers.'; $('#mePin1').focus(); return; }
+    if (a !== b) { m.textContent = 'The two new PINs do not match.'; $('#mePin2').focus(); return; }
+    var oldH = P.pinHash || '';
+    (cur != null ? pinHash(P.id, cur) : Promise.resolve(oldH)).then(function (ch) {
+      if (oldH && ch !== oldH) { m.textContent = 'Your current PIN is not right.'; $('#mePin0').focus(); return; }
+      return pinHash(P.id, a).then(function (nh) {
+        P.pinHash = nh; saveProfile();
+        enqueue('profile', { student_id: P.id, pin_hash: nh, old_pin_hash: oldH, goals: JSON.stringify(P.goals || {}), last_course: P.course, focus_minutes: pomoCfg().focus, updated: iso(now()) });
+        m.textContent = 'Saved. Use your new PIN from now on.'; $$('#mePin0,#mePin1,#mePin2').forEach(function (x) { x.value = ''; });
+      });
+    }).catch(function (e) { m.textContent = e.message; });
+  };
+  $('#meNameSave').onclick = function () { var n = $('#meName').value.trim(); if (!n) { $('#meName').focus(); return; } P.name = n.slice(0, 40); saveProfile(); toast('Name saved.'); };
+  $('#meGoalSave').onclick = function () {
+    var gr = ($('input[name="meGrade"]:checked') || {}).value, w = parseFloat($('#meWeekly').value), y = parseFloat($('#meDaily').value);
+    if (!(w >= 1 && w <= 60) || !(y >= 0.5 && y <= 12)) { $('#meMsg').textContent = 'Hours a week must be 1 to 60, and hours a day 0.5 to 12.'; return; }
+    P.goals[ck] = { grade: gr, weekly: w, daily: y }; saveProfile(); pushProfile(); $('#meMsg').textContent = 'Goal saved.';
+  };
+  $('#meSync').onclick = function () { flush().then(function () { toast(syncStatusText()); }); };
+  $('#meExport').onclick = exportCsv;
+  $('#meReset').onclick = openResetDialog;
+};
+function exportCsv() {
+  var cols = ['student_id', 'course', 'mode', 'item_id', 'competency', 'dok', 'got', 'possible', 'confidence', 'reasoning_score', 'minutes', 'timestamp', 'attempt_id', 'during_focus'];
+  var csv = cols.join(',') + '\n' + EV.map(function (r) { return cols.map(function (c) { var v = String(r[c] == null ? '' : r[c]); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(','); }).join('\n');
+  var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = 'mastery-os-record-' + P.id + '.csv'; document.body.appendChild(a); a.click(); a.remove();
+}
+function openResetDialog() {
+  var box = openDialog('<h2 id="dlgT">Start over on this device?</h2><p>This clears your name, goals, and practice record from this browser. It cannot be undone here. To bring your progress back later, you would need your private ID: <b>' + esc(P.id) + '</b>.</p>' +
+    '<label class="row" style="gap:10px;font-weight:700;margin:12px 0"><input type="checkbox" id="rsOk" style="width:20px;height:20px;accent-color:#A0522D"> I understand, and I have my ID written down</label>' +
+    '<div class="row"><button type="button" class="btn" id="rsKeep">Keep my data</button><button type="button" class="btn terra" id="rsGo" disabled>Start over</button></div>', { focus: '#rsKeep' });
+  $('#rsOk', box).onchange = function (e) { $('#rsGo', box).disabled = !e.target.checked; };
+  $('#rsKeep', box).onclick = closeDialog;
+  $('#rsGo', box).onclick = function () {
+    Object.keys(KEYS).forEach(function (k) { LS.del(KEYS[k]); });
+    P = null; EV = []; QUEUE = []; SESS = []; REF = []; FLAGS = {}; invalidate(); closeDialog(); pfStop(false); showSetup();
+  };
+}
+
+/* ---------- 22. SHARED PIECES FOR EVERY MODE ---------- */
+function confField(name, legend) {
+  var h = '<fieldset class="confset"><legend>' + esc(legend || 'Before you answer: how sure are you?') + '</legend><div class="conf">';
+  for (var i = 1; i <= 5; i++) h += '<input type="radio" name="' + name + '" id="' + name + i + '" value="' + i + '"><label for="' + name + i + '"><b>' + i + '</b><span>' + CONF_LABELS[i] + '</span></label>';
+  return h + '</div></fieldset>';
+}
+function confVal(name) { var r = $('input[name="' + name + '"]:checked'); return r ? +r.value : 0; }
+function calibNote(conf, perf) {
+  if (conf >= 4 && perf < CONFIG.HIGH_PERF) return 'You felt sure and missed some of this. That is the most useful thing you could have found today, and it will come back first.';
+  if (conf <= 2 && perf >= CONFIG.HIGH_PERF) return 'You did better than you expected. Trust yourself a little more on this one.';
+  return '';
+}
+function markdownBold(s) { return esc(s).replace(/\[\[(.+?)\]\]/g, '<strong>$1</strong>'); }
+function norm(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+function taskHead(task, extra) {
+  var it = task.item, ck = it.course, comps = it.comps.map(function (c) { return compName(ck, c); });
+  var n = RUN.tasks.length > 1 ? (RUN.kind === 'review' ? 'Review ' : '') + (RUN.i + 1) + ' of ' + RUN.tasks.length : '';
+  return '<div class="qhead"><span>' + esc(it.mode === 'flash' && it.course === 'anatomy' ? 'Recall card' : MODES[it.mode].name) + (n ? ' · ' + n : '') + '</span><span>DOK ' + it.dok + ', ' + DOK_LABELS[it.dok] + '</span></div>' +
+    '<p class="muted" style="margin-top:-4px">' + esc(comps.slice(0, 3).join(' · ')) + (comps.length > 3 ? ' and more' : '') + '</p>' + (task.note ? '<p class="note">' + esc(task.note) + '</p>' : '') + (extra || '');
+}
+var CAP = { flash: 4, exam: 8, dump: 25, draw: 45, loops: 40 };
+function elapsedMin(t0, mode) { return Math.min((now() - t0) / 60000, CAP[mode] || 30); }
+
+/* ---------- 23. THE SESSION RUNNER ---------- */
+ROUTES.run = function () {
+  if (!RUN || !RUN.tasks.length) { go('#/home'); return; }
+  if (RUN.i >= RUN.tasks.length) { renderSummary(); return; }
+  var task = RUN.tasks[RUN.i], m = task.item.mode;
+  ({ flash: runFlash, exam: runExam, dump: runDump, draw: runDraw, loops: runLoop })[m](task, function (res) {
+    RUN.results.push(res); RUN.i++;
+    if (RUN.i >= RUN.tasks.length) renderSummary(); else ROUTES.run();
+    var h1 = $('#main h1'); if (h1) { h1.setAttribute('tabindex', '-1'); h1.focus(); }
+    window.scrollTo(0, 0); sendHeight();
+  });
+};
+function runTitle() {
+  return RUN.kind === 'review' ? 'Today’s review' : RUN.kind === 'new' ? 'Something new' : (RUN.title || MODES[RUN.tasks[0].item.mode].name);
+}
+function renderSummary() {
+  var got = 0, pos = 0, miss = 0;
+  RUN.results.forEach(function (r) { got += r.got; pos += r.possible; if (r.conf >= 4 && r.possible && r.got / r.possible < CONFIG.HIGH_PERF) miss++; });
+  var pct = pos ? Math.round(got / pos * 100) : 0;
+  view(crumb() + '<div class="runner"><h1>' + esc(runTitle()) + ': done</h1><div class="card"><p class="big">' + round1(got) + ' of ' + pos + ' <span class="muted" style="font-size:16px;font-weight:500">(' + pct + '%)</span></p>' +
+    (miss ? '<p>' + plural(miss, 'time') + ' you felt sure and still missed something. Those topics come back first.</p>' : '<p>Every result is saved and your review schedule is updated.</p>') +
+    '<p class="muted">' + esc(paceMessage(course().key)) + '</p><div class="row"><a class="btn" href="#/home" target="_top">Back to Today</a><a class="btn ghost" href="#/practice" target="_top">Practice more</a></div></div></div>');
+  RUN = null;
+}
+
+/* ---------- 24. PICKERS ---------- */
+function filterBar(ck, items, opts) {
+  opts = opts || {};
+  var d = D(ck), ids = {}; items.forEach(function (it) { (it.lines ? [].concat.apply([], it.lines.map(function (l) { return l.comps; })) : it.comps).forEach(function (c) { ids[c] = 1; }); });
+  var groups = uniq(d.comps.filter(function (c) { return ids[c.id]; }).map(function (c) { return c.group; }));
+  var h = '<div class="grid g3"><div><label class="f" for="fGroup">Topic area</label><select class="field" id="fGroup"><option value="">Everything taught so far</option>' + groups.map(function (g) { return '<option>' + esc(g) + '</option>'; }).join('') + '</select></div>' +
+    '<div><label class="f" for="fComp">Competency</label><select class="field" id="fComp"><option value="">Any competency</option></select></div>';
+  if (opts.dok) h += '<div><label class="f" for="fDok">DOK level</label><select class="field" id="fDok"><option value="">Any level</option>' + [1, 2, 3, 4].map(function (l) { return '<option value="' + l + '">DOK ' + l + ', ' + DOK_LABELS[l] + '</option>'; }).join('') + '</select></div>';
+  if (opts.count) h += '<div><label class="f" for="fCount">How many</label><select class="field" id="fCount">' + opts.count.map(function (n) { return '<option value="' + n + '">' + (n === 999 ? 'All of them' : n) + '</option>'; }).join('') + '</select></div>';
+  return h + '</div>';
+}
+function wireFilter(ck, items, onChange) {
+  var d = D(ck);
+  function fillComps() {
+    var g = $('#fGroup').value, ids = {};
+    items.forEach(function (it) { (it.lines ? [].concat.apply([], it.lines.map(function (l) { return l.comps; })) : it.comps).forEach(function (c) { ids[c] = 1; }); });
+    var list = d.comps.filter(function (c) { return ids[c.id] && (!g || c.group === g); });
+    $('#fComp').innerHTML = '<option value="">Any competency</option>' + list.map(function (c) { return '<option value="' + esc(c.id) + '">' + esc(c.name) + '</option>'; }).join('');
+  }
+  fillComps();
+  var want = hashParam('comp');
+  if (want && d.byId[want]) { $('#fGroup').value = d.byId[want].group; fillComps(); $('#fComp').value = want; }
+  $('#fGroup').addEventListener('change', function () { fillComps(); onChange(); });
+  $('#fComp').addEventListener('change', onChange);
+  if ($('#fDok')) $('#fDok').addEventListener('change', onChange);
+  if ($('#fCount')) $('#fCount').addEventListener('change', onChange);
+}
+function applyFilter(ck, items) {
+  var g = $('#fGroup').value, c = $('#fComp').value, k = $('#fDok') ? +$('#fDok').value : 0, d = D(ck);
+  return items.filter(function (it) {
+    var comps = it.lines ? [].concat.apply([], it.lines.map(function (l) { return l.comps; })) : it.comps;
+    if (c && comps.indexOf(c) < 0) return false;
+    if (g && !comps.some(function (x) { return d.byId[x] && d.byId[x].group === g; })) return false;
+    if (k && it.dok !== k) return false;
+    return true;
+  });
+}
+function taughtItems(ck, items) { return items.filter(function (it) { return taught(ck, it.week); }); }
+function freshFirst(ck, items, n) {
+  var seen = lastSeen(ck), E = engine(ck);
+  var weakBoost = function (it) { var s = E[it.comps[0] + '|' + it.dok]; return s ? s.strength : 0.5; };
+  return shuffle(items).sort(function (a, b) { return ((seen[a.id] || 0) - (seen[b.id] || 0)) || (weakBoost(a) - weakBoost(b)); }).slice(0, n);
+}
+function modePage(mode, build) {
+  return function () {
+    var ck = course().key, c = course();
+    loadingView('Loading ' + MODES[mode].name.toLowerCase() + '…');
+    ensureMode(ck, mode).then(function (all) {
+      var items = taughtItems(ck, all);
+      var head = crumb() + '<h1>' + esc(MODES[mode].name) + '</h1><p class="lead">' + esc(MODES[mode].blurb) + '</p>';
+      if (!all.length) { view(head + '<div class="card"><p>' + esc(c.long) + ' does not have ' + esc(MODES[mode].name) + ' content yet. Every other mode is ready to use.</p><a class="btn" href="#/practice" target="_top">Back to Practice</a></div>'); return; }
+      if (!items.length) { view(head + '<div class="card"><p>Nothing in this mode has been taught yet. Turn on “Show topics from later weeks” on the Practice page to look ahead.</p></div>'); return; }
+      build(ck, items, head);
+    }).catch(failView);
+  };
+}
+function startRun(title, items, kind) {
+  RUN = { kind: kind || 'mode', title: title, tasks: items.map(function (it) { return { item: it }; }), i: 0, results: [] };
+  go('#/run');
+}
+
+ROUTES.flash = modePage('flash', function (ck, items, head) {
+  view(head + '<div class="card stack">' + filterBar(ck, items, { count: [10, 20, 30] }) + '<p class="muted" id="fInfo" aria-live="polite"></p><button type="button" class="btn key" id="fGo">Start flashcards</button></div>');
+  var upd = function () { $('#fInfo').textContent = plural(applyFilter(ck, items).length, 'card') + ' match. Cards you have not seen lately and weaker topics come first.'; };
+  wireFilter(ck, items, upd); upd();
+  $('#fGo').onclick = function () { var pool = applyFilter(ck, items); if (!pool.length) return; startRun('Flashcards', freshFirst(ck, pool, +$('#fCount').value)); };
+});
+ROUTES.exam = modePage('exam', function (ck, items, head) {
+  view(head + '<div class="card stack">' + filterBar(ck, items, { dok: true, count: [5, 10, 20] }) + '<p class="muted" id="fInfo" aria-live="polite"></p><button type="button" class="btn key" id="fGo">Start the exam</button></div>');
+  var upd = function () { $('#fInfo').textContent = plural(applyFilter(ck, items).length, 'question') + ' match.'; };
+  wireFilter(ck, items, upd); upd();
+  $('#fGo').onclick = function () { var pool = applyFilter(ck, items); if (!pool.length) return; startRun('Exam engine', freshFirst(ck, pool, +$('#fCount').value)); };
+});
+function listPicker(mode, label) {
+  return modePage(mode, function (ck, items, head) {
+    view(head + '<div class="card stack">' + filterBar(ck, items) + '</div><div class="sp"></div><ul class="list" id="pickList"></ul>');
+    var seen = lastSeen(ck);
+    var draw = function () {
+      var pool = applyFilter(ck, items).sort(function (a, b) { return (b.week || 0) - (a.week || 0); }).slice(0, 80);
+      $('#pickList').innerHTML = pool.map(function (it, i) {
+        var done = seen[it.id];
+        return '<li class="' + (done ? 'st-done' : 'st-open') + '"><div class="row" style="justify-content:space-between"><span><span class="t">' + esc((it.code ? it.code + ' · ' : '') + (it.title || it.prompt)) + '</span><br><span class="muted">Week ' + (it.week || '?') + ' · DOK ' + it.dok + (done ? ' · Last practiced ' + fmtDate(done) : '') + '</span></span><button type="button" class="btn sm" data-pick="' + i + '" aria-label="' + esc(label + ': ' + (it.title || it.prompt)) + '">' + esc(label) + '</button></div></li>';
+      }).join('') || '<li>No matches. Try a different topic.</li>';
+      $$('#pickList [data-pick]').forEach(function (b) { b.onclick = function () { startRun(MODES[mode].name, [pool[+b.getAttribute('data-pick')]]); }; });
+      sendHeight();
+    };
+    wireFilter(ck, items, draw); draw();
+  });
+}
+ROUTES.dumpNative = listPicker('dump', 'Start');
+ROUTES.draw = listPicker('draw', 'Draw it');
+ROUTES.loops = modePage('loops', function (ck, items, head) {
+  var seen = lastSeen(ck), mods = uniq(items.map(function (l) { return l.module; }));
+  var h = head + '<div class="card stack"><div class="grid g2"><div><label class="f" for="fCount">Stations per round</label><select class="field" id="fCount"><option value="10">10</option><option value="20">20</option><option value="999">Every station in the Loop</option></select></div>' +
+    '<div><span class="f">Spelling</span><label class="row" style="gap:10px;font-weight:700"><input type="checkbox" id="fSpell"' + (P.spellStrict ? ' checked' : '') + ' style="width:20px;height:20px;accent-color:#08101F"> Spelling counts, like the lab practical</label></div></div></div><div class="sp"></div>';
+  mods.forEach(function (m) {
+    h += '<h2>Module ' + esc(m) + '</h2><ul class="list" style="margin-bottom:18px">' + items.filter(function (l) { return l.module === m; }).map(function (l) {
+      return '<li class="' + (seen[l.id] ? 'st-done' : 'st-open') + '"><div class="row" style="justify-content:space-between"><span><span class="t">' + esc(l.title) + '</span><br><span class="muted">' + esc(l.unit) + ' · ' + l.stations.length + ' stations</span></span><button type="button" class="btn sm" data-loop="' + esc(l.id) + '" aria-label="Start ' + esc(l.title) + '">Start</button></div></li>';
+    }).join('') + '</ul>';
+  });
+  view(h);
+  $('#fSpell').onchange = function (e) { P.spellStrict = e.target.checked; saveProfile(); };
+  $$('[data-loop]').forEach(function (b) { b.onclick = function () {
+    var l = items.filter(function (x) { return x.id === b.getAttribute('data-loop'); })[0];
+    RUN = { kind: 'mode', title: l.title, tasks: [{ item: l, count: +$('#fCount').value }], i: 0, results: [] }; go('#/run');
+  }; });
+});
+
+/* ---------- 25. FLASHCARDS ---------- */
+function runFlash(task, done) {
+  var it = task.item, t0 = now();
+  view(crumb() + '<div class="runner"><h1 class="sr">' + esc(runTitle()) + '</h1><div class="card">' + taskHead(task) +
+    '<p class="prompt" id="fcQ">' + esc(it.prompt) + '</p>' + confField('fcConf', 'Before you flip: how sure are you that you know this?') +
+    '<div class="sp" style="height:14px"></div><button type="button" class="btn" id="fcFlip" aria-disabled="true">Flip the card</button><p class="kbd" id="fcHint">Rate your confidence first. Keys 1 to 5 work too.</p>' +
+    '<div id="fcBack" hidden><div class="answer" tabindex="-1" id="fcA"><p style="margin:0 0 6px"><b>Answer:</b> ' + esc(it.answer) + '</p>' + (it.explain ? '<p class="muted" style="margin:0">' + esc(it.explain) + '</p>' : '') + '</div>' +
+    '<div class="sp" style="height:14px"></div><p><b>Did you get it?</b></p><div class="row"><button type="button" class="btn" id="fcGot">I got it</button><button type="button" class="btn ghost" id="fcMiss">I missed it</button></div></div></div></div>');
+  var flip = function () {
+    if (!confVal('fcConf')) { $('#fcHint').textContent = 'Pick how sure you are first. It only counts before you see the answer.'; $('#fcConf1').focus(); return; }
+    $$('input[name="fcConf"]').forEach(function (r) { r.disabled = true; });
+    $('#fcFlip').hidden = true; $('#fcHint').hidden = true; $('#fcBack').hidden = false; $('#fcA').focus(); sendHeight();
+  };
+  $$('input[name="fcConf"]').forEach(function (r) { r.addEventListener('change', function () { $('#fcFlip').removeAttribute('aria-disabled'); }); });
+  $('#fcFlip').onclick = flip;
+  var fin = function (ok) {
+    var conf = confVal('fcConf');
+    recordAttempt({ course: it.course, mode: 'flash', item: it, groups: it.comps.map(function (c) { return { comp: c, dok: it.dok, got: ok ? 1 : 0, possible: 1 }; }), confidence: conf, minutes: elapsedMin(t0, 'flash') });
+    var n = calibNote(conf, ok ? 1 : 0); if (n) toast(n, 4500);
+    done({ got: ok ? 1 : 0, possible: 1, conf: conf });
+  };
+  $('#fcGot').onclick = function () { fin(true); }; $('#fcMiss').onclick = function () { fin(false); };
+  keyScope(function (e) {
+    if (!$('#fcBack')) return false;
+    if (/^[1-5]$/.test(e.key) && $('#fcBack').hidden && !$('input[name="fcConf"]').disabled) { var r = $('#fcConf' + e.key); r.checked = true; r.focus(); r.dispatchEvent(new Event('change')); return true; }
+    return false;
+  });
+}
+var KEYFN = null;
+function keyScope(fn) { KEYFN = fn; }
+document.addEventListener('keydown', function (e) {
+  if (!KEYFN || DLG || !$('#setup').hidden) return;
+  var tag = (e.target.tagName || '').toLowerCase(); if (tag === 'textarea' || (tag === 'input' && e.target.type !== 'radio' && e.target.type !== 'checkbox')) return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (KEYFN(e)) e.preventDefault();
+});
+window.addEventListener('hashchange', function () { KEYFN = null; });
+
+/* ---------- 26. EXAM ENGINE ---------- */
+var REASON_LABELS = ['No reasoning given', 'Restated the answer, or gave a reason that does not fit the question', 'Named a relevant fact', 'Linked the right fact to this question', 'Explained the mechanism or cause correctly', 'Complete, and it matches the explanation'];
+var STOPW = {}; 'the a an and or of to in on for with from by at as is are be it its this that these those which what when where how why than then into also only more most less very there their they them was were has have had not but can will would should could each other such same does do did been being about over under between through during after before'.split(' ').forEach(function (w) { STOPW[w] = 1; });
+function keyTerms(t) { var o = {}; String(t || '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/).forEach(function (w) { if (w.length > 4 && !STOPW[w]) o[w.slice(0, 6)] = 1; }); return o; }
+function suggestReasoning(reason, it) {
+  var words = String(reason || '').trim().split(/\s+/).filter(Boolean).length;
+  if (words < 3) return 0;
+  var key = keyTerms((it.why || '') + ' ' + (it.correction || '')), ans = keyTerms(answerText(it)), mine = keyTerms(reason), k = 0, onlyAns = true;
+  Object.keys(mine).forEach(function (w) { if (key[w]) { k++; if (!ans[w]) onlyAns = false; } });
+  var causal = /\b(because|so|since|therefore|which|causes?|leads?|allows?|means|results?)\b/i.test(reason);
+  if (k === 0) return 1;
+  if (onlyAns && k <= 2) return 1;
+  if (k >= 6 && causal) return 5;
+  if (k >= 4 && causal) return 4;
+  if (k >= 3) return 3;
+  return 2;
+}
+function answerText(it) {
+  if (it.kind === 'mc') return it.options[it.correct];
+  if (it.kind === 'ma') return it.correct.map(function (i) { return it.options[i]; }).join('; ');
+  if (it.kind === 'tf') return it.truth ? 'True' : 'False';
+  if (it.kind === 'tffix') return it.truth ? 'True' : 'False, the correct term is ' + (it.accept[0] || '');
+  return '';
+}
+function runExam(task, done) {
+  var it = task.item, t0 = now(), tries = 0, out = {};
+  var ansHtml = '';
+  if (it.kind === 'mc' || it.kind === 'ma') {
+    var type = it.kind === 'ma' ? 'checkbox' : 'radio';
+    ansHtml = '<fieldset><legend>' + (it.kind === 'ma' ? 'Your answer: select all that apply' : 'Your answer') + '</legend><div class="opts">' + it.options.map(function (o, i) {
+      return '<label class="opt" id="opt' + i + '"><input type="' + type + '" name="exAns" value="' + i + '"><span><b>' + 'ABCDEFGH'.charAt(i) + '.</b> ' + esc(o) + '</span></label>';
+    }).join('') + '</div></fieldset>';
+  } else {
+    ansHtml = '<fieldset><legend>True or false?</legend><div class="opts"><label class="opt" id="optT"><input type="radio" name="exAns" value="true"><span>True</span></label><label class="opt" id="optF"><input type="radio" name="exAns" value="false"><span>False</span></label></div></fieldset>' +
+      (it.kind === 'tffix' ? '<div id="fixWrap" hidden style="margin-top:12px"><label class="f" for="exFix">If it is false, what word or term should replace the bold one?</label><input class="field" id="exFix" autocomplete="off"></div>' : '');
+  }
+  view(crumb() + '<div class="runner"><h1 class="sr">' + esc(runTitle()) + '</h1><div class="card">' + taskHead(task) +
+    (it.caseText ? '<div class="note" style="margin-bottom:12px"><p style="margin:0"><b>Case.</b> ' + esc(it.caseText) + '</p></div>' : '') +
+    '<p class="prompt">' + (it.kind === 'tffix' ? markdownBold(it.prompt) : esc(it.prompt)) + '</p>' +
+    confField('exConf', 'Before you answer: how sure are you?') + '<div class="sp" style="height:16px"></div>' + ansHtml +
+    '<div class="sp" style="height:14px"></div><label class="f" for="exWhy">Your reasoning: why is that the answer?</label><textarea class="field" id="exWhy" rows="3" aria-describedby="exWhyHelp"></textarea><p class="kbd" id="exWhyHelp">A sentence or two is enough. Your reasoning is scored after the answer is shown.</p>' +
+    '<p id="exMsg" role="alert" class="muted"></p><div id="exHint" hidden class="note" tabindex="-1"></div>' +
+    '<div class="row" id="exBtns"><button type="button" class="btn" id="exSubmit">Check my answer</button></div><div id="exReveal"></div></div></div>');
+  if (it.kind === 'tffix') $$('input[name="exAns"]').forEach(function (r) { r.addEventListener('change', function () { $('#fixWrap').hidden = r.value !== 'false' || !r.checked; }); });
+  function selection() {
+    var ch = $$('input[name="exAns"]:checked').map(function (x) { return x.value; });
+    if (it.kind === 'mc') return ch.length ? +ch[0] : null;
+    if (it.kind === 'ma') return ch.length ? ch.map(Number).sort() : null;
+    return ch.length ? ch[0] === 'true' : null;
+  }
+  function isRight(sel) {
+    if (it.kind === 'mc') return sel === it.correct;
+    if (it.kind === 'ma') { var c = it.correct.slice().sort(); return sel.length === c.length && sel.every(function (v, i) { return v === c[i]; }); }
+    if (it.kind === 'tf') return sel === it.truth;
+    if (it.kind === 'tffix') {
+      if (it.truth) return sel === true;
+      if (sel !== false) return false;
+      var f = norm($('#exFix').value); return !!f && it.accept.some(function (a) { return norm(a) === f; });
+    }
+  }
+  function hint(sel) {
+    if (it.kind === 'mc') {
+      $('#opt' + sel).classList.add('out'); $('#opt' + sel + ' input').disabled = true; $('#opt' + sel + ' input').checked = false;
+      var wn = it.whyNot && it.whyNot[sel] && !/^correct/i.test(it.whyNot[sel]) ? it.whyNot[sel] : null;
+      if (wn) return 'Not that one. ' + wn + ' Try again.';
+      var wrong = it.options.map(function (o, i) { return i; }).filter(function (i) { return i !== it.correct && i !== sel && !$('#opt' + i + ' input').disabled; });
+      if (wrong.length > 1) { var x = wrong[rnd(wrong.length)]; $('#opt' + x).classList.add('out'); $('#opt' + x + ' input').disabled = true; return 'Not that one. Another wrong choice is crossed out too. Try again.'; }
+      return 'Not that one. Try again.';
+    }
+    if (it.kind === 'ma') {
+      var c = it.correct, right = sel.filter(function (v) { return c.indexOf(v) >= 0; }).length, wrongN = sel.length - right, missing = c.length - right;
+      return 'You picked ' + plural(right, 'right choice') + ' and ' + plural(wrongN, 'choice') + ' that ' + (wrongN === 1 ? 'does' : 'do') + ' not belong' + (missing ? ', and you are missing ' + missing : '') + '. Adjust and try again.';
+    }
+    if (it.kind === 'tffix' && !it.truth && sel === false) return 'You are right that it is false. The fix is not right yet. Think about which term actually belongs in that spot.';
+    return 'Not quite. Read the statement again, word by word. One detail decides it.';
+  }
+  $('#exSubmit').onclick = function () {
+    var conf = confVal('exConf'), sel = selection(), why = $('#exWhy').value.trim();
+    if (!conf) { $('#exMsg').textContent = 'Rate how sure you are first.'; $('#exConf1').focus(); return; }
+    if (sel === null) { $('#exMsg').textContent = 'Choose an answer.'; ($('input[name="exAns"]:not(:disabled)') || {}).focus && $('input[name="exAns"]:not(:disabled)').focus(); return; }
+    if (it.kind === 'tffix' && sel === false && !$('#exFix').value.trim()) { $('#exMsg').textContent = 'Type the term that should replace the bold one.'; $('#exFix').focus(); return; }
+    if (why.split(/\s+/).filter(Boolean).length < 3) { $('#exMsg').textContent = 'Add a few words of reasoning. Why is that the answer?'; $('#exWhy').focus(); return; }
+    $('#exMsg').textContent = ''; $$('input[name="exAns"],input[name="exConf"]').forEach(function (r) { if (r.name === 'exConf') r.disabled = true; });
+    tries++;
+    var ok = isRight(sel);
+    if (!ok && tries === 1) { var hm = hint(sel); $('#exHint').hidden = false; $('#exHint').innerHTML = '<p style="margin:0"><b>Hint.</b> ' + esc(hm) + '</p>'; $('#exHint').focus(); $('#exSubmit').textContent = 'Check my second try'; sendHeight(); return; }
+    out.got = ok ? (tries === 1 ? 1 : 0.5) : 0; out.conf = conf; out.why = why; reveal(sel, ok);
+  };
+  function reveal(sel, ok) {
+    $$('input[name="exAns"]').forEach(function (r) { r.disabled = true; });
+    if (it.kind === 'mc' || it.kind === 'ma') {
+      var c = it.kind === 'ma' ? it.correct : [it.correct];
+      it.options.forEach(function (o, i) { var el = $('#opt' + i); el.classList.remove('out'); if (c.indexOf(i) >= 0) el.classList.add('ok'); else if ($('#opt' + i + ' input').checked) el.classList.add('no'); });
+    }
+    $('#exBtns').hidden = true; $('#exHint').hidden = true;
+    var h = '<div class="sp" style="height:6px"></div><div class="answer" tabindex="-1" id="exAnsBox"><p style="margin:0 0 6px"><b>' + (ok ? (out.got === 1 ? 'Correct.' : 'Correct on your second try.') : 'Not this time.') + '</b> The answer is: ' + esc(answerText(it)) + '</p>' +
+      (it.why ? '<p style="margin:0 0 6px">' + esc(it.why) + '</p>' : '') + (it.correction ? '<p style="margin:0">' + esc(it.correction) + '</p>' : '') + '</div>';
+    if (it.whyNot && (it.kind === 'mc' || it.kind === 'ma')) {
+      var wn = it.options.map(function (o, i) { return { i: i, t: it.whyNot[i] }; }).filter(function (x) { return x.t && !/^correct\.?$/i.test(x.t.trim()) && (it.kind === 'ma' ? it.correct.indexOf(x.i) < 0 : x.i !== it.correct); });
+      if (wn.length) h += '<div class="sp" style="height:10px"></div><h3>Why the other choices are wrong</h3><ul>' + wn.map(function (x) { return '<li><b>' + 'ABCDEFGH'.charAt(x.i) + '.</b> ' + esc(x.t) + '</li>'; }).join('') + '</ul>';
+    }
+    var sug = suggestReasoning(out.why, it);
+    h += '<div class="sp" style="height:12px"></div><fieldset><legend>Score your reasoning against the explanation</legend><p class="muted" style="margin-top:-2px">Your reasoning: “' + esc(out.why) + '”</p><p class="muted">Mastery OS suggests <b>' + sug + '</b> from the key ideas your reasoning shares with the explanation. Change it if that is not fair.</p><div class="opts">' +
+      REASON_LABELS.map(function (l, i) { return '<label class="opt"><input type="radio" name="exRs" value="' + i + '"' + (i === sug ? ' checked' : '') + '><span><b>' + i + '.</b> ' + esc(l) + '</span></label>'; }).join('') + '</div></fieldset>' +
+      (calibNote(out.conf, out.got) ? '<p class="note" style="margin-top:12px">' + esc(calibNote(out.conf, out.got)) + '</p>' : '') +
+      '<div class="sp" style="height:12px"></div><button type="button" class="btn" id="exSave">Save and continue</button>';
+    $('#exReveal').innerHTML = h; $('#exAnsBox').focus(); sendHeight();
+    $('#exSave').onclick = function () {
+      var rs = +(($('input[name="exRs"]:checked') || { value: sug }).value);
+      recordAttempt({ course: it.course, mode: 'exam', item: it, groups: it.comps.map(function (c) { return { comp: c, dok: it.dok, got: out.got, possible: 1 }; }), confidence: out.conf, reasoning: rs, minutes: elapsedMin(t0, 'exam') });
+      done({ got: out.got, possible: 1, conf: out.conf });
+    };
+  }
+}
+
+/* ---------- 27. CHECKLIST MODES: BRAIN DUMP AND DRAW IT TO KNOW IT ---------- */
+function checklistHtml(it) {
+  return '<fieldset><legend>Tick every point you actually included. Be honest; this is for you.</legend><ul class="checklist">' + it.lines.map(function (l, i) {
+    return '<li><label><input type="checkbox" data-line="' + i + '"><span>' + esc(l.text) + '</span></label></li>';
+  }).join('') + '</ul></fieldset><p id="ckCount" aria-live="polite" class="muted" style="margin-top:8px">0 of ' + it.lines.length + ' ticked.</p>';
+}
+function wireChecklist(it, t0, conf, mode, done) {
+  var boxes = $$('[data-line]');
+  var upd = function () { $('#ckCount').textContent = boxes.filter(function (b) { return b.checked; }).length + ' of ' + it.lines.length + ' ticked.'; };
+  boxes.forEach(function (b) { b.addEventListener('change', upd); });
+  $('#ckSave').onclick = function () {
+    var ticked = boxes.map(function (b) { return b.checked; }), got = ticked.filter(Boolean).length, at = iso(now()), attId = null;
+    /* a brain dump done here also counts in her brain dump levels, so Level 2 and 3 open the same way */
+    if (mode === 'dump' && it.course === 'anatomy' && it.level) {
+      try {
+        var st = JSON.parse(localStorage.getItem('bio004-dump-levels-v1') || 'null') || { runs: {}, prefs: {} }; st.runs = st.runs || {};
+        (st.runs[it.id] = st.runs[it.id] || []).push({ at: at, got: got, of: it.lines.length, conf: conf >= 4 ? 'high' : conf === 3 ? 'med' : 'low' });
+        localStorage.setItem('bio004-dump-levels-v1', JSON.stringify(st)); attId = 'bd|' + it.id + '|' + at;
+      } catch (e) {}
+    }
+    recordAttempt({ course: it.course, mode: mode, item: it, groups: splitByGroups(it, ticked), confidence: conf, minutes: elapsedMin(t0, mode), attemptId: attId });
+    var n = calibNote(conf, got / it.lines.length);
+    var missed = it.lines.filter(function (l, i) { return !ticked[i]; });
+    view(crumb() + '<div class="runner"><h1>' + got + ' of ' + it.lines.length + ' points</h1><div class="card">' + (n ? '<p class="note">' + esc(n) + '</p>' : '<p>Saved. Your review schedule is updated for every competency on this checklist.</p>') +
+      (missed.length ? '<h2>What to add in a second color</h2><ul>' + missed.map(function (l) { return '<li><b>' + esc(l.text) + '</b>' + (l.why ? '<br><span class="muted">' + esc(l.why) + '</span>' : '') + '</li>'; }).join('') + '</ul>' : '') +
+      (it.checkNote ? '<p><b>Check:</b> ' + esc(it.checkNote) + '</p>' : '') +
+      (it.knowWhen ? '<p><b>You know it when:</b> ' + esc(it.knowWhen) + '</p>' : '') +
+      (it.key ? '<p><a class="linkbtn" ' + linkAttrs(siteUrl(it.course, it.key)) + '>Open the drawing key for this note sheet</a></p>' : '') +
+      '<button type="button" class="btn" id="ckNext">Continue</button></div></div>');
+    $('#ckNext').focus();
+    $('#ckNext').onclick = function () { done({ got: got, possible: it.lines.length, conf: conf }); };
+  };
+}
+function runDump(task, done) {
+  var it = task.item, t0 = now(), timer = null, secs = 0, conf = 0;
+  view(crumb() + '<div class="runner"><h1 class="sr">' + esc(runTitle()) + '</h1><div class="card">' + taskHead(task) + '<h2>' + esc(it.title || 'Brain dump') + '</h2><p class="prompt">' + esc(it.prompt) + '</p>' +
+    '<div id="bdStep1">' + confField('bdConf', 'Before you start: how sure are you that you can cover this?') + '<div class="sp" style="height:14px"></div><button type="button" class="btn" id="bdStart">Start my brain dump</button><p id="bdMsg" role="alert" class="muted"></p></div>' +
+    '<div id="bdStep2" hidden><p class="note">Notes closed, book closed, phone away. Five minutes is a good default. Write on paper, or type below. What you type stays in this tab and is not saved or sent.</p>' +
+    '<p><span class="tag" aria-live="off" id="bdClock">0:00</span></p><label class="f" for="bdTxt">Write everything you know</label><textarea class="field" id="bdTxt" rows="10"></textarea><div class="sp" style="height:12px"></div><button type="button" class="btn" id="bdDone">I am done, show the checklist</button></div>' +
+    '<div id="bdStep3" hidden>' + checklistHtml(it) + '<div class="sp" style="height:12px"></div><button type="button" class="btn" id="ckSave">Save my score</button></div></div></div>');
+  $('#bdStart').onclick = function () {
+    conf = confVal('bdConf'); if (!conf) { $('#bdMsg').textContent = 'Rate how sure you are first.'; $('#bdConf1').focus(); return; }
+    $('#bdStep1').hidden = true; $('#bdStep2').hidden = false; $('#bdTxt').focus();
+    timer = setInterval(function () { secs++; var c = $('#bdClock'); if (c) c.textContent = fmtClock(secs); else clearInterval(timer); }, 1000);
+    sendHeight();
+  };
+  $('#bdDone').onclick = function () { clearInterval(timer); $('#bdStep2').hidden = true; $('#bdStep3').hidden = false; var f = $('[data-line]'); if (f) f.focus(); sendHeight(); wireChecklist(it, t0, conf, 'dump', done); };
+}
+function runDraw(task, done) {
+  if (task.item.opts && !task.item.lines) { chooseSheetPrompt(task, done); return; }
+  var it = task.item, t0 = now(), conf = 0;
+  view(crumb() + '<div class="runner"><h1 class="sr">' + esc(runTitle()) + '</h1><div class="card">' + taskHead(task) + '<h2>' + esc((it.code ? it.code + ' · ' : '') + it.title) + '</h2>' +
+    (it.warm ? '<p class="muted"><b>Warm up:</b> ' + esc(it.warm) + '</p>' : '') + '<p>' + esc(it.prompt) + '</p>' +
+    '<div id="dwStep1">' + confField('dwConf', 'Before you draw: how sure are you that you can draw this from memory?') + '<div class="sp" style="height:14px"></div><button type="button" class="btn" id="dwStart">Start drawing</button><p id="dwMsg" role="alert" class="muted"></p></div>' +
+    '<div id="dwStep2" hidden><p class="note">Draw from memory with nothing open. Paper works best. If you would rather draw here, use the space below.</p>' +
+    '<div class="row" role="toolbar" aria-label="Drawing tools" style="margin-bottom:8px"><button type="button" class="btn sm" id="dwPen" aria-pressed="true">Pen</button><button type="button" class="btn sm ghost" id="dwEraser" aria-pressed="false">Eraser</button><button type="button" class="btn sm ghost" id="dwClear">Clear</button><button type="button" class="btn sm ghost" id="dwSave">Save my drawing as an image</button></div>' +
+    '<div class="drawwrap"><canvas id="dwCanvas" aria-label="Drawing area. Draw with a mouse, finger or stylus. Paper works just as well."></canvas></div><div class="sp" style="height:12px"></div><button type="button" class="btn" id="dwCheck">Check my drawing</button></div>' +
+    '<div id="dwStep3" hidden>' + checklistHtml(it) + '<div class="sp" style="height:12px"></div><button type="button" class="btn" id="ckSave">Save my score</button></div></div></div>');
+  $('#dwStart').onclick = function () {
+    conf = confVal('dwConf'); if (!conf) { $('#dwMsg').textContent = 'Rate how sure you are first.'; $('#dwConf1').focus(); return; }
+    $('#dwStep1').hidden = true; $('#dwStep2').hidden = false; setupCanvas(); $('#dwPen').focus(); sendHeight();
+  };
+  $('#dwCheck').onclick = function () { $('#dwStep3').hidden = false; $('#dwCheck').hidden = true; var f = $('[data-line]'); if (f) f.focus(); sendHeight(); wireChecklist(it, t0, conf, 'draw', done); };
+}
+/* note sheets carry two prompts; the student picks one, as on paper */
+function chooseSheetPrompt(task, done) {
+  var it = task.item;
+  view(crumb() + '<div class="runner"><h1 class="sr">' + esc(runTitle()) + '</h1><div class="card">' + taskHead(task) + '<h2>' + esc(it.code + ' \u00b7 ' + it.title) + '</h2>' +
+    '<fieldset><legend>Pick one prompt and do that one</legend><div class="opts">' + it.opts.map(function (o, i) {
+      return '<label class="opt"><input type="radio" name="dwPick" value="' + i + '"' + (i === 0 ? ' checked' : '') + '><span><b>' + esc(o.k + '. ' + o.form) + '</b><br>' + esc(o.prompt) + (o.then ? '<br><span class="muted"><b>Then:</b> ' + esc(o.then) + '</span>' : '') + '</span></label>';
+    }).join('') + '</div></fieldset><div class="sp" style="height:12px"></div><button type="button" class="btn" id="dwPickGo">Use this prompt</button>' +
+    (it.sheet ? ' <a class="linkbtn" style="margin-left:10px" ' + linkAttrs(siteUrl(it.course, it.sheet)) + '>Print the note sheet</a>' : '') + '</div></div>');
+  $('#dwPickGo').onclick = function () {
+    var o = it.opts[+($('input[name="dwPick"]:checked') || { value: 0 }).value];
+    var one = Object.assign({}, it, { id: it.id + '#' + o.k, prompt: o.prompt + (o.then ? ' Then: ' + o.then : ''), lines: o.lines, checkNote: o.check, opts: null });
+    runDraw({ item: one, note: task.note }, done);
+  };
+}
+function setupCanvas() {
+  var cv = $('#dwCanvas'), ctx = cv.getContext('2d'), dpr = window.devicePixelRatio || 1, erase = false, drawing = false, last = null;
+  function size() { var r = cv.getBoundingClientRect(); var img = cv.width ? ctx.getImageData(0, 0, cv.width, cv.height) : null; cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height); if (img) ctx.putImageData(img, 0, 0); }
+  size();
+  function pt(e) { var r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) * dpr, y: (e.clientY - r.top) * dpr }; }
+  cv.addEventListener('pointerdown', function (e) { drawing = true; last = pt(e); cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener('pointermove', function (e) {
+    if (!drawing) return; var p = pt(e);
+    ctx.strokeStyle = erase ? '#fff' : '#08101F'; ctx.lineWidth = (erase ? 22 : 3) * dpr; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke(); last = p;
+  });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) { cv.addEventListener(ev, function () { drawing = false; }); });
+  function tool(er) { erase = er; $('#dwPen').setAttribute('aria-pressed', String(!er)); $('#dwEraser').setAttribute('aria-pressed', String(er)); $('#dwPen').classList.toggle('ghost', er); $('#dwEraser').classList.toggle('ghost', !er); }
+  $('#dwPen').onclick = function () { tool(false); }; $('#dwEraser').onclick = function () { tool(true); };
+  $('#dwClear').onclick = function () { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height); live('Drawing cleared.'); };
+  $('#dwSave').onclick = function () { var a = document.createElement('a'); a.href = cv.toDataURL('image/png'); a.download = 'my-drawing.png'; document.body.appendChild(a); a.click(); a.remove(); };
+}
+
+/* ---------- 28. LOOPS ---------- */
+function lpNorm(s) { return String(s == null ? '' : s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim(); }
+function lpCore(s) { var v = lpNorm(s); while (/^(the|a|an)\s+/.test(v)) v = v.replace(/^(the|a|an)\s+/, ''); return v; }
+function lpDist(a, b) { if (a === b) return 0; var p = [], c = [], i, j; for (j = 0; j <= b.length; j++) p[j] = j; for (i = 1; i <= a.length; i++) { c[0] = i; for (j = 1; j <= b.length; j++) c[j] = Math.min(p[j] + 1, c[j - 1] + 1, p[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); for (j = 0; j <= b.length; j++) p[j] = c[j]; } return p[b.length]; }
+function lpSlip(n) { return n <= 4 ? 0 : n <= 8 ? 1 : n <= 14 ? 2 : 3; }
+/* same judging rules as the Loops app: exact, a spelling slip, or wrong */
+function lpJudge(typed, answer, alts) {
+  var t = lpCore(typed); if (!t) return 'wrong';
+  var cand = [answer].concat(alts || []), best = 'wrong';
+  for (var i = 0; i < cand.length; i++) {
+    var c = lpCore(cand[i]); if (!c) continue; if (t === c) return 'exact';
+    var d = lpDist(t, c);
+    if (d <= lpSlip(c.length)) best = 'misspelled';
+    else if (best !== 'misspelled' && (t.indexOf(c) >= 0 || c.indexOf(t) >= 0) && Math.abs(t.length - c.length) <= Math.max(4, Math.round(c.length * 0.4))) best = 'misspelled';
+  }
+  return best;
+}
+function lpGrade(st, typed) {
+  var ans = st.ans || [], alt = st.alt || {}, used = [], verd = [], i, j;
+  ['exact', 'misspelled'].forEach(function (want) {
+    for (i = 0; i < typed.length; i++) { if (typed[i] == null) continue; for (j = 0; j < ans.length; j++) { if (used[j]) continue; if (lpJudge(typed[i], ans[j], alt[ans[j]]) === want) { used[j] = true; verd[j] = want; typed[i] = null; break; } } }
+  });
+  for (j = 0; j < ans.length; j++) if (!verd[j]) verd[j] = 'wrong';
+  return verd;
+}
+function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+function runLoop(task, done) {
+  var it = task.item, n = task.count || (RUN.kind === 'mode' ? 10 : 8), stations = shuffle(it.stations.map(function (s, i) { return Object.assign({ idx: i }, s); })).slice(0, Math.min(n, it.stations.length));
+  var k = 0, got = 0, pos = 0, confSum = 0, t0 = now(), strict = !!P.spellStrict, byComp = {};
+  var STM = ((window.MOS_ANATOMY || {}).idx || {}).stations || {};
+  function img(num) { return it.imgBase + it.dir + '/s' + pad2(num) + '.jpg'; }
+  function station() {
+    var st = stations[k];
+    view(crumb() + '<div class="runner"><h1 class="sr">' + esc(it.title) + '</h1><div class="card">' + taskHead(task, '<p class="muted"><b>' + esc(it.title) + '</b>, station ' + (k + 1) + ' of ' + stations.length + (strict ? ' · spelling counts' : '') + '</p>') +
+      '<img class="stationimg" src="' + esc(img(st.q)) + '" alt="Loop station ' + (k + 1) + ': a lab image with ' + (st.ans.length === 1 ? 'one structure' : st.ans.length + ' structures') + ' marked for you to identify." loading="eager">' +
+      '<div class="sp" style="height:14px"></div>' + confField('lpConf', 'Before you answer: how sure are you?') + '<div class="sp" style="height:14px"></div>' +
+      st.ans.map(function (a, i) { return '<label class="f" for="lp' + i + '">' + (st.ans.length > 1 ? 'Answer ' + (i + 1) + ' of ' + st.ans.length : 'Name the structure') + '</label><input class="field" id="lp' + i + '" autocomplete="off" autocapitalize="none" spellcheck="false" style="margin-bottom:10px">'; }).join('') +
+      '<p id="lpMsg" role="alert" class="muted"></p><div class="row" id="lpBtns"><button type="button" class="btn" id="lpCheck">Check</button></div><div id="lpOut"></div></div></div>');
+    $('#lpCheck').onclick = check;
+    $$('.runner input.field').forEach(function (x) { x.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); check(); } }); });
+  }
+  function check() {
+    var st = stations[k], conf = confVal('lpConf');
+    if (!conf) { $('#lpMsg').textContent = 'Rate how sure you are first.'; $('#lpConf1').focus(); return; }
+    var typed = st.ans.map(function (a, i) { return $('#lp' + i).value; });
+    var v = lpGrade(st, typed.slice()), counted = v.filter(function (x) { return x === 'exact' || (!strict && x === 'misspelled'); }).length;
+    got += counted; pos += st.ans.length; confSum += conf;
+    (STM[it.loopId + '#' + st.idx] || []).forEach(function (c) { var g = byComp[c] || (byComp[c] = { got: 0, possible: 0 }); g.got += counted; g.possible += st.ans.length; });
+    $$('.runner input').forEach(function (x) { x.disabled = true; }); $('#lpBtns').hidden = true;
+    $('#lpOut').innerHTML = '<div class="answer" tabindex="-1" id="lpA"><p style="margin:0 0 6px"><b>' + counted + ' of ' + st.ans.length + (strict ? ' with spelling' : '') + '.</b></p><ul style="margin:0 0 8px">' + st.ans.map(function (a, i) {
+      return '<li>' + esc(a) + ': ' + (v[i] === 'exact' ? 'correct' : v[i] === 'misspelled' ? (strict ? 'right structure, check the spelling' : 'correct, check the spelling') : 'missed') + '</li>'; }).join('') + '</ul>' +
+      (strict && v.indexOf('misspelled') >= 0 ? '<p style="margin:0 0 8px">Spelling counts on a practical. Write it out once more before you move on.</p>' : '') +
+      '<img class="stationimg" src="' + esc(img(st.a)) + '" alt="Answer image for station ' + (k + 1) + ', labeled ' + esc(st.ans.join(', ')) + '."></div><div class="sp" style="height:12px"></div><button type="button" class="btn" id="lpNext">' + (k + 1 < stations.length ? 'Next station' : 'Finish this round') + '</button>';
+    $('#lpA').focus(); sendHeight();
+    $('#lpNext').onclick = function () { k++; if (k < stations.length) { station(); var f = $('#lpConf1'); if (f) f.focus(); } else finish(); };
+  }
+  function finish() {
+    var conf = Math.round(confSum / stations.length);
+    if (!Object.keys(byComp).length) toast('These stations are not linked to a competency yet, so this round is practice only.', 4500);
+    /* each station counts only toward the competency its structure belongs to */
+    recordAttempt({ course: it.course, mode: 'loops', item: it, groups: Object.keys(byComp).map(function (c) { return { comp: c, dok: 1, got: byComp[c].got, possible: byComp[c].possible }; }), confidence: conf, minutes: elapsedMin(t0, 'loops') });
+    done({ got: got, possible: pos, conf: conf });
+  }
+  station();
+}
+
+/* ---------- 31. YOUR COURSE TOOLS, ONE ICON EACH ---------- */
+var ICONS = {
+  cards: '<path d="M4 7h12v12H4z"/><path d="M8 3h12v12"/>',
+  brain: '<path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3h1V4z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3h-1V4z"/>',
+  pencil: '<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>',
+  target: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1"/>',
+  clip: '<path d="M9 4h6v3H9z"/><path d="M7 5H5v16h14V5h-2"/><path d="M8 12l2 2 5-5"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
+  loop: '<path d="M4 12a8 8 0 0 1 14-5l2 2"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 0 1-14 5l-2-2"/><path d="M4 20v-5h5"/>',
+  book: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M8 7h7"/>',
+  play: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z"/>',
+  sheet: '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><rect x="9" y="12" width="7" height="6"/>',
+  key: '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l2 2M15 8l2 2"/>',
+  exam: '<path d="M5 3h14v18H5z"/><path d="M8 8h8M8 12h8M8 16h5"/>'
+};
+function icon(n) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' + (ICONS[n] || ICONS.book) + '</svg>'; }
+function siteUrl(ck, path) { return /^https?:/.test(path) ? path : COURSES[ck].base + path; }
+function linkAttrs(url) {
+  if (url.charAt(0) === '#') return 'href="' + esc(url) + '"';
+  /* same site: open in place (breaks out of a Canvas frame); the Atlas refuses framing, so it gets its own tab */
+  var ext = /new-digital-atlas/.test(url) || !/drsrennie-stack\.github\.io/.test(url);
+  return 'href="' + esc(url) + '" ' + (ext ? 'target="_blank" rel="noopener"' : 'target="_top"');
+}
+function toolsFor(ck) {
+  var c = COURSES[ck], m = c.moduleOfWeek(Math.max(1, currentWeek(ck)));
+  if (ck === 'anatomy') return [
+    { icon: 'cards', name: 'Recall cards', sub: 'Spaced recall, every card', url: '#s-recall' },
+    { icon: 'brain', name: 'Brain dumps', sub: 'Three levels, with the key', url: '#s-dumps' },
+    { icon: 'target', name: 'Mastery Check', sub: 'Check a module, find the gap', url: siteUrl(ck, 'bio004-mastery-check.html') },
+    { icon: 'exam', name: 'Practice exam', sub: 'Module ' + m + ', in the real format', url: siteUrl(ck, 'practice-lecture-exam.html?exam=' + m) },
+    { icon: 'globe', name: 'Digital Atlas', sub: 'Look at the structures', url: 'https://drsrennie-stack.github.io/new-digital-atlas/' },
+    { icon: 'loop', name: 'Loops app', sub: 'Lab ID practice and lab exams', url: 'https://drsrennie-stack.github.io/loops/#m' + m },
+    { icon: 'book', name: 'Notes and materials', sub: 'Notes, videos, note sheets', url: siteUrl(ck, 'course-materials.html') }
+  ];
+  return [
+    { icon: 'exam', name: 'Practice exam', sub: 'A fresh paper, scored', url: siteUrl(ck, 'practice-exam.html') },
+    { icon: 'book', name: 'Course home', sub: 'Everything for BIO 005', url: siteUrl(ck, 'index.html') }
+  ];
+}
+function toolStrip(ck, title) {
+  return '<section aria-labelledby="hTools"><h2 id="hTools">' + esc(title || 'Your course tools') + '</h2><p class="muted" style="margin-top:-4px">Everything you do in these tools counts toward your weak spots here.</p><ul class="tools">' +
+    toolsFor(ck).map(function (t) { return '<li><a class="toolbtn" ' + linkAttrs(t.url) + '>' + icon(t.icon) + '<span><b>' + esc(t.name) + '</b><small>' + esc(t.sub) + '</small></span></a></li>'; }).join('') + '</ul></section>';
+}
+
+/* where to go to fix one competency, using her own pages */
+function fixLinks(ck, comp) {
+  var out = [], c = D(ck).byId[comp];
+  if (ck !== 'anatomy') {
+    out.push({ icon: 'exam', label: 'Exam engine', url: '#/exam?comp=' + comp });
+    out.push({ icon: 'brain', label: 'Brain dump', url: '#/dump?comp=' + comp });
+    return out;
+  }
+  var L = ((window.MOS_ANATOMY || {}).links || {})[comp] || {}, mod = L.module || COURSES.anatomy.moduleOfWeek(c ? c.week : 1);
+  if (L.notes) out.push({ icon: 'book', label: 'Notes', url: siteUrl(ck, L.notes.url) });
+  if (L.video) out.push({ icon: 'play', label: 'Concept videos', url: siteUrl(ck, L.video.url) });
+  out.push({ icon: 'cards', label: 'Recall cards', url: '#s-recall?comp=' + comp });
+  if (window.MOS_ANATOMY && (window.MOS_ANATOMY.idx.dumps) && Object.keys(window.MOS_ANATOMY.idx.dumps).some(function (k) { return window.MOS_ANATOMY.idx.dumps[k][0].indexOf(comp) >= 0; })) out.push({ icon: 'brain', label: 'Brain dumps', url: '#s-dumps?comp=' + comp });
+  if (L.sheet) out.push({ icon: 'sheet', label: 'Note sheet', url: siteUrl(ck, L.sheet) });
+  if (L.key) out.push({ icon: 'key', label: 'Drawing key', url: siteUrl(ck, L.key) });
+  (L.atlas || []).slice(0, 1).forEach(function (a) { out.push({ icon: 'globe', label: 'Atlas', url: a.url, title: a.title }); });
+  if (L.loops && L.loops.length) out.push({ icon: 'loop', label: L.loops[0].title, url: '#/loops' });
+  out.push({ icon: 'clip', label: 'Practice exam, Module ' + mod, url: siteUrl(ck, 'practice-lecture-exam.html?exam=' + mod) });
+  return out;
+}
+function fixRow(ck, comp) {
+  return '<ul class="fix" aria-label="Ways to work on ' + esc(compName(ck, comp)) + '">' + fixLinks(ck, comp).map(function (f) {
+    return '<li><a ' + linkAttrs(f.url) + (f.title ? ' title="' + esc(f.title) + '"' : '') + '>' + icon(f.icon) + '<span>' + esc(f.label) + '</span></a></li>';
+  }).join('') + '</ul>';
+}
+
+/* ---------- 32. MY WEAK SPOTS (the Weakness Dashboard) ---------- */
+function compSummary(ck) {
+  var E = engine(ck), by = {}, src = {}, last = {};
+  Object.keys(E).forEach(function (k) { var s = E[k]; (by[s.comp] = by[s.comp] || []).push(s); });
+  EV.forEach(function (r) { if (r.course !== ck) return; (src[r.competency] = src[r.competency] || {})[r.source || 'mastery-os'] = 1; last[r.competency] = Math.max(last[r.competency] || 0, r.t); });
+  return Object.keys(by).map(function (comp) {
+    var ks = by[comp].sort(function (a, b) { return a.dok - b.dok; });
+    var worst = ks.slice().sort(function (a, b) { return (b.miscal - a.miscal) || (a.strength - b.strength); })[0];
+    return { comp: comp, keys: ks, worst: worst, miscal: ks.some(function (s) { return s.miscal; }), strength: worst.strength, sources: Object.keys(src[comp] || {}), last: last[comp] || 0 };
+  });
+}
+function gapLabel(x) {
+  if (x.miscal) return { t: 'Felt sure, missed it', cls: 'terra' };
+  if (x.worst.strength < 0.5) return { t: 'Still learning', cls: 'terra' };
+  if (x.worst.strength < 0.8) return { t: 'Getting there', cls: 'gold' };
+  if (x.worst.state === 'unsure') return { t: 'Knows it, not sure yet', cls: 'gold' };
+  return { t: 'Knows it', cls: '' };
+}
+ROUTES.weak = function () {
+  var ck = course().key; loadingView('Reading your record…');
+  ensureCore(ck).then(function () {
+    ingestAll();
+    var d = D(ck), all = compSummary(ck), ord = { core: 0, high: 1, support: 2 };
+    var weak = all.filter(function (x) { return x.miscal || x.strength < 0.8 || x.worst.state === 'unsure'; })
+      .sort(function (a, b) { return (b.miscal - a.miscal) || (a.strength - b.strength) || ((ord[(d.byId[a.comp] || {}).yield] || 0) - (ord[(d.byId[b.comp] || {}).yield] || 0)); });
+    var ns = notStarted(ck), n = { miscal: 0, learning: 0, there: 0, unsure: 0 };
+    weak.forEach(function (x) { if (x.miscal) n.miscal++; else if (x.strength < 0.5) n.learning++; else if (x.strength < 0.8) n.there++; else n.unsure++; });
+    var mods = uniq(weak.map(function (x) { return COURSES[ck].moduleOfWeek((d.byId[x.comp] || {}).week || 1); })).sort();
+    var h = crumb() + '<h1>My weak spots</h1><p class="lead">Ranked from everything you have done: recall cards, brain dumps, Mastery Checks, practice exams, the Atlas, Loops and Mastery OS itself. Felt sure but missed it comes first, because that is the gap you cannot see on your own.</p>';
+    h += '<div class="grid g3 statrow">' +
+      [['Felt sure, missed it', n.miscal], ['Still learning', n.learning], ['Getting there', n.there], ['Knows it, not sure yet', n.unsure], ['Taught, not started', ns.length]].map(function (x) { return '<div class="card"><p class="big">' + x[1] + '</p><p class="muted" style="margin:0">' + x[0] + '</p></div>'; }).join('') + '</div><div class="sp"></div>';
+    h += '<div class="card"><div class="grid g2"><div><label class="f" for="wMod">Module</label><select class="field" id="wMod"><option value="">Every module</option>' + mods.map(function (m) { return '<option value="' + m + '">Module ' + m + '</option>'; }).join('') + '</select></div>' +
+      '<div><span class="f">Also show</span><label class="row" style="gap:10px;font-weight:700"><input type="checkbox" id="wNs" style="width:20px;height:20px;accent-color:#08101F"> Topics taught so far that I have not started</label></div></div></div><div class="sp"></div>';
+    h += '<ul class="list weaklist" id="wList"></ul><div class="sp"></div>' + toolStrip(ck);
+    view(h);
+    function draw() {
+      var m = $('#wMod').value, showNs = $('#wNs').checked;
+      var rows = weak.filter(function (x) { return !m || String(COURSES[ck].moduleOfWeek((d.byId[x.comp] || {}).week || 1)) === m; });
+      var html = rows.slice(0, 40).map(function (x) {
+        var c = d.byId[x.comp], g = gapLabel(x);
+        return '<li class="' + (x.miscal ? 'st-open' : 'st-locked') + '"><div class="row" style="justify-content:space-between;align-items:flex-start"><span><span class="t">' + esc(c.name) + '</span> <span class="tag ' + g.cls + '">' + esc(g.t) + '</span><br><span class="muted">' + esc(c.group) + ' · Week ' + c.week + (x.last ? ' · last practiced ' + fmtDate(x.last) : '') + '</span></span>' +
+          '<button type="button" class="btn sm" data-fixnow="' + esc(x.comp) + '">Practice it now</button></div>' +
+          '<p class="dokrow">' + x.keys.map(function (s) { var cls = s.miscal ? 'miscal' : s.strength >= 0.8 ? 'strong' : s.strength >= 0.5 ? 'mid' : 'weak'; return '<span class="cell ' + cls + '">DOK ' + s.dok + ' ' + Math.round(s.strength * 100) + '%</span>'; }).join(' ') + '</p>' +
+          '<p class="muted" style="margin:0 0 8px">' + esc(c.can) + '</p>' +
+          '<p class="muted" style="margin:0 0 6px">From: ' + esc(x.sources.map(function (sname) { return SRC_LABEL[sname] || sname; }).join(', ')) + '</p>' + fixRow(ck, x.comp) + '</li>';
+      }).join('');
+      if (showNs) html += ns.filter(function (c) { return !m || String(COURSES[ck].moduleOfWeek(c.week)) === m; }).slice(0, 30).map(function (c) {
+        return '<li class="st-locked"><div class="row" style="justify-content:space-between"><span><span class="t">' + esc(c.name) + '</span> <span class="tag">Not started</span><br><span class="muted">' + esc(c.group) + ' · Week ' + c.week + '</span></span><button type="button" class="btn sm" data-fixnow="' + esc(c.id) + '">Start it now</button></div>' + fixRow(ck, c.id) + '</li>';
+      }).join('');
+      $('#wList').innerHTML = html || '<li>No weak spots here yet. Practice in any tool and they will show up as soon as there is something to fix.</li>';
+      sendHeight();
+    }
+    $('#wMod').onchange = draw; $('#wNs').onchange = draw; draw();
+  }).catch(failView);
+};
+$('#main').addEventListener('click', function (e) {
+  var b = e.target.closest('[data-fixnow]'); if (!b) return;
+  var ck = course().key, comp = b.getAttribute('data-fixnow');
+  loadingView('Finding the best practice for this competency…');
+  ensureAll(ck).then(function () {
+    var E = engine(ck), keys = Object.keys(E).map(function (k) { return E[k]; }).filter(function (s) { return s.comp === comp; }).sort(function (a, b) { return (b.miscal - a.miscal) || (a.strength - b.strength); });
+    var dok = keys.length ? keys[0].dok : ((D(ck).byId[comp] || {}).dok || 1), tasks = [], avoid = {}, used = {};
+    for (var i = 0; i < 3; i++) { var pk = pickItem(ck, comp, dok, avoid, used); if (!pk) break; avoid[pk.item.id] = 1; used[pk.item.mode] = (used[pk.item.mode] || 0) + 1; tasks.push({ item: pk.item, key: { comp: comp, dok: dok }, note: pk.exact ? '' : 'Nothing at DOK ' + dok + ' exists yet for this competency, so this one is DOK ' + pk.dok + '.' }); }
+    if (!tasks.length) { view(crumb() + '<h1>' + esc(compName(ck, comp)) + '</h1><p>Mastery OS has no practice item for this one yet. Use the links below.</p>' + fixRow(ck, comp)); return; }
+    RUN = { kind: 'fix', title: compName(ck, comp), tasks: tasks, i: 0, results: [] }; go('#/run');
+  }).catch(failView);
+});
+
+/* ---------- 33. HER RECALL CARDS AND BRAIN DUMPS, RUNNING INSIDE MASTERY OS ---------- */
+function mountEngine(ck, which, mountId, title, lead) {
+  var c = COURSES[ck];
+  view(crumb() + '<h1>' + esc(title) + '</h1><p class="lead">' + esc(lead) + '</p><div class="engine" id="' + mountId + '"><p class="loading" role="status">Loading…</p></div><div class="sp"></div><a class="linkbtn" href="#/weak">See my weak spots</a>');
+  ensureMode(ck, which).then(function () {
+    var src = srcFor(c, c.engines[which]);
+    if (LOADED[src]) {
+      /* already running: ask it to draw itself into the new mount */
+      $('#' + mountId).innerHTML = '';
+      if (which === 'recall' && window.BIO004_RECALL_OPEN) window.BIO004_RECALL_OPEN(hashParam('comp') || null);
+      if (which === 'dump' && window.BIO004_DUMP_OPEN) window.BIO004_DUMP_OPEN(hashParam('comp') || null);
+      return;
+    }
+    return loadScript(src);
+  }).then(function () { sendHeight(); }).catch(failView);
+  /* each answer saved inside the engine lands in the record within a second */
+  var host = $('#' + mountId);
+  if (host) host.addEventListener('click', function () { ingestSoon(); });
+}
+ROUTES.recall = function () {
+  var ck = course().key;
+  if (!COURSES[ck].engines.recall) { go('#/flash'); return; }
+  mountEngine(ck, 'recall', 'recallMount', 'Recall cards', 'Your spaced recall cards. Pick how sure you are before the choices show, answer, then read why. Every answer counts toward your weak spots.');
+};
+ROUTES.dump = function () {
+  var ck = course().key;
+  if (!COURSES[ck].engines.dump) { ROUTES.dumpNative(); return; }
+  mountEngine(ck, 'dump', 'dumpMount', 'Brain dumps', 'Pick a topic, write everything you know with notes closed, then check it against the key. Level 2 and Level 3 open as you get the earlier level right.');
+};
+
+/* ---------- 29. FOCUS TIMER (carried over from Mastery OS) ---------- */
+/* Presets 25/5, 50/10, 90/20, build your own, and the baseline finder.
+   Completed focus time counts toward the week and feeds pace. */
+var PRESETS = {
+  classic: { label: 'Classic, 25 and 5', blocks: 4, focus: 25, shortBrk: 5, longBrk: 15, longEvery: 4 },
+  long: { label: 'Long, 50 and 10', blocks: 3, focus: 50, shortBrk: 10, longBrk: 30, longEvery: 3 },
+  deep: { label: 'Deep, 90 and 20', blocks: 2, focus: 90, shortBrk: 20, longBrk: 0, longEvery: 0 }
+};
+function pbSummary(c) {
+  var total = 0; for (var b = 0; b < c.blocks; b++) { total += c.focus; if (b < c.blocks - 1) total += (c.longEvery > 0 && c.longBrk > 0 && (b + 1) % c.longEvery === 0) ? c.longBrk : c.shortBrk; }
+  return plural(c.blocks, 'focus block') + ' of ' + c.focus + ' minutes, ' + c.shortBrk + ' minute breaks between' + (c.longEvery > 0 && c.longBrk > 0 ? ', and a ' + c.longBrk + ' minute break every ' + c.longEvery : '') + '. About ' + total + ' minutes in all.';
+}
+function sel(id, label, vals, cur, unit) {
+  var list = vals.slice(); if (list.indexOf(cur) < 0) { list.push(cur); list.sort(function (a, b) { return a - b; }); }
+  return '<div><label class="f" for="' + id + '">' + label + '</label><select class="field" id="' + id + '">' + list.map(function (v) { return '<option value="' + v + '"' + (v === cur ? ' selected' : '') + '>' + v + (unit ? ' ' + unit : '') + '</option>'; }).join('') + '</select></div>';
+}
+function openTimerSetup() {
+  if (PF) { $('#pf').classList.remove('mini'); $('#pfMin').setAttribute('aria-expanded', 'true'); $('#pfBody .btn') && $('#pfBody .btn').focus(); return; }
+  var c = pomoCfg(), bl = P && P.baseline;
+  var box = openDialog('<h2 id="dlgT">Focus timer</h2><p>Pick a preset or build your own. Completed focus time counts toward your weekly plan.</p>' +
+    '<fieldset><legend>Presets</legend><div class="row">' + Object.keys(PRESETS).map(function (k) { return '<button type="button" class="btn sm ghost" data-preset="' + k + '">' + esc(PRESETS[k].label) + '</button>'; }).join('') +
+    (bl ? '<button type="button" class="btn sm ghost" data-preset="baseline">My baseline, ' + bl.mins + '</button>' : '') + '</div></fieldset><div class="sp" style="height:14px"></div>' +
+    '<fieldset><legend>Build your own</legend><div class="grid g2">' + sel('pbBlocks', 'Focus blocks', [1, 2, 3, 4, 5, 6, 8], c.blocks) + sel('pbFocus', 'Focus length', [15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 75, 90], c.focus, 'min') +
+    sel('pbShort', 'Short break', [3, 5, 10, 15, 20], c.shortBrk, 'min') + sel('pbLong', 'Long break', [0, 10, 15, 20, 30], c.longBrk, 'min') + sel('pbEvery', 'Long break after every', [0, 2, 3, 4], c.longEvery, 'blocks') + '</div></fieldset>' +
+    '<p class="muted" id="pbSum" aria-live="polite" style="margin-top:10px"></p>' +
+    '<div class="row"><button type="button" class="btn key" id="pbStart">Start focusing</button><button type="button" class="btn ghost" id="pbBase">Find my focus baseline</button><button type="button" class="btn ghost" id="pbCancel">Cancel</button></div>', { focus: '#pbStart' });
+  function read() { return { blocks: +$('#pbBlocks').value, focus: +$('#pbFocus').value, shortBrk: +$('#pbShort').value, longBrk: +$('#pbLong').value, longEvery: +$('#pbEvery').value }; }
+  function upd() { $('#pbSum').textContent = pbSummary(read()); }
+  $$('select', box).forEach(function (s) { s.onchange = upd; }); upd();
+  $$('[data-preset]', box).forEach(function (b) { b.onclick = function () {
+    var k = b.getAttribute('data-preset'), p = PRESETS[k];
+    if (k === 'baseline') { var m = bl.mins; p = { blocks: 3, focus: m, shortBrk: m >= 50 ? 10 : 5, longBrk: m >= 50 ? 20 : 15, longEvery: 3 }; }
+    ['Blocks', 'Focus', 'Short', 'Long', 'Every'].forEach(function (f, i) { var v = [p.blocks, p.focus, p.shortBrk, p.longBrk, p.longEvery][i], s = $('#pb' + f); if (!$$('option', s).some(function (o) { return +o.value === v; })) s.insertAdjacentHTML('beforeend', '<option value="' + v + '">' + v + '</option>'); s.value = String(v); });
+    upd(); live('Preset applied. ' + pbSummary(read()));
+  }; });
+  $('#pbStart').onclick = function () { P.pomodoro = read(); saveProfile(); closeDialog(); pfStart(); };
+  $('#pbCancel').onclick = closeDialog;
+  $('#pbBase').onclick = openBaseline;
+}
+var BL = null;
+function openBaseline() {
+  closeDialog();
+  var box = openDialog('<h2 id="dlgT">Find your focus baseline</h2><p>Start studying something for real, right now. The moment you notice your attention drift, you fidget, or you reach for your phone, press the button. Your first drift is your natural focus length. Do not force it, just be honest.</p>' +
+    '<p class="big" id="blClock" aria-live="off" style="text-align:center;font-size:44px">0:00</p><p id="blMarks" class="muted" aria-live="polite"></p>' +
+    '<div class="row"><button type="button" class="btn terra" id="blMark">I am losing focus</button><button type="button" class="btn" id="blSave">Save my baseline</button><button type="button" class="btn ghost" id="blCancel">Back</button></div>',
+    { focus: '#blMark', onClose: function () { if (BL) clearInterval(BL.timer); BL = null; } });
+  BL = { t0: now(), marks: [], timer: setInterval(function () { var c = $('#blClock'); if (c && BL) c.textContent = fmtClock((now() - BL.t0) / 1000); }, 1000) };
+  $('#blMark', box).onclick = function () { BL.marks.push((now() - BL.t0) / 1000); $('#blMarks').textContent = 'Drift marked at ' + BL.marks.map(fmtClock).join(', ') + '. Your first drift sets your length.'; };
+  $('#blCancel', box).onclick = function () { closeDialog(); openTimerSetup(); };
+  $('#blSave', box).onclick = function () {
+    var secs = BL.marks.length ? BL.marks[0] : (now() - BL.t0) / 1000, mins = Math.max(15, Math.min(90, Math.round(secs / 60 / 5) * 5)) || 15;
+    P.baseline = { mins: mins, date: iso(now()) }; var brk = mins >= 50 ? 10 : 5; P.pomodoro = { blocks: 3, focus: mins, shortBrk: brk, longBrk: mins >= 50 ? 20 : 15, longEvery: 3 }; saveProfile();
+    closeDialog();
+    var b2 = openDialog('<h2 id="dlgT">About ' + mins + ' minutes</h2><p>That is roughly how long you held focus before your first drift. A good session for you is about <b>' + mins + ' minutes of focus with a ' + brk + ' minute break</b>. Your timer is set to that now. Run this again any time; focus length changes with sleep, stress, and practice.</p><div class="row"><button type="button" class="btn" id="blUse">Start a session</button><button type="button" class="btn ghost" id="blLater">Later</button></div>', { focus: '#blUse' });
+    $('#blUse', b2).onclick = function () { closeDialog(); pfStart(); }; $('#blLater', b2).onclick = closeDialog;
+  };
+}
+var PF = null;
+function pfStart() {
+  var c = pomoCfg();
+  PF = { c: c, i: 0, mode: 'focus', total: c.focus * 60, endAt: now() + c.focus * 60000, paused: false, left: 0, focusStart: now(), focusUsed: 0, timer: null, breakKind: null, course: course().key };
+  var el = $('#pf'); el.hidden = false; el.classList.remove('mini'); $('#pfMin').setAttribute('aria-expanded', 'true');
+  FOCUS_ON = true; pfRender(); PF.timer = setInterval(pfTick, 500); pfLive('Focus block 1 of ' + c.blocks + ' started, ' + c.focus + ' minutes.');
+}
+function pfLive(m) { var l = $('#pfLive'); l.textContent = ''; setTimeout(function () { l.textContent = m; }, 30); }
+function pfRemaining() { return PF.paused ? PF.left : Math.max(0, (PF.endAt - now()) / 1000); }
+function pfTick() {
+  if (!PF) return; var r = pfRemaining();
+  $('#pfClock').textContent = fmtClock(r); $('#pfMiniClock').textContent = fmtClock(r);
+  var a = $('#pfArc'); a.style.strokeDashoffset = (326.726 * (1 - Math.max(0, Math.min(1, r / PF.total)))).toFixed(2);
+  if (r <= 0 && !PF.paused) { if (PF.mode === 'focus') pfEndFocus(true); else pfNextBlock(); }
+}
+function pfLogFocus(full) {
+  var used = PF.focusUsed + (PF.paused ? 0 : (now() - PF.focusStart) / 1000);
+  var mins = full ? PF.c.focus : Math.floor(used / 60);
+  if (mins >= 1) {
+    var s = { course: PF.course, minutes: mins, at: now() }; SESS.push(s); LS.set(KEYS.sess, SESS);
+    if (P && P.id) enqueue('session', { student_id: P.id, course: s.course, minutes: s.minutes, timestamp: iso(s.at) });
+  }
+}
+function pfEndFocus(full) {
+  pfLogFocus(full); FOCUS_ON = false;
+  if (PF.i >= PF.c.blocks - 1) { pfFinish(); return; }
+  var isLong = PF.c.longEvery > 0 && PF.c.longBrk > 0 && (PF.i + 1) % PF.c.longEvery === 0;
+  PF.mode = 'break'; PF.breakKind = isLong ? 'long' : 'short'; var mins = isLong ? PF.c.longBrk : PF.c.shortBrk;
+  PF.total = mins * 60; PF.endAt = now() + PF.total * 1000; PF.paused = false; pfRender();
+  pfLive((isLong ? 'Long break, ' : 'Break, ') + mins + ' minutes. Step away from the screen.'); chime();
+}
+function pfNextBlock() {
+  PF.i++; PF.mode = 'focus'; PF.breakKind = null; PF.total = PF.c.focus * 60; PF.endAt = now() + PF.total * 1000; PF.paused = false; PF.focusStart = now(); PF.focusUsed = 0;
+  FOCUS_ON = true; pfRender(); pfLive('Focus block ' + (PF.i + 1) + ' of ' + PF.c.blocks + ' started.'); chime();
+}
+function pfFinish() { clearInterval(PF.timer); PF = null; FOCUS_ON = false; $('#pf').hidden = true; toast('Focus session complete. Nice work.'); chime(); if ((location.hash || '#/home').indexOf('#/home') === 0) route(); }
+function pfStop(log) { if (!PF) return; if (log !== false && PF.mode === 'focus') pfLogFocus(false); clearInterval(PF.timer); PF = null; FOCUS_ON = false; $('#pf').hidden = true; }
+function pfRender() {
+  if (!PF) return;
+  $('#pfLbl').textContent = PF.mode === 'focus' ? 'Focus ' + (PF.i + 1) + ' of ' + PF.c.blocks : PF.breakKind === 'long' ? 'Long break' : 'Break';
+  $('#pfName').textContent = PF.mode === 'focus' ? 'Focus timer' : 'On a break';
+  $('#pfBody').innerHTML = PF.mode === 'focus'
+    ? '<div class="row" style="justify-content:center"><button type="button" class="btn" id="pfPause">' + (PF.paused ? 'Resume' : 'Pause') + '</button><button type="button" class="btn" id="pfDone">Done, take a break</button></div>'
+    : '<p style="font-size:14px;margin:0 0 8px">Look away from the screen, move, get water.</p><div class="row" style="justify-content:center"><button type="button" class="btn" id="pfSkip">Skip the break</button><button type="button" class="btn" id="pfPause">' + (PF.paused ? 'Resume' : 'Pause') + '</button></div>';
+  $('#pfPause').onclick = function () {
+    if (PF.paused) { PF.endAt = now() + PF.left * 1000; PF.paused = false; if (PF.mode === 'focus') { PF.focusStart = now(); FOCUS_ON = true; } }
+    else { PF.left = pfRemaining(); PF.paused = true; if (PF.mode === 'focus') { PF.focusUsed += (now() - PF.focusStart) / 1000; FOCUS_ON = false; } }
+    pfRender(); $('#pfPause').focus(); pfLive(PF.paused ? 'Paused.' : 'Resumed.');
+  };
+  if ($('#pfDone')) $('#pfDone').onclick = function () { pfEndFocus(false); var b = $('#pfBody .btn'); if (b) b.focus(); };
+  if ($('#pfSkip')) $('#pfSkip').onclick = function () { pfNextBlock(); var b = $('#pfBody .btn'); if (b) b.focus(); };
+  pfTick();
+}
+function chime() {
+  try { var A = window.AudioContext || window.webkitAudioContext; if (!A) return; var ctx = chime.ctx || (chime.ctx = new A()); var o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = 660; g.gain.setValueAtTime(0.0001, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.15, ctx.currentTime + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.8); o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime + 0.85); } catch (e) {}
+}
+$('#timerBtn').addEventListener('click', openTimerSetup);
+$('#pfClose').addEventListener('click', function () { pfStop(true); toast('Timer stopped. Focus time so far is saved.'); $('#timerBtn').focus(); });
+$('#pfMin').addEventListener('click', function () { var m = $('#pf').classList.toggle('mini'); this.setAttribute('aria-expanded', String(!m)); this.setAttribute('aria-label', m ? 'Unfold the timer' : 'Fold the timer'); this.innerHTML = m ? '+' : '&#8211;'; });
+(function drag() {
+  var h = $('#pfHead'), el = $('#pf'), st = null;
+  h.addEventListener('pointerdown', function (e) { if (e.target.closest('button')) return; var r = el.getBoundingClientRect(); st = { x: e.clientX, y: e.clientY, l: r.left, t: r.top }; h.setPointerCapture(e.pointerId); });
+  h.addEventListener('pointermove', function (e) {
+    if (!st) return; var l = Math.max(4, Math.min(window.innerWidth - el.offsetWidth - 4, st.l + e.clientX - st.x)), t = Math.max(4, Math.min(window.innerHeight - el.offsetHeight - 4, st.t + e.clientY - st.y));
+    el.style.left = l + 'px'; el.style.top = t + 'px'; el.style.right = 'auto'; el.style.bottom = 'auto';
+  });
+  h.addEventListener('pointerup', function () { st = null; });
+})();
+
+/* ---------- 30. STARTUP ---------- */
+$$('.picker button').forEach(function (b) { b.addEventListener('click', function () { if (!P || !P.id) return; setCourse(b.getAttribute('data-course')); }); });
+
+/* The Sunday 5 pm reflection opens once on its own, then waits on the Today banner. */
+function checkWeekTurn() {
+  if (!P || !P.id || !goal()) return;
+  var ck = course().key, pend = pendingReflection(ck);
+  if (pend && FLAGS['autoRef-' + ck] !== pend && !RUN) {
+    FLAGS['autoRef-' + ck] = pend; LS.set(KEYS.flags, FLAGS);
+    if ((location.hash || '#/home').replace(/^#\/?/, '').split('/')[0] === 'home') go('#/reflect');
+  }
+}
+setInterval(checkWeekTurn, 60000);
+
+/* iframe height sender, for Canvas and Kajabi embeds */
+function sendHeight() {
+  var h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+  try { window.parent.postMessage({ type: 'resize', id: CONFIG.FRAME_ID, frameId: CONFIG.FRAME_ID, height: h }, '*'); } catch (e) {}
+}
+window.addEventListener('load', sendHeight);
+window.addEventListener('resize', sendHeight);
+if (window.ResizeObserver) { try { new ResizeObserver(sendHeight).observe(document.body); } catch (e) {} }
+
+(function init() {
+  if (P && !P.course) P.course = 'anatomy';
+  EV.forEach(function (r) { if (!r.t) r.t = new Date(r.timestamp).getTime(); });
+  ingestAll(); route(); checkWeekTurn(); flushSoon();
+  setInterval(ingestSoon, 60000);
+})();
+</script>
+</body>
+</html>
